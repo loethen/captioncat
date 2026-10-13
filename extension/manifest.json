@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "字幕伙伴 · YouTube",
+  "version": "0.1.0",
+  "description": "给 YouTube 字幕换皮肤，悬停翻译、点击收集单词，还有可替换的字幕小伙伴。",
+  "minimum_chrome_version": "120",
+  "permissions": ["storage", "clipboardWrite"],
+  "host_permissions": ["https://www.youtube.com/*", "https://translate.googleapis.com/*"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "content_scripts": [{
+    "matches": ["https://www.youtube.com/*"],
+    "js": ["content.js"],
+    "css": ["content.css"],
+    "run_at": "document_idle"
+  }],
+  "action": {
+    "default_title": "字幕伙伴",
+    "default_popup": "popup.html",
+    "default_icon": { "16": "icons/16.png", "32": "icons/32.png" }
+  },
+  "icons": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "web_accessible_resources": [{
+    "resources": ["assets/characters/*/*"],
+    "matches": ["https://www.youtube.com/*"]
+  }],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; img-src 'self' data:; connect-src https://translate.googleapis.com"
+  }
+}

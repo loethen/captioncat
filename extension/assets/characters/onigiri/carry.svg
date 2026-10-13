@@ -1,0 +1,41 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 4 100 100'>
+  <style>
+  .b{transform-box:fill-box;transform-origin:50% 100%;animation:waddle .46s ease-in-out infinite}
+  .e{transform-box:fill-box;transform-origin:50% 50%;animation:bl 4.4s infinite}
+  .h{transform-box:fill-box;transform-origin:50% 50%;animation:beat .9s ease-in-out infinite}
+  .w{transform-origin:84px 64px;animation:none;transform:rotate(-35deg);}
+  .f1{animation:step .46s ease-in-out infinite}
+  .f2{animation:step .46s ease-in-out .23s infinite}
+  .x{animation:fl 1.4s ease-in-out infinite}
+  .x2{animation:fl 1.9s ease-in-out .5s infinite}
+  @keyframes sq{0%,100%{transform:scale(1,1)}50%{transform:scale(1.025,.975)}}
+  @keyframes tilt{0%,100%{transform:rotate(0)}50%{transform:rotate(-7deg)}}
+  @keyframes jump{0%,100%{transform:translateY(0) scale(1.03,.97)}50%{transform:translateY(-7px) scale(.98,1.03)}}
+  @keyframes sway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1px)}75%{transform:translateX(1px)}}
+  @keyframes droop{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(-5deg) translateY(1px)}}
+  @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+  @keyframes bl{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.12)}}
+  @keyframes wv{0%,78%,100%{transform:rotate(0)}82%{transform:rotate(-55deg)}86%{transform:rotate(-32deg)}90%{transform:rotate(-55deg)}94%{transform:rotate(-32deg)}97%{transform:rotate(0)}}
+  @keyframes wv3{0%,100%{transform:rotate(-20deg)}50%{transform:rotate(-55deg)}}
+  @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  @keyframes waddle{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-2px)}}
+  @keyframes step{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @keyframes swing{0%,100%{transform:rotate(8deg)}50%{transform:rotate(-14deg)}}
+  @keyframes stir{0%,100%{transform:rotate(-42deg)}50%{transform:rotate(-14deg)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+  </style>
+  <g class='b'>
+  <ellipse class='f1' cx='36' cy='97' rx='9' ry='5' fill='#fdfbf6' stroke='#2e2b29' stroke-width='2.4'/>
+  <ellipse class='f2' cx='64' cy='97' rx='9' ry='5' fill='#fdfbf6' stroke='#2e2b29' stroke-width='2.4'/>
+  <ellipse cx='8' cy='68' rx='6' ry='9' transform='rotate(18 8 68)' fill='#fdfbf6' stroke='#2e2b29' stroke-width='2.4'/>
+  <g class='w'><ellipse cx='93' cy='68' rx='6' ry='9' transform='rotate(-18 93 68)' fill='#fdfbf6' stroke='#2e2b29' stroke-width='2.4'/></g>
+  <path d='M50 8 C62 8 74 24 88 52 C96 70 92 92 72 94 L28 94 C8 92 4 70 12 52 C26 24 38 8 50 8 Z' fill='#fdfbf6' stroke='#2e2b29' stroke-width='2.4' stroke-linejoin='round'/>
+  <rect x='24' y='72' width='52' height='20' rx='4' fill='#2c3a36'/>
+  <ellipse cx='29' cy='61' rx='5.5' ry='3.4' fill='#ffb3c1' opacity='.8'/>
+  <ellipse cx='71' cy='61' rx='5.5' ry='3.4' fill='#ffb3c1' opacity='.8'/>
+  <g class='e'><ellipse cx='38' cy='53' rx='3.5' ry='4.5' fill='#2e2b29'/><ellipse cx='62' cy='53' rx='3.5' ry='4.5' fill='#2e2b29'/><circle cx='39.2' cy='51.3' r='1.3' fill='#fff'/><circle cx='63.2' cy='51.3' r='1.3' fill='#fff'/></g>
+  <path d='M44.5 63 Q50 60 55.5 63' stroke='#2e2b29' stroke-width='2.4' fill='none' stroke-linecap='round'/>
+  </g>
+  <path class='x' d='M83 20 Q88 29 83 33 Q78 29 83 20 Z' fill='#8ec5f0' stroke='#2e2b29' stroke-width='1.4' stroke-linejoin='round'/>
+  </svg>

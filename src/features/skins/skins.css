@@ -1,0 +1,44 @@
+/* Mounted only while the paper skin is active; removed in native mode. */
+html[data-ytc-skin="wa-light"] #movie_player .caption-window {
+  overflow: visible !important;
+  background: none !important;
+}
+
+html[data-ytc-skin="wa-light"] #movie_player .caption-visual-line {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  /* Remove the baseline strut between inline-block caption boxes. */
+  line-height: 0 !important;
+}
+
+/* Each line keeps its own paper box; adjacent rows touch without outer shadows. */
+html[data-ytc-skin="wa-light"] #movie_player .ytp-caption-segment {
+  display: inline-block !important;
+  box-sizing: border-box;
+  vertical-align: top;
+  background: rgba(246, 244, 238, .97) !important;
+  color: #2b2927 !important;
+  padding: .12em .75em !important;
+  margin: 0 !important;
+  border-radius: .08em;
+  box-shadow: inset 0 0 0 1px rgba(43, 41, 39, .1) !important;
+  text-shadow: none !important;
+  line-height: 1.2 !important;
+  font-weight: 500;
+}
+
+html[data-ytc-skin="wa-light"] #movie_player .captions-text.ytc-enter {
+  animation: ytc-wa-in .28s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+@keyframes ytc-wa-in {
+  from { opacity: 0; transform: translateY(.35em); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-ytc-skin="wa-light"] #movie_player .captions-text {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,17 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+  <style>
+  .s{animation:rise 1.6s ease-out infinite}.s2{animation-delay:.5s}.s3{animation-delay:1s}
+  @keyframes rise{0%{transform:translateY(8px) scale(.6);opacity:0}30%{opacity:.95}100%{transform:translateY(-16px) scale(1.15);opacity:0}}
+  .lid{animation:rattle .5s ease-in-out infinite}
+  @keyframes rattle{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.6px)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+  </style>
+  <g fill='#f4f7f8' stroke='#b9c3c8' stroke-width='1.6'>
+  <ellipse class='s' cx='36' cy='38' rx='7' ry='6'/><ellipse class='s s2' cx='52' cy='30' rx='8' ry='7'/><ellipse class='s s3' cx='67' cy='38' rx='6.5' ry='5.5'/>
+  </g>
+  <rect x='4' y='60' width='12' height='7' rx='3.5' fill='#6f747a' stroke='#2e2b29' stroke-width='2.2'/>
+  <rect x='84' y='60' width='12' height='7' rx='3.5' fill='#6f747a' stroke='#2e2b29' stroke-width='2.2'/>
+  <path d='M14 56 H86 V80 Q86 92 74 92 H26 Q14 92 14 80 Z' fill='#7b8187' stroke='#2e2b29' stroke-width='2.4' stroke-linejoin='round'/>
+  <path d='M22 66 V82' stroke='#fff' stroke-opacity='.35' stroke-width='3' stroke-linecap='round'/>
+  <g class='lid'><path d='M18 56 Q50 36 82 56 Z' fill='#9aa0a6' stroke='#2e2b29' stroke-width='2.4' stroke-linejoin='round'/><circle cx='50' cy='43' r='3.4' fill='#d8452e' stroke='#2e2b29' stroke-width='1.8'/></g>
+  </svg>

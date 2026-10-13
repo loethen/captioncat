@@ -1,0 +1,40 @@
+html[data-ytc-interactive] .ytp-caption-window-container,
+html[data-ytc-interactive] .caption-window,
+html[data-ytc-interactive] .ytp-caption-segment { pointer-events: auto !important; }
+html[data-ytc-interactive] .ytp-caption-segment { cursor: pointer !important; }
+.ytc-mascot { position: absolute; left: 0; top: 0; z-index: 58; pointer-events: none; display: none; will-change: transform; }
+.ytc-mascot-flip { position: relative; width: 100%; height: 100%; }
+.ytc-mascot-art { width: 100%; height: 100%; object-fit: contain; transform-origin: 50% 100%; }
+.ytc-mascot-prop { position: absolute; display: none; object-fit: contain; }
+.ytc-translation, .ytc-vocabulary, .ytc-toast {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+  font-weight: 400; letter-spacing: normal; text-shadow: none; box-sizing: border-box;
+}
+.ytc-translation {
+  position: absolute; z-index: 99998; display: none; width: max-content; max-width: min(560px, 85%);
+  padding: 8px 12px; border: 1px solid #555; border-radius: 6px; background: #242424; color: #fff;
+  font-size: 15px; line-height: 1.5; text-align: center; pointer-events: none; overflow-wrap: anywhere;
+}
+.ytc-translation.ytc-loading { color: #ccc; }
+.ytc-toast { position: absolute; top: 12%; left: 50%; transform: translateX(-50%); z-index: 100000; pointer-events: none; padding: 8px 14px; border-radius: 6px; background: #242424; color: #fff; font-size: 14px; line-height: 1.4; opacity: 0; transition: opacity .2s; max-width: 85%; }
+.ytc-toast-visible { opacity: 1; }
+.ytc-vocabulary { position: absolute; top: 12px; right: 12px; z-index: 99999; padding-bottom: 8px; font-size: 13px; line-height: 1.5; color: #fff; text-align: right; transition: opacity .2s; }
+#movie_player.ytp-autohide .ytc-vocabulary:not(.ytc-flash):not(.ytc-open):not(:focus-within) { opacity: 0; pointer-events: none; }
+.ytc-vocabulary button { color: inherit; font: inherit; cursor: pointer; border: 0; margin: 0; }
+.ytc-vocabulary button:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+.ytc-vocabulary button:disabled { opacity: .45; cursor: default; }
+.ytc-pill { padding: 4px 10px; border-radius: 999px; background: rgba(25,25,25,.8); opacity: .7; white-space: nowrap; }
+.ytc-open .ytc-pill, .ytc-flash .ytc-pill, .ytc-vocabulary:hover .ytc-pill { opacity: 1; }
+.ytc-flash .ytc-pill { background: #3a4b3e; }
+.ytc-word-card { display: none; margin-top: 6px; width: min(270px, 70vw); padding: 12px; box-sizing: border-box; text-align: left; border: 1px solid #555; border-radius: 8px; background: #242424; }
+.ytc-open .ytc-word-card { display: block; }
+.ytc-word-heading { margin-bottom: 8px; color: #bbb; font-size: 12px; }
+.ytc-word-list { display: flex; flex-wrap: wrap; gap: 5px; max-height: 140px; overflow-y: auto; }
+.ytc-word-chip { padding: 2px 7px; border-radius: 4px; background: #444; }
+.ytc-word-chip:hover { text-decoration: line-through; background: #633d3d; }
+.ytc-empty { color: #b8b8b8; }
+.ytc-word-bar { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.ytc-word-bar button { padding: 2px 0; background: none; }
+@media (prefers-reduced-motion: reduce) {
+  .ytc-toast, .ytc-vocabulary { transition: none; }
+}
