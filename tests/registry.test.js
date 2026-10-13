@@ -28,9 +28,9 @@ test('reaction priority, disabling and missing artwork fall back safely', () => 
   assert.equal(moodOf('What happened', ['ask'], { states: { normal: {} } }), 'normal');
 });
 test('invalid storage is normalized; partial changes preserve nested settings', () => {
-  const normalized = normalizeSettings({ skinId: 'gone', characterId: 'gone', enabledActions: ['cook', 'gone', 'cook'], translation: { delay: -12, targetLanguage: 'gone' } });
+  const normalized = normalizeSettings({ skinId: 'gone', characterId: 'gone', disabledActions: ['cook', 'gone', 'cook'], translation: { delay: -12, targetLanguage: 'gone' } });
   assert.equal(normalized.skinId, 'wa-light'); assert.equal(normalized.characterId, 'onigiri');
-  assert.deepEqual(normalized.enabledActions, ['cook']); assert.equal(normalized.translation.delay, 0);
+  assert.deepEqual(normalized.disabledActions, ['cook']); assert.equal(normalized.translation.delay, 0);
   const patched = patchSettings(defaultSettings(), { translation: { enabled: false } });
   assert.equal(patched.translation.pauseOnHover, true); assert.equal(patched.translation.enabled, false);
   assert.deepEqual(normalizeSettings(null), defaultSettings());

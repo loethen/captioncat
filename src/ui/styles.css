@@ -26,14 +26,13 @@ h2 { font-size: 17px; font-weight: 600; margin: 26px 0 10px; }
 .footnote { color: #909090; font-size: 12px; text-align: center; margin-top: 12px; }
 .status { color: #737373; font-size: 13px; min-height: 22px; margin-top: 10px; }
 .status.error { color: #ad3333; }
-.preview { height: 120px; border-radius: 8px; background: #f3f3f1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; overflow: hidden; }
-.preview img { width: 57px; height: 57px; object-fit: contain; align-self: center; margin-left: 135px; margin-bottom: -1px; }
+/* The character is positioned by the mascot renderer on top of the sample caption. */
+.preview { position: relative; height: 120px; border-radius: 8px; background: #f3f3f1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 12px 12px 18px; overflow: hidden; }
 .preview-caption { font-size: 14px; text-align: center; }
 .preview-line { display: block; line-height: 0; }
 .preview-line > span { display: inline-block; vertical-align: top; padding: .12em .75em; color: #2b2927; background: #f6f4ee; border-radius: .08em; line-height: 1.2; box-shadow: inset 0 0 0 1px rgba(43,41,39,.1); }
 .preview[data-skin='off'] .preview-line > span { padding: 0 .25em; background: #242424; color: white; border-radius: 0; box-shadow: none; }
 .preview.large { height: 190px; }
-.preview.large img { width: 78px; height: 78px; margin-left: 190px; }
 .preview.large .preview-caption { font-size: 18px; }
 .preview-control { display: flex; justify-content: flex-end; align-items: center; gap: 12px; font-size: 12px; color: var(--muted); margin-top: 10px; }
 .preview-control select { padding: 4px 8px; font-size: 12px; }

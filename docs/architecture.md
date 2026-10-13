@@ -23,7 +23,7 @@ YouTube 页面
 
 只保留纸皮肤与 YouTube 原版。纸皮肤 CSS 作为本地字符串打包，仅在选中纸时挂载独立样式节点，不进入常驻的 content.css。切回原版时移除样式节点和入场动画标记，并发出 resize 事件通知播放器重新布局；原版不应用插件的行高、边距、字体、字号或显示方式。
 
-角色是纸皮肤的可选组成部分，由皮肤注册表声明；切换到原版后立即隐藏并停止动画循环。字幕学习功能关闭后，移除交互标记，恢复 YouTube 的指针行为。所有页面文本通过 `textContent` / DOM API 创建，没有使用 `innerHTML`，以适应 YouTube 的 Trusted Types。
+角色与皮肤相互独立，可搭配任一皮肤；角色选「无」时立即隐藏并停止动画循环。字幕学习功能关闭后，移除交互标记，恢复 YouTube 的指针行为。所有页面文本通过 `textContent` / DOM API 创建，没有使用 `innerHTML`，以适应 YouTube 的 Trusted Types。
 
 ## 后台层
 

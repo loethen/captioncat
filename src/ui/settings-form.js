@@ -1,44 +1,47 @@
-import { skins, skinSupportsMascot } from '../features/skins/registry.js';
-import { characters, getCharacter } from '../features/mascot/characters/index.js';
+import { skins } from '../features/skins/registry.js';
+import { characters, getCharacter, NO_CHARACTER } from '../features/mascot/characters/index.js';
 import { actions, supportsAction } from '../features/mascot/actions/index.js';
-import { reactions } from '../features/mascot/reactions/index.js';
-import { SETTINGS_KEY, languages, normalizeSettings, patchSettings } from '../shared/settings.js';
+import { reactions, supportsReaction } from '../features/mascot/reactions/index.js';
+import { SETTINGS_KEY, enabledIds, languages, normalizeSettings, patchSettings } from '../shared/settings.js';
 import { request, watchStorage } from '../shared/messages.js';
 import { element } from '../shared/dom.js';
+import { createMascotPreview } from './mascot-preview.js';
 
 export function status(text, error = false) {
   const node = document.querySelector('#status');
   node.textContent = text; node.classList.toggle('error', error);
 }
 
-const stateNames = { normal: '平常', happy: '开心', love: '喜欢', nervous: '紧张', sleepy: '困倦', ask: '疑问', wow: '惊讶', walk: '散步', cook: '煮饭', carry: '提袋子' };
+// Expressions offered in the preview; other states are steps inside actions.
+const moodNames = { normal: '平常', happy: '开心', love: '喜欢', food: '馋嘴', nervous: '紧张', sleepy: '睡觉', ask: '疑问', wow: '惊讶' };
 
 export async function bindSettingsForm() {
   let settings, pending = 0, queue = Promise.resolve();
   const find = id => document.getElementById(id);
-  for (const [id, options] of [['skin', skins], ['character', characters], ['language', languages]]) {
+  const stage = createMascotPreview(find('preview'));
+  for (const [id, options] of [['skin', skins], ['character', [{ id: NO_CHARACTER, name: '无' }, ...characters]], ['language', languages]]) {
     const select = find(id);
     if (select) select.replaceChildren(...options.map(item => new Option(item.name, item.id)));
   }
   function preview() {
     const character = getCharacter(settings.characterId);
-    const supportsMascot = skinSupportsMascot(settings.skinId);
     const select = find('preview-state');
-    let state = select?.value || 'normal';
-    if (!character.states[state]) state = 'normal';
-    if (select) {
-      select.replaceChildren(...Object.keys(character.states).map(id => new Option(stateNames[id] || id, id)));
-      select.value = state;
+    if (select && character) {
+      const chosen = select.value;
+      const group = (label, options) => { const node = element('optgroup'); node.label = label; node.append(...options); return node; };
+      select.replaceChildren(
+        group('表情', Object.keys(moodNames).filter(id => character.states[id]).map(id => new Option(moodNames[id], `state:${id}`))),
+        group('动作', actions.filter(action => supportsAction(character, action)).map(action => new Option(action.name, `action:${action.id}`))),
+      );
+      if ([...select.options].some(option => option.value === chosen)) select.value = chosen;
     }
-    const image = find('preview-character');
-    image.src = chrome.runtime.getURL(character.states[state].src); image.hidden = !supportsMascot || !settings.mascotEnabled;
-    for (const id of ['mascot-settings', 'mascot-control', 'preview-mascot-control']) {
-      const node = find(id); if (node) node.hidden = !supportsMascot;
+    stage.update(character);
+    stage.select(select?.value || 'state:normal');
+    for (const id of ['mascot-details', 'preview-mascot-control']) {
+      const node = find(id); if (node) node.hidden = !character;
     }
-    const characterControl = find('character-control');
-    if (characterControl) characterControl.hidden = !supportsMascot || characters.length < 2;
     find('preview').dataset.skin = settings.skinId;
-    if (find('character-description')) find('character-description').textContent = character.description;
+    if (find('character-description')) find('character-description').textContent = character?.description || '字幕上不显示角色。';
   }
   function pluginList(id, registry, enabled, compatible, callback) {
     const root = find(id);
@@ -53,7 +56,7 @@ export async function bindSettingsForm() {
   }
   function render() {
     const values = {
-      skin: settings.skinId, character: settings.characterId, mascot: settings.mascotEnabled,
+      skin: settings.skinId, character: settings.characterId,
       'actions-enabled': settings.actionsEnabled, translation: settings.translation.enabled,
       pause: settings.translation.pauseOnHover, vocabulary: settings.vocabulary.enabled,
       language: settings.translation.targetLanguage, delay: settings.translation.delay,
@@ -64,9 +67,10 @@ export async function bindSettingsForm() {
     }
     preview();
     const character = getCharacter(settings.characterId);
-    const toggle = (key, id, enabled) => save({ [key]: enabled ? [...settings[key], id] : settings[key].filter(value => value !== id) });
-    pluginList('action-list', actions, settings.enabledActions, action => supportsAction(character, action), (id, enabled) => toggle('enabledActions', id, enabled));
-    pluginList('reaction-list', reactions, settings.enabledReactions, reaction => !!character.states[reaction.id], (id, enabled) => toggle('enabledReactions', id, enabled));
+    if (!character) return;
+    const toggle = (key, id, enabled) => save({ [key]: enabled ? settings[key].filter(value => value !== id) : [...settings[key], id] });
+    pluginList('action-list', actions, enabledIds(actions, settings.disabledActions), action => supportsAction(character, action), (id, enabled) => toggle('disabledActions', id, enabled));
+    pluginList('reaction-list', reactions, enabledIds(reactions, settings.disabledReactions), reaction => supportsReaction(character, reaction), (id, enabled) => toggle('disabledReactions', id, enabled));
   }
   function save(patch) {
     settings = patchSettings(settings, patch); pending++; render(); status('保存中…');
@@ -82,7 +86,7 @@ export async function bindSettingsForm() {
   }
   const handlers = {
     skin: node => ({ skinId: node.value }), character: node => ({ characterId: node.value }),
-    mascot: node => ({ mascotEnabled: node.checked }), 'actions-enabled': node => ({ actionsEnabled: node.checked }),
+    'actions-enabled': node => ({ actionsEnabled: node.checked }),
     translation: node => ({ translation: { enabled: node.checked } }), pause: node => ({ translation: { pauseOnHover: node.checked } }),
     vocabulary: node => ({ vocabulary: { enabled: node.checked } }), language: node => ({ translation: { targetLanguage: node.value } }),
     delay: node => ({ translation: { delay: node.valueAsNumber } }),

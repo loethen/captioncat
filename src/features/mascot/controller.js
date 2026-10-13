@@ -22,7 +22,10 @@ export function createMascot(env, random = Math.random, config = timing) {
     const fresh = available.filter(action => action.id !== lastKind);
     const choices = fresh.length ? fresh : available;
     if (!choices.length) { nextActionAt = now + config.actionGap[1]; return; }
-    const plugin = choices[Math.floor(random() * choices.length)];
+    begin(choices[Math.floor(random() * choices.length)], info);
+  }
+
+  function begin(plugin, info) {
     lastKind = plugin.id;
     activity = { id: plugin.id, index: 0, started: null, steps: plugin.buildSteps({ random, position, info }) };
   }
@@ -36,11 +39,13 @@ export function createMascot(env, random = Math.random, config = timing) {
       if (info.span < info.fs * 2 || Math.abs(distance) < 2) { env.pose(null); next(); return; }
       const direction = distance > 0 ? 1 : -1;
       env.face(direction); env.pose(step.pose || 'walk');
-      position += direction * Math.min(Math.abs(distance), config.walkSpeed * info.fs * dt) / info.span;
+      position += direction * Math.min(Math.abs(distance), config.walkSpeed * (step.speed || 1) * info.fs * dt) / info.span;
     } else if (step.type === 'wait' || step.type === 'pose') {
       if (activity.started === null) {
         activity.started = now; env.pose(step.pose || null); env.override(step.mood || null);
         if ('prop' in step) env.prop(step.prop);
+        if (step.fx) env.propFx(step.fx);
+        if (step.lunge) env.lunge();
       }
       if (now - activity.started >= step.ms) next();
     } else if (step.type === 'throw') {
@@ -122,6 +127,13 @@ export function createMascot(env, random = Math.random, config = timing) {
 
   return {
     tick, reset,
+    // Starts the given action immediately (settings preview); false when the mascot is not standing on a caption.
+    play(plugin) {
+      const info = env.info();
+      if (state !== 'perched' || busy || !info) return false;
+      if (activity) endActivity(lastNow || 0);
+      begin(plugin, info); return true;
+    },
     nod() { if (state === 'perched' && !busy && !activity) env.nod(); },
     setMood(value) {
       mood = value; env.setMood(value);

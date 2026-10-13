@@ -2,10 +2,6 @@ html[data-ytc-interactive] .ytp-caption-window-container,
 html[data-ytc-interactive] .caption-window,
 html[data-ytc-interactive] .ytp-caption-segment { pointer-events: auto !important; }
 html[data-ytc-interactive] .ytp-caption-segment { cursor: pointer !important; }
-.ytc-mascot { position: absolute; left: 0; top: 0; z-index: 58; pointer-events: none; display: none; will-change: transform; }
-.ytc-mascot-flip { position: relative; width: 100%; height: 100%; }
-.ytc-mascot-art { width: 100%; height: 100%; object-fit: contain; transform-origin: 50% 100%; }
-.ytc-mascot-prop { position: absolute; display: none; object-fit: contain; }
 .ytc-translation, .ytc-vocabulary, .ytc-toast {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
   font-weight: 400; letter-spacing: normal; text-shadow: none; box-sizing: border-box;

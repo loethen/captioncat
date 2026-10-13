@@ -1,15 +1,13 @@
 # 角色与动作插拔接口
 
-插拔在源码注册表层完成：添加 / 移除本地模块后重新构建扩展。目前只保留 YouTube 原版和「饭团 · 纸」，饭团只随纸皮肤显示。设置页可启停动作和表情，注册多个角色时才显示角色选择。运行时不会从网络下载或执行插件代码。
-
-外观的角色能力在 `src/features/skins/registry.js` 中通过 `supportsMascot: true` 声明；未声明的外观默认没有角色，预览和播放器使用同一规则。
+插拔在源码注册表层完成：添加 / 移除本地模块后重新构建扩展。皮肤只保留 YouTube 原版和「纸」；角色（饭团、二黑）与皮肤相互独立，可搭配任一皮肤，也可选「无」。设置页可选择角色、启停动作和表情。运行时不会从网络下载或执行插件代码。
 
 ## 新增或替换角色
 
 1. 把素材放到 `extension/assets/characters/<角色 id>/`。
 2. 在 `src/features/mascot/characters/<角色 id>/index.js` 导出角色对象。
 3. 在 `src/features/mascot/characters/index.js` 导入并加入 `characters` 数组。
-4. 对修改的 JavaScript 执行 `node --check`，再运行 `npm run build` 后重新加载扩展。新增角色会在带角色的外观中出现在设置页。
+4. 对修改的 JavaScript 执行 `node --check`，再运行 `npm run build` 后重新加载扩展。新增角色会出现在设置页的角色选择里。
 
 ```js
 export const cat = {
@@ -63,7 +61,7 @@ export const greet = {
 };
 ```
 
-在 `actions/index.js` 导入并加入 `actions` 数组。删除动作时从数组移除即可，相关设置会自动过滤。新增动作会出现在设置页；已有用户需勾选启用，首次安装默认启用所有注册动作。
+在 `actions/index.js` 导入并加入 `actions` 数组。删除动作时从数组移除即可，相关设置会自动过滤。新增动作会出现在设置页并默认启用：设置只保存用户关掉的动作和表情（`disabledActions` / `disabledReactions`）。弹窗和设置页的预览区用同一套控制器和渲染器，选中表情或动作即在示例字幕上播放，不影响页面字幕。
 
 动作匹配会同时检查：用户是否启用、角色是否有 `requiredStates` 和 `requiredProps`、字幕可走区域是否达到 `minSpanEm`。替换后的角色缺少所需姿势或道具时，对应动作会自动停用。
 
@@ -71,8 +69,8 @@ export const greet = {
 
 | `type` | 字段 | 行为 |
 | --- | --- | --- |
-| `walk` | `to`（0–1）、可选 `pose` | 在字幕上沿移动；默认使用 `walk` 姿势 |
-| `pose` | `ms`、可选 `pose` / `mood` / `prop` | 持续指定姿势、表情和道具 |
+| `walk` | `to`（0–1）、可选 `pose` / `speed` | 在字幕上沿移动；默认使用 `walk` 姿势，`speed` 是速度倍数 |
+| `pose` | `ms`、可选 `pose` / `mood` / `prop` / `fx` / `lunge` | 持续指定姿势、表情和道具；`fx`（`enter` / `wave` / `jitter` / `yank`）播放道具动效，`lunge: true` 让角色往前蹿一下 |
 | `wait` | `ms`、可选 `pose` | 停留，默认回到普通姿势 |
 | `throw` | 可选 `ms`（默认 800） | 播放道具抛出效果，结束后移除道具 |
 
@@ -84,7 +82,7 @@ export const greet = {
 
 在 `reactions/index.js` 的 `reactions` 数组中添加 `{ id, name, test }`。按数组顺序匹配，首先命中的规则生效；`test()` 收到小写字幕文本，`id` 对应角色 `states` 中的姿势名。
 
-未启用的规则和角色没有素材的规则会跳过，最后回到 `normal`。设置页会自动列出注册的规则。饭团「遇到食物就紧张」的规则可在这里更改或移除。
+未启用的规则和角色没有素材的规则会跳过，最后回到 `normal`。角色可用可选的 `reactions: [id, …]` 进一步限定自己响应的规则（例如二黑有 `nervous` 素材，但遇到食物只流口水）。设置页会自动列出注册的规则。饭团「遇到食物就紧张」的规则可在这里更改或移除。
 
 ## 自定义渲染器
 
@@ -94,7 +92,7 @@ export const greet = {
 mount(player), size(px), place({x, y}), show(), hide(), fade()
 move(from, to, kind, done), pop(), nod(), land()
 setMood(name), override(nameOrNull), pose(nameOrNull), sleep(boolean)
-face(direction), prop(nameOrNull), throwProp(), dispose()
+face(direction), prop(nameOrNull), propFx(name), throwProp(), lunge(), dispose()
 ```
 
 `move()` 完成时调用 `done()`；替换角色或销毁时，`dispose()` 必须取消动画并移除节点。`reduced()` 为真时跳过动态效果。自定义渲染器返回的方法需要可独立调用，避免依赖调用时的 `this`，因为控制器通过环境适配器调用它们。

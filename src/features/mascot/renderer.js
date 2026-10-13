@@ -1,3 +1,4 @@
+import './styles.css';
 import { element } from '../../shared/dom.js';
 
 // Default renderer for packaged SVG / PNG / animated WebP / GIF character packs.
@@ -55,6 +56,7 @@ export function createAssetRenderer({ character, assetURL, reduced }) {
     pop() { play(inner, [{ transform: 'translateY(70%) scale(.55)', opacity: 0 }, { transform: 'translateY(-8%) scale(1.06)', opacity: 1, offset: 0.6 }, { transform: 'none', opacity: 1 }], { duration: 500, easing: 'ease-out' }); },
     nod() { play(inner, [{ transform: 'none' }, { transform: 'translateY(6%) scale(1.06,.9)', offset: 0.3 }, { transform: 'translateY(-14%) scale(.96,1.06)', offset: 0.6 }, { transform: 'none' }], { duration: 450 }); },
     land() { play(inner, [{ transform: 'scale(1.14,.82)' }, { transform: 'scale(.97,1.05)', offset: 0.55 }, { transform: 'none' }], { duration: 300 }); },
+    lunge() { play(inner, [{ transform: 'none' }, { transform: 'translate(18%,-28%)', offset: 0.4 }, { transform: 'translate(10%,0)', offset: 0.75 }, { transform: 'none' }], { duration: 450, easing: 'ease-out' }); },
     setMood(value) { if (mood !== value) { mood = value; paint(); } },
     override(value) { if (override !== value) { override = value; paint(); } },
     pose(value) { if (pose !== value) { pose = value; paint(); } },
@@ -69,6 +71,14 @@ export function createAssetRenderer({ character, assetURL, reduced }) {
     },
     throwProp() {
       if (canAnimate()) propAnimation = prop.animate([{ transform: 'translate(0,0) rotate(0)', opacity: 1 }, { transform: 'translate(120%,-130%) rotate(220deg)', opacity: 1, offset: 0.4 }, { transform: 'translate(250%,200%) rotate(540deg)', opacity: 0 }], { duration: 800, easing: 'ease-in-out', fill: 'forwards' });
+    },
+    propFx(name) {
+      if (!canAnimate()) return;
+      cancel(propAnimation);
+      if (name === 'enter') propAnimation = prop.animate([{ transform: 'translateX(120%)' }, { transform: 'none' }], { duration: 600, easing: 'ease-out', fill: 'forwards' });
+      else if (name === 'wave') propAnimation = prop.animate([{ transform: 'translateY(-45%) rotate(-3deg)' }, { transform: 'translateY(35%) rotate(3deg)' }], { duration: 520, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
+      else if (name === 'jitter') propAnimation = prop.animate([{ transform: 'none' }, { transform: 'translate(130%,-40%)' }, { transform: 'translate(-70%,0)' }, { transform: 'translate(60%,-90%)' }, { transform: 'none' }], { duration: 640, iterations: Infinity, easing: 'ease-in-out' });
+      else if (name === 'yank') propAnimation = prop.animate([{ transform: 'none', opacity: 1 }, { transform: 'translate(130%,-130%)', opacity: 0 }], { duration: 300, easing: 'ease-in', fill: 'forwards' });
     },
     dispose() { this.hide(); outer.getAnimations({ subtree: true }).forEach(animation => animation.cancel()); outer.remove(); },
   };
