@@ -7,7 +7,7 @@ export const timing = {
 export function createMascot(env, random = Math.random, config = timing) {
   let state = 'hidden', current = null, destination = null, ground = null, position = 1;
   let busy = false, generation = 0, missingSince = null, restSince = 0, sleeping = false, worried = false;
-  let activity = null, nextActionAt = 0, lastKind = '', lastNow = null, mood = 'normal';
+  let activity = null, nextActionAt = 0, lastKind = '', lastNow = null, mood = 'normal', facing = 1;
   let candidate = null, candidateSince = 0, stable = null;
   const between = (lo, hi) => lo + random() * (hi - lo);
 
@@ -27,7 +27,7 @@ export function createMascot(env, random = Math.random, config = timing) {
 
   function begin(plugin, info) {
     lastKind = plugin.id;
-    activity = { id: plugin.id, index: 0, started: null, steps: plugin.buildSteps({ random, position, info }) };
+    activity = { id: plugin.id, index: 0, started: null, steps: plugin.buildSteps({ random, position, facing, info }) };
   }
 
   function stepActivity(info, now, dt) {
@@ -35,17 +35,19 @@ export function createMascot(env, random = Math.random, config = timing) {
     if (!step) { endActivity(now); return; }
     const next = () => { activity.index++; activity.started = null; };
     if (step.type === 'walk') {
+      if (activity.started === null) { activity.started = now; if ('prop' in step) env.prop(step.prop); }
       const distance = (Math.max(0, Math.min(1, step.to)) - position) * info.span;
       if (info.span < info.fs * 2 || Math.abs(distance) < 2) { env.pose(null); next(); return; }
       const direction = distance > 0 ? 1 : -1;
-      env.face(direction); env.pose(step.pose || 'walk');
+      facing = direction; env.face(direction); env.pose(step.pose || 'walk');
       position += direction * Math.min(Math.abs(distance), config.walkSpeed * (step.speed || 1) * info.fs * dt) / info.span;
     } else if (step.type === 'wait' || step.type === 'pose') {
       if (activity.started === null) {
         activity.started = now; env.pose(step.pose || null); env.override(step.mood || null);
+        if (step.turn) { facing = -facing; env.face(facing); }
         if ('prop' in step) env.prop(step.prop);
         if (step.fx) env.propFx(step.fx);
-        if (step.lunge) env.lunge();
+        if (step.body) env.bodyFx(step.body);
       }
       if (now - activity.started >= step.ms) next();
     } else if (step.type === 'throw') {

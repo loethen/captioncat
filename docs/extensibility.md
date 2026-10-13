@@ -69,14 +69,14 @@ export const greet = {
 
 | `type` | 字段 | 行为 |
 | --- | --- | --- |
-| `walk` | `to`（0–1）、可选 `pose` / `speed` | 在字幕上沿移动；默认使用 `walk` 姿势，`speed` 是速度倍数 |
-| `pose` | `ms`、可选 `pose` / `mood` / `prop` / `fx` / `lunge` | 持续指定姿势、表情和道具；`fx`（`enter` / `wave` / `jitter` / `yank`）播放道具动效，`lunge: true` 让角色往前蹿一下 |
+| `walk` | `to`（0–1）、可选 `pose` / `speed` / `prop` | 在字幕上沿移动；默认使用 `walk` 姿势，`speed` 是速度倍数 |
+| `pose` | `ms`、可选 `pose` / `mood` / `prop` / `fx` / `body` / `turn` | 持续指定姿势、表情和道具；`turn: true` 让角色原地掉头；`fx`（`enter` / `sneak` / `appear` / `wave` / `jitter` / `nudge1` / `nudge2` / `tip` / `vanish` / `yank`）播放道具动效，`body`（`lunge` / `jump` / `recoil` / `poke` / `dive`·`bail` / `slip`·`cling`·`climb` / `lower`·`raise`）播放角色的全身动效；其中 `dive`、`slip`、`cling`、`lower` 会让角色停在偏离原位的地方，直到姿势被清除或播放成对的返回动效 |
 | `wait` | `ms`、可选 `pose` | 停留，默认回到普通姿势 |
 | `throw` | 可选 `ms`（默认 800） | 播放道具抛出效果，结束后移除道具 |
 
 `pose: null` / `prop: null` 可显式清除姿势或道具。没有 `prop` 字段时保留当前道具。所有非普通字幕表情会中断日常动作，清除道具；字幕短暂消失时暂停动作，较久消失后取消。
 
-`buildSteps()` 接收可注入的随机函数、当前上沿位置和字幕几何信息，返回步骤数组。用已有步骤组合新动作不需要修改 `controller.js`。新增全新的步骤类型时，需要在执行器中增加对应处理。默认只检查语法，功能由用户手动验证。
+`buildSteps()` 接收可注入的随机函数、当前上沿位置、朝向（`facing`，1 为右）和字幕几何信息，返回步骤数组。用已有步骤组合新动作不需要修改 `controller.js`。新增全新的步骤类型时，需要在执行器中增加对应处理。默认只检查语法，功能由用户手动验证。
 
 ## 字幕表情规则
 
@@ -92,7 +92,7 @@ export const greet = {
 mount(player), size(px), place({x, y}), show(), hide(), fade()
 move(from, to, kind, done), pop(), nod(), land()
 setMood(name), override(nameOrNull), pose(nameOrNull), sleep(boolean)
-face(direction), prop(nameOrNull), propFx(name), throwProp(), lunge(), dispose()
+face(direction), prop(nameOrNull), propFx(name), bodyFx(name), throwProp(), dispose()
 ```
 
 `move()` 完成时调用 `done()`；替换角色或销毁时，`dispose()` 必须取消动画并移除节点。`reduced()` 为真时跳过动态效果。自定义渲染器返回的方法需要可独立调用，避免依赖调用时的 `this`，因为控制器通过环境适配器调用它们。

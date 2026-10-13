@@ -7,7 +7,7 @@ export const laser = {
       { type: 'pose', pose: 'watch', prop: 'dot', fx: 'enter', ms: 500 },     // 红点出现，盯住
       { type: 'walk', to, speed: 2 },                                         // 追
       { type: 'pose', pose: 'crouch', fx: 'jitter', ms: 800 },                // 红点原地乱晃，蓄力
-      { type: 'pose', pose: 'pounce', fx: 'yank', lunge: true, ms: 450 },     // 扑！红点溜了
+      { type: 'pose', pose: 'pounce', fx: 'yank', body: 'lunge', ms: 450 },     // 扑！红点溜了
       { type: 'pose', pose: 'miss', prop: null, ms: 700 + random() * 500 },   // 爪子底下什么都没有
     ];
     return [...chase(far), ...chase(1 - far + (far ? 0.15 : -0.15) * random()), { type: 'pose', pose: null, ms: 100 }];
