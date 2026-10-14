@@ -33,8 +33,8 @@ export function defaultSettings() {
     uiLanguage: resolveLocale(), skinId: 'wa-light', characterId: characters[0].id, actionsEnabled: true,
     // Stored as opt-outs so newly registered actions start enabled.
     disabledActions: [],
-    translation: { enabled: true, targetLanguage: defaultTargetLanguage(), delay: 120, pauseOnHover: true },
-    vocabulary: { enabled: true },
+    translation: { enabled: false, targetLanguage: defaultTargetLanguage(), delay: 120, pauseOnHover: true },
+    vocabulary: { enabled: false },
   };
 }
 
@@ -52,11 +52,11 @@ export function normalizeSettings(input = {}) {
     actionsEnabled: bool(input?.actionsEnabled, true),
     disabledActions: ids(input?.disabledActions, actions),
     translation: {
-      enabled: bool(translation.enabled, true), pauseOnHover: bool(translation.pauseOnHover, true),
+      enabled: bool(translation.enabled, false), pauseOnHover: bool(translation.pauseOnHover, true),
       targetLanguage: languages.some(language => language.id === translation.targetLanguage) ? translation.targetLanguage : defaults.translation.targetLanguage,
       delay: Number.isFinite(translation.delay) ? Math.max(0, Math.min(2000, Math.round(translation.delay))) : defaults.translation.delay,
     },
-    vocabulary: { enabled: bool(input?.vocabulary?.enabled, true) },
+    vocabulary: { enabled: bool(input?.vocabulary?.enabled, false) },
   };
 }
 

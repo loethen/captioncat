@@ -19,11 +19,11 @@ export default {
   'status.saving': 'Saving…',
   'status.saved': 'Saved',
 
-  'popup.openOptions': 'Settings & vocabulary',
-  'popup.noVideo': 'Open a YouTube video and turn on captions to get started.',
-  'popup.collected.one': '{count} word collected from this video',
-  'popup.collected.other': '{count} words collected from this video',
-  'popup.fallback': 'Settings apply to YouTube videos automatically.',
+  'popup.openOptions': 'Settings',
+  // One sentence in three parts, so the middle part can be highlighted in any word order.
+  'popup.hintStart': 'Open a YouTube video and ',
+  'popup.hintKey': 'turn on captions',
+  'popup.hintEnd': ' to get started.',
 
   'skins.heading': 'Caption appearance',
   'skins.label': 'Caption skin',

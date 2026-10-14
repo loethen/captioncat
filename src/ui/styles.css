@@ -83,7 +83,13 @@ h2 { font-size: 16px; font-weight: 700; color: var(--foreground); margin: 26px 0
 .popup .field, .popup .toggle { min-height: 40px; padding: 6px 0; }
 .popup .field select { padding: 5px 8px; }
 .popup .hint { margin: 12px 2px 10px; font-size: 13px; }
-.popup .footnote { margin-top: 8px; }
+/* The step people miss: the extension never turns captions on. The icon mirrors YouTube's CC button. */
+.hint-key { color: var(--accent-text); font-weight: 600; white-space: nowrap; }
+.hint-key svg { width: 1.3em; height: 1.3em; margin-left: .2em; vertical-align: -.3em; }
+.popup-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
+.popup-footer .footnote { margin: 0; text-align: left; }
+.icon-button { display: inline-grid; place-items: center; flex: none; width: 32px; height: 32px; padding: 0; color: var(--muted); background: transparent; }
+.icon-button:hover:not(:disabled) { color: var(--foreground); }
 .popup .status:empty { display: none; }
 .popup .preview { height: 112px; }
 .popup .field, .popup .toggle { min-height: 38px; }

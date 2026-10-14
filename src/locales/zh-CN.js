@@ -17,10 +17,10 @@ export default {
   'status.saving': '保存中…',
   'status.saved': '已自动保存',
 
-  'popup.openOptions': '设置与单词本',
-  'popup.noVideo': '打开 YouTube 视频并开启字幕，即可使用。',
-  'popup.collected.other': '当前视频已收集 {count} 个单词',
-  'popup.fallback': '设置会自动应用到 YouTube 视频。',
+  'popup.openOptions': '设置',
+  'popup.hintStart': '打开 YouTube 视频并',
+  'popup.hintKey': '开启字幕',
+  'popup.hintEnd': '，即可使用。',
 
   'skins.heading': '字幕外观',
   'skins.label': '字幕皮肤',
