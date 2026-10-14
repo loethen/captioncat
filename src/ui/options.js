@@ -6,6 +6,7 @@ import { element } from '../shared/dom.js';
 import { reviewPrompt } from '../shared/text.js';
 import { copyText } from '../shared/clipboard.js';
 import { plural, t } from '../shared/i18n.js';
+import { catMood } from './brand-cat.js';
 
 let all = {}, revision = 0;
 bindSettingsForm({ onLocale: renderWords });
@@ -41,7 +42,7 @@ function renderWords() {
     const controls = element('div', 'video-actions');
     const copy = element('button', '', t('vocabulary.copyPrompt'));
     copy.addEventListener('click', async () => {
-      try { await copyText(reviewPrompt(video.words, video.url)); status(t('vocabulary.promptCopied')); } catch (error) { status(error.message, true); }
+      try { await copyText(reviewPrompt(video.words, video.url)); status(t('vocabulary.promptCopied')); catMood('happy'); } catch (error) { status(error.message, true); }
     });
     const clear = element('button', '', t('vocabulary.clearVideo'));
     clear.addEventListener('click', async () => {
@@ -49,18 +50,22 @@ function renderWords() {
     });
     controls.append(copy, clear); entry.append(controls); container.append(entry);
   }
-  if (!container.children.length) container.append(element('p', 'empty', search ? t('vocabulary.noMatch') : t('vocabulary.empty')));
+  if (!container.children.length) {
+    const empty = element('div', 'empty'), cat = element('img', 'empty-cat');
+    cat.src = `assets/characters/erhei/${search ? 'ask' : 'sleepy'}.svg`; cat.alt = '';
+    empty.append(cat, element('p', '', search ? t('vocabulary.noMatch') : t('vocabulary.empty'))); container.append(empty);
+  }
 }
 document.querySelector('#word-search').addEventListener('input', renderWords);
 document.querySelector('#export-words').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), videos: Object.values(all) }, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob), link = element('a');
   link.href = url; link.download = 'captioncat-vocabulary.json'; document.body.append(link); link.click(); link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000); status(t('vocabulary.exported'));
+  setTimeout(() => URL.revokeObjectURL(url), 1000); status(t('vocabulary.exported')); catMood('happy');
 });
 document.querySelector('#clear-cache').addEventListener('click', async event => {
   const button = event.currentTarget; button.disabled = true;
-  try { await request('translation:clear'); status(t('translation.cacheCleared')); } catch (error) { status(error.message, true); }
+  try { await request('translation:clear'); status(t('translation.cacheCleared')); catMood('happy'); } catch (error) { status(error.message, true); }
   finally { button.disabled = false; }
 });
 watchStorage(WORDS_KEY, value => { revision++; all = value || {}; renderWords(); });

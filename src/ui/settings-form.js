@@ -8,10 +8,12 @@ import { element } from '../shared/dom.js';
 import { label, locales, t } from '../shared/i18n.js';
 import { applyLocale, initLocale } from './localize.js';
 import { createMascotPreview } from './mascot-preview.js';
+import { bindBrandCat, catMood } from './brand-cat.js';
 
 export function status(text, error = false) {
   const node = document.querySelector('#status');
   node.textContent = text; node.classList.toggle('error', error);
+  if (error) catMood('wow');
 }
 
 // Expressions offered in the preview; other states are steps inside actions.
@@ -19,7 +21,7 @@ const previewMoods = ['normal', 'happy', 'love', 'food', 'nervous', 'sleepy', 'a
 
 // `onLocale` runs after the interface language changes, for text the caller renders itself.
 export async function bindSettingsForm({ onLocale } = {}) {
-  initLocale();
+  initLocale(); bindBrandCat();
   let settings, loaded = false, pending = 0, queue = Promise.resolve();
   const find = id => document.getElementById(id);
   const stage = createMascotPreview(find('preview'));
@@ -91,7 +93,7 @@ export async function bindSettingsForm({ onLocale } = {}) {
     queue = queue.then(async () => {
       try {
         const result = await request('settings:patch', { patch });
-        pending--; if (!pending) { settings = result; render(); status(t('status.saved')); }
+        pending--; if (!pending) { settings = result; render(); status(t('status.saved')); catMood('happy'); }
       } catch (error) {
         pending--; status(error.message, true);
         if (!pending) { try { settings = await request('settings:get'); render(); } catch {} }

@@ -54,7 +54,9 @@ function sprite(pose, f) {
   const tail = pts => pts.forEach(p => R(p[0], p[1], 2, 2, K));
   const ts = [0, 1, 1, 0][f % 4], sw = [-1, 0, 1, 0][f % 4];
 
-  if (pose === 'loaf') {                       // loaf (asleep)
+  if (pose === 'portrait') {                   // the head alone, for the extension icon
+    head(3, 8, 'n', false);
+  } else if (pose === 'loaf') {                // loaf (asleep)
     tail([[3, 21], [2, 19], [2, 17]]); body(5, 17, 26, 8); R(5, 24, 26, 1, K);
     head(26, 13, 'down', false); R(30, 26, 6, 2, WT);
     G('z', 44, 6 - ((f % 8) >> 2), BL);
@@ -136,6 +138,11 @@ function paths(grid) {
     }
   });
   return [...byColor].map(([col, d]) => `<path fill='${col}' d='${d}'/>`).join('');
+}
+
+// Erhei's head on its own, as a 24×24 grid of colours (null is transparent), outline included.
+export function portraitGrid() {
+  return sprite('portrait', 0).slice(0, 24).map(row => row.slice(0, 24));
 }
 
 export function catSVG(state) {

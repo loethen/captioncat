@@ -53,6 +53,8 @@ To remove a character, take it out of the registry and delete its artwork and mo
 
 Erhei is drawn in code. `src/features/mascot/characters/erhei/artwork.js` paints each pose frame by frame, and `node scripts/generate-assets.mjs` bakes the poses and props into frame-switching SVGs under `extension/assets/characters/erhei/`. Edit `artwork.js` and regenerate; do not edit the SVGs by hand.
 
+The popup and the settings page also use these SVGs directly as the brand cat: the one beside the title that reacts to saves and errors (`src/ui/brand-cat.js`), the sleeping cat in an empty vocabulary, and the cat strolling along the settings page footer. They are part of the CaptionCat brand and stay visible when the caption character is set to None.
+
 ## Adding or removing an everyday action
 
 One module per action, for example `src/features/mascot/actions/greet.js`:

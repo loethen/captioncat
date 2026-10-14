@@ -10,9 +10,12 @@ npm run dev                         # watch src/; reload the extension and refre
 npm run build                       # build dist/
 node scripts/package.mjs            # zip dist/ into release/
 node scripts/generate-assets.mjs    # regenerate the Erhei SVGs from the pixel-art code
+node scripts/generate-icons.mjs     # regenerate the extension icons
 ```
 
 Run `npm run build` again after changing anything under `extension/` (manifest, HTML, assets, `_locales`). Regenerating assets is only needed after editing `artwork.js`.
+
+The extension icon is Erhei's head on a transparent background, taken from the character artwork (`portraitGrid()` in `artwork.js`), so it changes with Erhei's face. `scripts/generate-icons.mjs` scales the 24×24 grid exactly for 48 and 128 px and area-averages it for 16 and 32 px. Regenerate after changing the head; do not edit the PNGs by hand.
 
 ## Verification scope
 
