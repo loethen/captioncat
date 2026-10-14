@@ -5,7 +5,7 @@ import { request } from '../../shared/messages.js';
 export function createTranslationFeature(source) {
   const tip = element('div', 'ytc-translation');
   tip.dataset.ytcOverlay = ''; tip.setAttribute('role', 'status');
-  let settings, hovered = null, displayedText = '', timer, requestId = 0, pausedVideo = null, pausedUrl = '';
+  let settings, hovered = null, displayedText = '', timer, requestId = 0, pausedVideo = null, pausedUrl = '', pointerX = -1, pointerY = -1;
   const mount = source.onMount(player => { hide(false); if (player) player.append(tip); else tip.remove(); });
 
   function place() {
@@ -46,41 +46,52 @@ export function createTranslationFeature(source) {
     clearTimeout(timer); requestId++; tip.style.display = 'none';
     timer = setTimeout(show, settings.delay);
   }
-  function mouseover(event) {
-    if (!settings?.enabled) return;
-    const win = captionWindow(event.target);
-    if (!win || !source.player?.contains(win) || hovered === win) return;
+  // The caption window is larger than its text, so hit-test the visible segments.
+  function overText(win) {
+    for (const segment of win.querySelectorAll('.ytp-caption-segment')) {
+      for (const rect of segment.getClientRects()) {
+        if (pointerX >= rect.left - 2 && pointerX <= rect.right + 2 && pointerY >= rect.top - 2 && pointerY <= rect.bottom + 2) return true;
+      }
+    }
+    return false;
+  }
+  function sync(target) {
+    const win = settings?.enabled ? captionWindow(target) : null;
+    const over = win && source.player?.contains(win) && overText(win) ? win : null;
+    if (over === hovered) return;
     if (hovered) hide();
-    hovered = win;
+    if (!over) return;
+    hovered = over;
     if (settings.pauseOnHover) {
       const video = source.player.querySelector('video');
       if (video && !video.paused && !video.ended) { pausedVideo = video; pausedUrl = location.href; video.pause(); }
     }
     schedule();
   }
-  function mouseout(event) {
-    if (!hovered || hovered.contains(event.relatedTarget instanceof Node ? event.relatedTarget : null)) return;
-    if (captionWindow(event.target) === hovered) hide();
-  }
+  function mousemove(event) { pointerX = event.clientX; pointerY = event.clientY; sync(event.target); }
+  function mouseleave() { pointerX = pointerY = -1; if (hovered) hide(); }
   // Explicit player interaction transfers playback ownership back to the user.
   function playbackIntent(event) {
     if (pausedVideo && (event.type === 'keydown' && ['Space', 'KeyK', 'MediaPlayPause'].includes(event.code) || event.type === 'pointerdown' && source.player?.contains(event.target) && !captionWindow(event.target))) pausedVideo = null;
   }
   const unsubscribe = source.subscribe(() => {
     if (!hovered) return;
-    if (!hovered.isConnected || !source.player?.contains(hovered)) return hide();
+    // Captions can move or be replaced under a still pointer without any mouse event.
+    const previous = hovered;
+    sync(document.elementFromPoint(pointerX, pointerY));
+    if (hovered !== previous) return;
     const text = captionText(hovered);
     if (text !== displayedText) { displayedText = text; schedule(); }
   });
   const resize = () => place();
-  document.addEventListener('mouseover', mouseover, true); document.addEventListener('mouseout', mouseout, true);
+  document.addEventListener('mousemove', mousemove, true); document.documentElement.addEventListener('mouseleave', mouseleave);
   window.addEventListener('pointerdown', playbackIntent, true); window.addEventListener('keydown', playbackIntent, true);
   window.addEventListener('resize', resize); document.addEventListener('fullscreenchange', resize);
   return {
     update(value) { if (JSON.stringify(settings) !== JSON.stringify(value.translation)) hide(); settings = value.translation; },
     dispose() {
       hide(); mount(); unsubscribe(); tip.remove();
-      document.removeEventListener('mouseover', mouseover, true); document.removeEventListener('mouseout', mouseout, true);
+      document.removeEventListener('mousemove', mousemove, true); document.documentElement.removeEventListener('mouseleave', mouseleave);
       window.removeEventListener('pointerdown', playbackIntent, true); window.removeEventListener('keydown', playbackIntent, true);
       window.removeEventListener('resize', resize); document.removeEventListener('fullscreenchange', resize);
     },

@@ -1,5 +1,3 @@
-html[data-ytc-interactive] .ytp-caption-window-container,
-html[data-ytc-interactive] .caption-window,
 html[data-ytc-interactive] .ytp-caption-segment { pointer-events: auto !important; }
 html[data-ytc-interactive] .ytp-caption-segment { cursor: pointer !important; }
 .ytc-translation, .ytc-vocabulary, .ytc-toast {

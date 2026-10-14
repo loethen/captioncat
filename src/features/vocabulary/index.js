@@ -63,7 +63,10 @@ export function createVocabularyFeature(source, notify) {
   pill.addEventListener('click', () => { pinned = !pinned; setOpen(pinned); });
   root.addEventListener('keydown', event => { if (event.key === 'Escape') { pinned = false; escapeClosing = true; pill.focus(); setOpen(false); escapeClosing = false; } });
 
-  function intercept(event) {
+  // Leave pointer/mouse down and up to the player so captions stay draggable.
+  let downX = 0, downY = 0;
+  function pointerdown(event) { downX = event.clientX; downY = event.clientY; }
+  function dblclick(event) {
     if (!settings?.vocabulary.enabled || !context || root.contains(event.target)) return;
     const win = captionWindow(event.target);
     if (win && source.player?.contains(win)) event.stopImmediatePropagation();
@@ -73,6 +76,7 @@ export function createVocabularyFeature(source, notify) {
     const win = captionWindow(event.target);
     if (!win || !source.player?.contains(win)) return;
     event.stopImmediatePropagation(); event.preventDefault();
+    if (Math.hypot(event.clientX - downX, event.clientY - downY) > 4) return;
     const word = getWordAtPoint(event.clientX, event.clientY, win);
     if (!word) return;
     const video = videoContext(location.href, document.title);
@@ -84,8 +88,7 @@ export function createVocabularyFeature(source, notify) {
       flashTimer = setTimeout(() => { root.classList.remove('ytc-flash'); render(); }, 1500);
     } catch (error) { notify(error.message); }
   }
-  const intercepted = ['pointerdown', 'pointerup', 'mousedown', 'mouseup', 'dblclick'];
-  intercepted.forEach(type => window.addEventListener(type, intercept, true));
+  window.addEventListener('pointerdown', pointerdown, true); window.addEventListener('dblclick', dblclick, true);
   window.addEventListener('click', click, true);
   copy.addEventListener('click', async () => {
     if (!current()?.words.length) return;
@@ -97,6 +100,6 @@ export function createVocabularyFeature(source, notify) {
   });
   return {
     update(value) { settings = value; root.style.display = value.vocabulary.enabled && context ? '' : 'none'; },
-    dispose() { clearTimeout(closeTimer); clearTimeout(flashTimer); unwatch(); unmount(); root.remove(); intercepted.forEach(type => window.removeEventListener(type, intercept, true)); window.removeEventListener('click', click, true); },
+    dispose() { clearTimeout(closeTimer); clearTimeout(flashTimer); unwatch(); unmount(); root.remove(); window.removeEventListener('pointerdown', pointerdown, true); window.removeEventListener('dblclick', dblclick, true); window.removeEventListener('click', click, true); },
   };
 }
