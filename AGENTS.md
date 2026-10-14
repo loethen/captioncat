@@ -1,16 +1,17 @@
-# 项目协作规则
+# Agent guide
 
-## 当前产品范围
+This file is a routing table. The rules live in the documents below; read the one that matches the task before starting.
 
-- 皮肤只保留「YouTube 原版」和「纸」，优先打磨纸皮肤；未经用户明确要求，不新增皮肤或角色。
-- 皮肤和角色相互独立：角色（目前只有二黑）可搭配任一皮肤，也可以选「无」不显示角色。
-- 纸皮肤的每行字幕独立画纸框，行与行之间不添加 gap；使用紧凑的上下内边距、小圆角和轻内描边，不合并成整体底板，不使用叠加接缝的外扩阴影。
-- 原版字幕不应用插件的排版样式，包括行高、字号、字体、内边距和外边距；切回原版时移除纸皮肤样式与动画标记。
+| Before you… | Read |
+| --- | --- |
+| change any code, build, package, verify or commit | [docs/development.md](docs/development.md) |
+| add or change any text a user can see | [docs/i18n.md](docs/i18n.md) |
+| touch the paper skin or the switch back to YouTube's own captions | [docs/skins.md](docs/skins.md) |
+| add or change a character, action, expression or its artwork | [docs/mascot.md](docs/mascot.md) |
+| change caption tracking, hover translation, word collection or in-player overlays | [docs/captions.md](docs/captions.md) |
+| change storage, messaging, permissions or the manifest | [docs/architecture.md](docs/architecture.md) |
 
-## 测试范围
+Two rules apply to every task, so they are repeated here; the details are in the documents above.
 
-- 默认只检查修改代码的语法问题，采用最小必要检查，节省时间和 token。
-- UI、视觉布局和交互由用户自行测试，不自动启动浏览器、截图或运行交互测试。
-- 不自动运行单元测试、集成测试、端到端测试或其他功能验证；不为了验证改动新增测试。
-- 只有用户明确要求时，才执行超出语法检查范围的测试。
-- 任务需要构建或打包时可以执行，但应直接调用构建或打包命令，避免通过 `check`、`package` 等包含额外测试的命令间接运行测试。
+- Verify with a syntax check only. Do not run tests, start a browser or take screenshots unless the user asks.
+- Do not add a skin or a character unless the user asks.

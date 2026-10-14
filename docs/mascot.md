@@ -1,20 +1,28 @@
-# 角色与动作插拔接口
+# Characters, actions and expressions
 
-插拔在源码注册表层完成：添加 / 移除本地模块后重新构建扩展。皮肤只保留 YouTube 原版和「纸」；角色（目前只有二黑）与皮肤相互独立，可搭配任一皮肤，也可选「无」。设置页可选择角色、启停动作和表情。运行时不会从网络下载或执行插件代码。
+Read this before adding or changing a character, an action, an expression or its artwork.
 
-## 新增或替换角色
+## Scope
 
-1. 把素材放到 `extension/assets/characters/<角色 id>/`。
-2. 在 `src/features/mascot/characters/<角色 id>/index.js` 导出角色对象。
-3. 在 `src/features/mascot/characters/index.js` 导入并加入 `characters` 数组。
-4. 对修改的 JavaScript 执行 `node --check`，再运行 `npm run build` 后重新加载扩展。新增角色会出现在设置页的角色选择里。
+- There is one character, Erhei (id `erhei`), a pixel black cat. Do not add a character unless the user asks.
+- Characters and skins are independent: a character works with either skin, and "None" shows no character.
+- Plugging happens in the source registries: add or remove a local module, then rebuild. Nothing is downloaded or executed from the network at runtime.
+- Names are written in English in the module. Translations are optional entries in the locale files; see [i18n.md](i18n.md).
+
+## Adding or replacing a character
+
+1. Put the artwork in `extension/assets/characters/<id>/`.
+2. Export the character object from `src/features/mascot/characters/<id>/index.js`.
+3. Import it in `src/features/mascot/characters/index.js` and add it to the `characters` array.
+4. Optionally add `character.<id>` and `character.<id>.description` to the non-English locale files.
+5. Run `node --check` on the changed files, then `npm run build` and reload the extension. The character appears in the character selector.
 
 ```js
 export const cat = {
   id: 'cat',
-  name: '小猫',
-  description: '一只喜欢散步的小猫。',
-  sizeEm: 2.8, // 尺寸相对 YouTube 字幕字号
+  name: 'Kitten',
+  description: 'A kitten that likes to stroll.',
+  sizeEm: 2.8, // size relative to the YouTube caption font size
   states: {
     normal: { src: 'assets/characters/cat/normal.svg', mirror: true },
     walk:   { src: 'assets/characters/cat/walk.webp', mirror: true },
@@ -24,9 +32,9 @@ export const cat = {
 };
 ```
 
-`normal` 必须存在，其余姿势按需提供。默认渲染器使用 `<img>`，支持 SVG、PNG、WebP、GIF；素材建议使用透明背景和统一画布。每个姿势可使用独立素材，不必修改状态机。包含问号、感叹号、文字的素材可设置 `mirror: false`，避免向左走时文字反转。
+`normal` is required; other poses are optional. The default renderer uses `<img>` and accepts SVG, PNG, WebP and GIF. Use a transparent background and one canvas size for all poses. Each pose can have its own artwork without touching the state machine. Artwork that contains a question mark, an exclamation mark or text can set `mirror: false` so it does not read backwards when the character walks left.
 
-道具使用角色自己的素材和相对位置：
+Props use the character's own artwork and a position relative to the character:
 
 ```js
 props: {
@@ -37,18 +45,22 @@ props: {
 }
 ```
 
-道具放在角色的朝向容器内，随角色自动镜像。`sizeEm`、姿势和道具都属于角色包，动作与状态机不写角色形状和素材地址。
+Props sit inside the character's facing container, so they mirror with it. `sizeEm`, poses and props all belong to the character package; actions and the state machine never mention shapes or asset paths.
 
-移除角色时，从注册表移除它并删除对应素材 / 模块。已保存的无效角色 id 会回退到注册表的第一个角色，注册表须至少保留一个角色。
+To remove a character, take it out of the registry and delete its artwork and module. A saved id that no longer exists falls back to the first registered character, so the registry must keep at least one.
 
-## 新增或删除日常动作
+### Erhei's artwork
 
-每个动作一个模块，例如 `src/features/mascot/actions/greet.js`：
+Erhei is drawn in code. `src/features/mascot/characters/erhei/artwork.js` paints each pose frame by frame, and `node scripts/generate-assets.mjs` bakes the poses and props into frame-switching SVGs under `extension/assets/characters/erhei/`. Edit `artwork.js` and regenerate; do not edit the SVGs by hand.
+
+## Adding or removing an everyday action
+
+One module per action, for example `src/features/mascot/actions/greet.js`:
 
 ```js
 export const greet = {
   id: 'greet',
-  name: '打招呼',
+  name: 'Greet',
   requiredStates: ['happy'],
   requiredProps: [],
   minSpanEm: 0,
@@ -61,33 +73,35 @@ export const greet = {
 };
 ```
 
-在 `actions/index.js` 导入并加入 `actions` 数组。删除动作时从数组移除即可，相关设置会自动过滤。新增动作会出现在设置页并默认启用：设置只保存用户关掉的动作和表情（`disabledActions` / `disabledReactions`）。弹窗和设置页的预览区用同一套控制器和渲染器，选中表情或动作即在示例字幕上播放，不影响页面字幕。
+Import it in `actions/index.js` and add it to the `actions` array. To remove one, take it out of the array; saved settings that mention it are filtered automatically. A new action shows up on the settings page and starts enabled, because settings store only what the user turned off (`disabledActions`, `disabledReactions`). The previews in the popup and on the settings page run the same controller and renderer on a sample caption, so choosing an expression or action there plays it without touching the page's captions.
 
-带 `incidental: true` 的动作不会被单独随机选中，只能由别的动作在自己的步骤里引用（例如散步走到尽头时有概率接上「差点滑下去」），但仍可在设置页开关、在预览里单独播放。
+An action with `incidental: true` is never picked at random on its own. Another action refers to it from its own steps, for example a stroll that reaches the end has a chance of continuing into "Near slip". It can still be switched on and off and previewed.
 
-动作匹配会同时检查：用户是否启用、角色是否有 `requiredStates` 和 `requiredProps`、字幕可走区域是否达到 `minSpanEm`。替换后的角色缺少所需姿势或道具时，对应动作会自动停用。
+An action is available only when all of these hold: the user has it enabled, the character has its `requiredStates` and `requiredProps`, and the walkable caption width reaches `minSpanEm`. When a replacement character lacks a pose or prop, the actions that need it switch off by themselves.
 
-通用步骤：
+Generic steps:
 
-| `type` | 字段 | 行为 |
+| `type` | Fields | Behaviour |
 | --- | --- | --- |
-| `walk` | `to`（0–1）、可选 `pose` / `speed` / `prop` | 在字幕上沿移动；默认使用 `walk` 姿势，`speed` 是速度倍数 |
-| `pose` | `ms`、可选 `pose` / `mood` / `prop` / `fx` / `body` / `turn` | 持续指定姿势、表情和道具；`turn: true` 让角色原地掉头；`fx`（`enter` / `appear` / `wave` / `jitter` / `nudge1` / `nudge2` / `tip` / `vanish` / `yank`）播放道具动效，`body`（`lunge` / `jump` / `recoil` / `poke` / `dive`·`bail` / `overstep`·`gasp`·`drop`·`cling`·`climb`）播放角色的全身动效；其中 `dive`、`overstep`、`gasp`、`drop`、`cling` 会让角色停在偏离原位的地方，直到姿势被清除或播放成对的返回动效 |
-| `wait` | `ms`、可选 `pose` | 停留，默认回到普通姿势 |
+| `walk` | `to` (0–1), optional `pose` / `speed` / `prop` | Moves along the top edge of the caption. Uses the `walk` pose by default; `speed` is a multiplier. |
+| `pose` | `ms`, optional `pose` / `mood` / `prop` / `fx` / `body` / `turn` | Holds a pose, expression and prop. `turn: true` turns the character around on the spot. `fx` plays a prop effect: `enter`, `appear`, `wave`, `jitter`, `nudge1`, `nudge2`, `tip`, `vanish`, `yank`. `body` plays a whole-body effect: `lunge`, `jump`, `recoil`, `poke`, `dive` and `bail`, `overstep`, `gasp`, `drop`, `cling`, `climb`. Of these, `dive`, `overstep`, `gasp`, `drop` and `cling` leave the character away from its spot until the pose is cleared or the matching return effect plays. |
+| `wait` | `ms`, optional `pose` | Stays put; returns to the normal pose by default. |
 
-`pose: null` / `prop: null` 可显式清除姿势或道具。没有 `prop` 字段时保留当前道具。所有非普通字幕表情会中断日常动作，清除道具；字幕短暂消失时暂停动作，较久消失后取消。
+`pose: null` and `prop: null` clear the pose or the prop explicitly. A step without a `prop` field keeps the current prop. Any caption expression other than normal interrupts the action and clears the prop. A short caption gap pauses the action; a longer one cancels it.
 
-`buildSteps()` 接收可注入的随机函数、当前上沿位置、朝向（`facing`，1 为右）、字幕几何信息和当前可用的动作列表（`available`），返回步骤数组。用已有步骤组合新动作不需要修改 `controller.js`。新增全新的步骤类型时，需要在执行器中增加对应处理。默认只检查语法，功能由用户手动验证。
+`buildSteps()` receives an injectable random function, the current position along the top edge, the facing (`facing`, 1 is right), the caption geometry and the list of currently available actions (`available`), and returns an array of steps. Combining existing steps into a new action needs no change to `controller.js`. A brand new step type needs a handler in the executor.
 
-## 字幕表情规则
+## Caption expression rules
 
-在 `reactions/index.js` 的 `reactions` 数组中添加 `{ id, name, test }`。按数组顺序匹配，首先命中的规则生效；`test()` 收到小写字幕文本，`id` 对应角色 `states` 中的姿势名。
+Add `{ id, name, test }` to the `reactions` array in `reactions/index.js`. Rules are tried in array order and the first match wins. `test()` receives the caption text in lower case; `id` is the name of the pose in the character's `states`.
 
-未启用的规则和角色没有素材的规则会跳过，最后回到 `normal`。设置页会自动列出注册的规则。
+Rules the user disabled, and rules whose pose the character does not have, are skipped; the result falls back to `normal`. The settings page lists the registered rules automatically.
 
-## 自定义渲染器
+The current rules are English keywords, so expressions react to English captions only.
 
-角色可选提供 `createRenderer({ character, assetURL, reduced })`，替换默认 `createAssetRenderer`。控制器只通过下面的接口操作渲染器：
+## Custom renderer
+
+A character may provide `createRenderer({ character, assetURL, reduced })` to replace the default `createAssetRenderer`. The controller talks to a renderer only through this interface:
 
 ```text
 mount(player), size(px), place({x, y}), show(), hide(), fade()
@@ -96,6 +110,14 @@ setMood(name), override(nameOrNull), pose(nameOrNull), sleep(boolean)
 face(direction), prop(nameOrNull), propFx(name), bodyFx(name), dispose()
 ```
 
-`move()` 完成时调用 `done()`；替换角色或销毁时，`dispose()` 必须取消动画并移除节点。`reduced()` 为真时跳过动态效果。自定义渲染器返回的方法需要可独立调用，避免依赖调用时的 `this`，因为控制器通过环境适配器调用它们。
+`move()` calls `done()` when it finishes. `dispose()` must cancel animations and remove nodes when the character is replaced or destroyed. Skip motion when `reduced()` is true. Methods must work when called on their own, without relying on `this`, because the controller calls them through an environment adapter.
 
-未来接入本地视频或 Lottie 时，可在该接口内处理播放、状态切换与销毁，控制器与日常动作无需知道具体渲染技术。所需资源应随扩展打包，并检查 `web_accessible_resources` 范围；默认素材包校验目前按图片格式校验。
+A renderer for local video or Lottie can handle playback, state changes and teardown behind this interface; the controller and the actions do not need to know the technique. Its resources must ship with the extension and fit the `web_accessible_resources` scope. The default character validation currently accepts image formats only.
+
+## Runtime behaviour to preserve
+
+- While a character is shown, the caption position is read on every animation frame, with no frame-rate cap; a time threshold makes walking stutter. The loop is skipped while the page is hidden and cancelled when the character is "None".
+- The character waits for the top edge of the caption to be stable before changing level when captions scroll.
+- A brief caption gap keeps the character perched. A longer gap makes it fall, rest, sleep and finally fade; it returns when captions come back.
+- Coordinates account for the player's CSS scale, and the overlay lives inside the player so it shows in fullscreen.
+- `controller.js` is a state machine with no DOM access; keep it that way.

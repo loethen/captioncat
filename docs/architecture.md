@@ -1,53 +1,62 @@
-# 架构与数据流
+# Architecture and data flow
+
+Read this before changing storage, messaging, permissions or the manifest.
 
 ```text
-YouTube 页面
+YouTube page
   content/index.js
-    CaptionSource ──► 皮肤 / 角色 / 翻译 / 单词收集
-    各功能创建自己的播放器内浮层
+    CaptionSource ──► skins / character / translation / word collection
+    each feature creates its own overlay inside the player
        │ runtime.sendMessage
        ▼
-  background/index.js（MV3 service worker）
+  background/index.js (MV3 service worker)
     Store ──► chrome.storage.local
-    TranslationService ──► 固定 Google 翻译端点
+    TranslationService ──► fixed Google Translate endpoint
        ▲
        │ runtime.sendMessage / storage.onChanged
   popup / options
 ```
 
-## 页面层
+The page side is described in [captions.md](captions.md), [skins.md](skins.md) and [mascot.md](mascot.md).
 
-一个共享 `CaptionSource` 维护播放器、字幕文本和字幕节点；功能模块通过订阅接收更新。播放器内只有一个 MutationObserver，观察节点和文本变化；扩展自身浮层的变化会跳过。每秒的单一恢复检查处理播放器替换和漏掉的导航事件。
+## Background worker
 
-角色开启时随浏览器的每个动画帧读取字幕位置，与原油猴脚本一致，不额外限制帧率；先等待上沿稳定，再决定是否换层。页面隐藏时跳过计算，角色关闭时取消循环。坐标转换考虑播放器的 CSS 缩放；浮层位于播放器内，以便在全屏中显示。
+- Messages are accepted only from the extension's own pages and from `https://www.youtube.com`.
+- Cross-origin translation requests are made by the worker. The content script sends only the caption text; the endpoint is fixed, and a message cannot name a URL. This follows [Chrome's guidance on cross-origin requests](https://developer.chrome.com/docs/extensions/develop/concepts/network-requests).
+- Every write to settings and vocabulary goes through one serial queue in `store.js`, so several tabs doing read, modify, write cannot overwrite each other.
+- The translation service shares identical in-flight requests, caches by target language and source sentence, and persists up to 500 entries immediately. Clearing the cache waits for earlier requests to finish, so an old response cannot refill it.
+- The listener returns `true` to keep the response channel open for async work. Nothing persistent is kept in worker memory.
+- Failures are sent back as `{ code, params }` and translated by the receiving page. See [i18n.md](i18n.md).
+- All registered code and assets ship with the extension. No remote JavaScript, no `eval`.
 
-只保留纸皮肤与 YouTube 原版。纸皮肤 CSS 作为本地字符串打包，仅在选中纸时挂载独立样式节点，不进入常驻的 content.css。切回原版时移除样式节点和入场动画标记，并发出 resize 事件通知播放器重新布局；原版不应用插件的行高、边距、字体、字号或显示方式。
+## Messages
 
-角色与皮肤相互独立，可搭配任一皮肤；角色选「无」时立即隐藏并停止动画循环。字幕学习功能关闭后，移除交互标记，恢复 YouTube 的指针行为。所有页面文本通过 `textContent` / DOM API 创建，没有使用 `innerHTML`，以适应 YouTube 的 Trusted Types。
-
-## 后台层
-
-跨域翻译由 service worker 发起，内容脚本只发送字幕文本；端点固定，消息不能指定任意请求 URL。这遵循 [Chrome 的跨域请求说明](https://developer.chrome.com/docs/extensions/develop/concepts/network-requests)。
-
-设置与单词的所有写入经过后台串行队列，避免多个标签页「读取 → 修改 → 写入」互相覆盖。翻译服务去重并发相同请求，按目标语言和原句缓存，立即持久保存至多 500 条；缓存清除等待先前请求结束，避免旧响应重新填入。
-
-后台通过 `return true` 保持异步消息响应通道，不依赖 service worker 内存做持久存储。所有注册代码及素材随扩展打包，无远程 JavaScript 或 `eval`。
-
-## 存储
-
-| Key | 内容 |
+| Type | Effect |
 | --- | --- |
-| `settings:v1` | 皮肤、角色、已启用的动作 / 表情、翻译和收集设置 |
-| `words:v1` | 按视频 id 分组的单词、原句、加入时间和规范视频链接 |
-| `translations:v1` | 最多 500 条 `[目标语言 + 原句, 译文]` |
+| `settings:get`, `settings:patch` | Read settings; merge a partial change |
+| `skin:next` | Switch to the next skin in one queued step |
+| `translation:translate`, `translation:clear` | Translate a caption; clear the cache |
+| `words:get`, `words:add`, `words:remove`, `words:clear-video` | Read and change the vocabulary |
 
-设置读取时规范化，失效的注册 id 会过滤或回退。单词本总量上限 10,000 条，达到上限后提示导出或删除。设置和单词通过 [storage.onChanged](https://developer.chrome.com/docs/extensions/reference/api/storage) 在已打开的页面、弹窗与设置页同步。
+## Storage
 
-## 权限
+| Key | Content |
+| --- | --- |
+| `settings:v1` | Interface language, skin, character, disabled actions and expressions, translation and collection settings |
+| `words:v1` | Words grouped by video id, with the source sentence, time added and canonical video link |
+| `translations:v1` | Up to 500 `[target language + source sentence, translation]` pairs |
 
-- `storage`：设置、单词和翻译缓存。
-- `clipboardWrite`：用户点击复制时写入复习 Prompt。
-- `https://www.youtube.com/*`：注入字幕功能，以及在弹窗识别当前 YouTube 视频。
-- `https://translate.googleapis.com/*`：后台翻译请求。
+Everything is in `chrome.storage.local`; there is no account sync. Settings are normalized on read: an id that is no longer registered is filtered out or replaced by the default. On a new install the interface language is `auto` and the translation target is the browser's language. The vocabulary holds at most 10,000 words; past that the user is asked to export or delete. Settings and vocabulary reach open pages, the popup and the settings page through [storage.onChanged](https://developer.chrome.com/docs/extensions/reference/api/storage).
 
-角色图片作为 [web accessible resources](https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources) 仅向 YouTube 暴露。没有申请所有网站、历史记录、下载或广泛 tabs 权限。
+## Permissions
+
+- `storage`: settings, vocabulary and the translation cache.
+- `clipboardWrite`: writing the review prompt when the user clicks copy.
+- `https://www.youtube.com/*`: injecting the caption features, and recognizing the current video in the popup.
+- `https://translate.googleapis.com/*`: translation requests from the worker.
+
+Character images are [web accessible resources](https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources) exposed to YouTube only. The extension does not ask for all sites, history, downloads or broad tabs access.
+
+## Translation endpoint
+
+Translation uses `translate.googleapis.com/translate_a/single?client=gtx`, kept from the original userscript. It is not a supported API and may be affected by the network, rate limits or changes on Google's side; failures are shown in the tooltip. To move to a supported service, replace the request adapter in `src/background/translation-service.js` and adjust the host permission and the `connect-src` in the manifest.

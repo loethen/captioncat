@@ -1,28 +1,30 @@
-# 验证范围
+# Verification record
 
-首次实现的验证日期：2026-10-13。以下为当时的验证记录；后续修改遵循 `AGENTS.md`，默认只检查语法，UI 和交互由用户自行测试。
+This is a historical record of how the first implementation was verified on 2026-10-13. It does not describe the current state. Later changes follow [development.md](development.md): a syntax check by default, with UI and interaction tested by the user. Some checks below refer to behaviour that has since changed, such as the character being tied to the paper skin.
 
-## 自动测试
+## Automated tests at the time
 
-`npm run check`：21 项 Node 单元测试通过，构建成功。
+`npm run check`: 21 Node unit tests passed and the build succeeded.
 
-- 角色注册、素材存在、能力匹配、短字幕动作选择。
-- 字幕情绪优先级、关闭表情、缺少素材回退。
-- 设置规范化、部分修改、多页面并发修改和快捷键切换。
-- 英文取词、缩写 / 连字符、视频链接规范化。
-- 单词并发保存、去重、持久恢复、视频隔离、删除、原句和复习 Prompt。
-- 翻译并发去重、不同语言缓存隔离、持久恢复、缓存上限、缓存清空。
-- 翻译格式错误、HTTP 错误、超时与重试。
-- 角色短暂无字幕、落下、睡眠、淡出、字幕滚动稳定判断。
-- 新动作组合、表情中断动作、减少动态效果、旧动画回调失效。
+- Character registration, packaged artwork, capability matching, action choice on short captions.
+- Caption expression priority, disabled expressions, fallback when artwork is missing.
+- Settings normalization, partial changes, concurrent changes from several pages, skin shortcut.
+- English word boundaries, contractions and hyphens, video link normalization.
+- Concurrent word saves, deduplication, persistence, isolation between videos, deletion, source sentences and the review prompt.
+- Translation request sharing, cache isolation between languages, persistence, cache limit, cache clearing.
+- Malformed translation responses, HTTP errors, timeout and retry.
+- The character during brief caption gaps, falling, sleeping, fading, and stable-geometry detection while captions scroll.
+- Composing new actions, expressions interrupting actions, reduced motion, stale animation callbacks.
 
-`scripts/browser-smoke.mjs`：在独立临时 Chromium 配置中加载**实际构建的 MV3 扩展**。YouTube DOM 与翻译响应使用 fixture / mock，避免外部视频和网络结果影响检查。
+`scripts/browser-smoke.mjs` loaded the **actual built MV3 extension** in a temporary Chromium profile. The YouTube DOM and the translation responses were fixtures and mocks, so outside videos and network results could not affect the check.
 
-当时覆盖扩展注入、图片加载、Trusted Types、翻译悬停与播放恢复、手动暂停保护、准确点击取词、去重、键盘收起、皮肤快捷键、角色切换与能力过滤、单词本搜索和 JSON 导出、刷新恢复、SPA 页面切换、全屏、过期翻译响应、功能关闭、减少动态效果、弹窗设置同步、弹窗高度及无 JavaScript 错误。后续精简为纸与原版，角色仅随纸显示，主题样式改为按需挂载；这些变更只检查语法，未运行交互测试。
+It covered extension injection, image loading, Trusted Types, hover translation and playback resume, protection of a manual pause, exact word clicks, deduplication, closing with the keyboard, the skin shortcut, character switching and capability filtering, vocabulary search and JSON export, restore after reload, single-page navigation, fullscreen, stale translation responses, turning features off, reduced motion, popup settings sync, popup height and the absence of JavaScript errors.
 
-## 可选浏览器检查
+The script has not been kept in step with later changes and refers to controls that no longer exist.
 
-浏览器检查独立于普通构建；需要 Playwright 和支持加载本地扩展的 Chromium / Chrome for Testing：
+## Optional browser check
+
+The browser check is separate from the normal build. It needs Playwright and a Chromium or Chrome for Testing that can load a local extension:
 
 ```sh
 npm install --no-save playwright
@@ -30,12 +32,12 @@ npx playwright install chromium
 node scripts/browser-smoke.mjs
 ```
 
-已有 Playwright 包和浏览器时，可以通过 `PLAYWRIGHT_MODULE`、`BROWSER_EXECUTABLE` 环境变量指定路径。检查使用临时浏览器配置，不修改用户的日常浏览器配置。
+With an existing Playwright package and browser, point to them with the `PLAYWRIGHT_MODULE` and `BROWSER_EXECUTABLE` environment variables. The check uses a temporary profile and does not touch the user's everyday browser profile.
 
-首次实现生成的 [设置页](screenshots/options.png)、[弹窗](screenshots/popup.png) 和 [模拟播放器](screenshots/player-fixture.png) 截图已进行视觉检查。截图保留为历史记录，后续界面修改没有重新截图。
+The screenshots produced by the first run ([settings page](screenshots/options.png), [popup](screenshots/popup.png), [simulated player](screenshots/player-fixture.png)) were inspected visually. They are kept as history and were not retaken after later interface changes.
 
-## 尚未覆盖的真实环境
+## Real environments not covered
 
-没有在真实 YouTube 视频上进行端到端验证；Google 翻译接口的当前网络可达性也未纳入模拟检查。Edge、Shorts、嵌入式播放器和多语言字幕布局尚未实机验证。扩展当前只注入 `www.youtube.com` 标准页面。
+There was no end-to-end run on a real YouTube video, and the reachability of the Google Translate endpoint was not part of the simulated check. Edge, Shorts, embedded players and caption layouts in other languages were not verified on a real device.
 
-加载后可在常看的真实视频上自行检查：开启英文 CC，切换纸与原版，确认原版行高和关闭插件时一致；观看一行与两行自动字幕滚动，悬停和移开字幕，点击单词，进入 / 退出全屏，再切换到另一个视频。
+A manual pass on a familiar video: turn on English captions, switch between Paper and the YouTube default and confirm the default matches the extension being off, watch one-line and two-line auto captions scroll, hover over and away from captions, click a word, enter and leave fullscreen, then move to another video.
