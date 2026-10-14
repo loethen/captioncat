@@ -6,9 +6,13 @@ import { element } from '../shared/dom.js';
 import { reviewPrompt } from '../shared/text.js';
 import { copyText } from '../shared/clipboard.js';
 import { plural, t } from '../shared/i18n.js';
-import { catMood } from './brand-cat.js';
+import { createMascotPreview } from './mascot-preview.js';
+import { characters } from '../features/mascot/characters/index.js';
 
 let all = {}, revision = 0;
+document.querySelector('#version').textContent = `v${chrome.runtime.getManifest().version}`;
+// The brand cat lives on the footer rule and does whatever it likes there.
+createMascotPreview(document.querySelector('#stroll'), { lines: '.stroll-line', random: true }).update(characters[0]);
 bindSettingsForm({ onLocale: renderWords });
 for (const button of document.querySelectorAll('[data-tab]')) button.addEventListener('click', () => {
   for (const tab of document.querySelectorAll('[data-tab]')) { const active = button === tab; tab.classList.toggle('active', active); tab.setAttribute('aria-pressed', String(active)); }
@@ -42,7 +46,7 @@ function renderWords() {
     const controls = element('div', 'video-actions');
     const copy = element('button', '', t('vocabulary.copyPrompt'));
     copy.addEventListener('click', async () => {
-      try { await copyText(reviewPrompt(video.words, video.url)); status(t('vocabulary.promptCopied')); catMood('happy'); } catch (error) { status(error.message, true); }
+      try { await copyText(reviewPrompt(video.words, video.url)); status(t('vocabulary.promptCopied')); } catch (error) { status(error.message, true); }
     });
     const clear = element('button', '', t('vocabulary.clearVideo'));
     clear.addEventListener('click', async () => {
@@ -61,11 +65,11 @@ document.querySelector('#export-words').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), videos: Object.values(all) }, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob), link = element('a');
   link.href = url; link.download = 'captioncat-vocabulary.json'; document.body.append(link); link.click(); link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000); status(t('vocabulary.exported')); catMood('happy');
+  setTimeout(() => URL.revokeObjectURL(url), 1000); status(t('vocabulary.exported'));
 });
 document.querySelector('#clear-cache').addEventListener('click', async event => {
   const button = event.currentTarget; button.disabled = true;
-  try { await request('translation:clear'); status(t('translation.cacheCleared')); catMood('happy'); } catch (error) { status(error.message, true); }
+  try { await request('translation:clear'); status(t('translation.cacheCleared')); } catch (error) { status(error.message, true); }
   finally { button.disabled = false; }
 });
 watchStorage(WORDS_KEY, value => { revision++; all = value || {}; renderWords(); });

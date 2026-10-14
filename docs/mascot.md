@@ -53,7 +53,7 @@ To remove a character, take it out of the registry and delete its artwork and mo
 
 Erhei is drawn in code. `src/features/mascot/characters/erhei/artwork.js` paints each pose frame by frame, and `node scripts/generate-assets.mjs` bakes the poses and props into frame-switching SVGs under `extension/assets/characters/erhei/`. Edit `artwork.js` and regenerate; do not edit the SVGs by hand.
 
-The popup and the settings page also use these SVGs directly as the brand cat: the one beside the title that reacts to saves and errors (`src/ui/brand-cat.js`), the sleeping cat in an empty vocabulary, and the cat strolling along the settings page footer. They are part of the CaptionCat brand and stay visible when the caption character is set to None.
+The settings page also uses these SVGs directly: the sleeping cat in an empty vocabulary, and the cat living on the settings page footer, which runs the real controller with random actions (`createMascotPreview(stage, { random: true })`). They are part of the CaptionCat brand and stay visible when the caption character is set to None.
 
 ## Adding or removing an everyday action
 
@@ -75,7 +75,7 @@ export const greet = {
 };
 ```
 
-Import it in `actions/index.js` and add it to the `actions` array. To remove one, take it out of the array; saved settings that mention it are filtered automatically. A new action shows up on the settings page and starts enabled, because settings store only what the user turned off (`disabledActions`, `disabledReactions`). The previews in the popup and on the settings page run the same controller and renderer on a sample caption, so choosing an expression or action there plays it without touching the page's captions.
+Import it in `actions/index.js` and add it to the `actions` array. To remove one, take it out of the array; saved settings that mention it are filtered automatically. A new action shows up on the settings page and starts enabled, because settings store only what the user turned off (`disabledActions`). The previews in the popup and on the settings page run the same controller and renderer on a sample caption, so choosing an action there plays it without touching the page's captions. The preview starts on the stroll.
 
 An action with `incidental: true` is never picked at random on its own. Another action refers to it from its own steps, for example a stroll that reaches the end has a chance of continuing into "Near slip". It can still be switched on and off and previewed.
 
@@ -93,13 +93,15 @@ Generic steps:
 
 `buildSteps()` receives an injectable random function, the current position along the top edge, the facing (`facing`, 1 is right), the caption geometry and the list of currently available actions (`available`), and returns an array of steps. Combining existing steps into a new action needs no change to `controller.js`. A brand new step type needs a handler in the executor.
 
-## Caption expression rules
+## Caption expressions
 
-Add `{ id, name, test }` to the `reactions` array in `reactions/index.js`. Rules are tried in array order and the first match wins. `test()` receives the caption text in lower case; `id` is the name of the pose in the character's `states`.
+The character reacts to what captions say: happy, love, food, sleepy, ask and wow. This is a hidden extra. It has no setting and does not appear in the settings or the preview, so do not add one unless the user asks.
 
-Rules the user disabled, and rules whose pose the character does not have, are skipped; the result falls back to `normal`. The settings page lists the registered rules automatically.
-
-The current rules are English keywords, so expressions react to English captions only.
+- `reactions/keywords.js` holds the keywords, one list per expression and language (currently English, Chinese, Japanese, Korean, Spanish, French, German, Portuguese and Russian). To support another language, add its lists there; nothing else changes.
+- Captions are lower-cased before matching. Languages written with spaces match whole words only, so `eat` does not fire on "theater". Chinese, Japanese and Korean (listed in `UNSPACED`) match anywhere in the caption, so their entries must be specific enough not to appear inside unrelated words; prefer two or more characters.
+- `reactions/index.js` turns the lists into one pattern per expression and adds `signs` for what words cannot express, such as a trailing question or exclamation mark, laughter like "hahaha", or musical notes.
+- Expressions are tried in array order and the first match wins. `id` is the pose shown, so an expression whose pose the character lacks is skipped and the result falls back to `normal`.
+- A new expression needs an entry in `reactions`, keyword lists, and the pose in the character's `states`.
 
 ## Custom renderer
 

@@ -2,9 +2,10 @@
 // Plural namespaces (`skins.*`) are interface text; singular ones (`skin.<id>`) translate registry items.
 export default {
   'app.name': 'CaptionCat',
+  'app.nameStart': 'Caption',
+  'app.nameEnd': 'Cat',
   'app.tagline': 'Make captions more fun',
   'app.optionsTitle': 'CaptionCat · Settings & vocabulary',
-  'app.optionsSubtitle': 'Caption settings and vocabulary',
   'app.footer': 'Settings save automatically · Data stays in this browser · Works in fullscreen',
 
   'language.label': 'Interface language',
@@ -18,7 +19,6 @@ export default {
   'status.saving': 'Saving…',
   'status.saved': 'Saved',
 
-  'popup.learning': 'Translation and learning',
   'popup.openOptions': 'Settings & vocabulary',
   'popup.noVideo': 'Open a YouTube video and turn on captions to get started.',
   'popup.collected.one': '{count} word collected from this video',
@@ -37,34 +37,20 @@ export default {
   'characters.none': 'None',
   'characters.noneDescription': 'No character is shown on captions.',
 
-  'preview.label': 'Preview expression / action',
-  'preview.moods': 'Expressions',
-  'preview.actions': 'Actions',
+  'preview.label': 'Preview action',
 
   'actions.toggle': 'Let the character do its own thing',
-  'actions.toggleHint': 'When no caption triggers an expression, it picks one of the everyday actions selected below.',
+  'actions.toggleHint': 'Now and then it picks one of the everyday actions selected below.',
   'actions.list': 'Everyday actions',
-  'reactions.label': 'Expressions that follow captions',
-  'reactions.hint': 'The character reacts when a caption contains certain keywords.',
-  'reactions.list': 'Caption expressions',
-  'plugins.unsupported': 'The current character does not support this action or expression',
-
-  'mood.normal': 'Neutral',
-  'mood.happy': 'Happy',
-  'mood.love': 'Love',
-  'mood.food': 'Hungry',
-  'mood.nervous': 'Nervous',
-  'mood.sleepy': 'Asleep',
-  'mood.ask': 'Curious',
-  'mood.wow': 'Surprised',
+  'plugins.unsupported': 'The current character cannot do this action',
 
   'translation.heading': 'Hover translation',
-  'translation.toggle': 'Hover translation',
   'translation.enable': 'Enable hover translation',
   'translation.enableHint': 'Hover over a caption to see the whole sentence translated; move away to dismiss it.',
   'translation.pause': 'Pause video while hovering',
   'translation.pauseHint': 'Playback resumes when the pointer leaves.',
-  'translation.target': 'Target language',
+  'translation.target': 'Translate into',
+  'translation.targetHint': 'Usually your native language. It starts as your browser\'s language.',
   'translation.delay': 'Hover delay (ms)',
   'translation.delayHint': 'How long the pointer rests before translating, 0–2000.',
   'translation.delayInvalid': 'Enter a delay between 0 and 2000',
@@ -75,7 +61,7 @@ export default {
   'translation.loading': 'Translating…',
 
   'vocabulary.heading': 'Vocabulary',
-  'vocabulary.toggle': 'Click to collect words',
+  'vocabulary.saving': 'Word saving',
   'vocabulary.enable': 'Click English captions to collect words',
   'vocabulary.enableHint': 'Words are saved per video on this device. Copy a review prompt, or export JSON with the original sentences.',
   'vocabulary.search': 'Search words or videos',

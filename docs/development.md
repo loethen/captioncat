@@ -39,6 +39,6 @@ The extension targets a global audience.
 - Ship all code and assets inside the extension. No remote JavaScript, no `eval`.
 - Settings and vocabulary are written only by the background store, through its serial queue. Pages send a message and never write `chrome.storage` themselves. See [architecture.md](architecture.md).
 - Errors that reach the user are thrown as `AppError(code)`, not as text. See [i18n.md](i18n.md).
-- Settings store what the user turned off (`disabledActions`, `disabledReactions`), so newly registered items start enabled.
+- Settings store what the user turned off (`disabledActions`), so newly registered items start enabled.
 - Registries (skins, characters, actions, reactions) are plain local modules. Adding an item means adding a module and listing it in the registry; nothing is discovered at runtime.
 - Match the surrounding style: compact modules, comments only where the reason is not obvious from the code.

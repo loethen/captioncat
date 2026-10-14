@@ -2,18 +2,13 @@
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-i18n="app.name">CaptionCat</title><link rel="stylesheet" href="popup.css"></head>
 <body class="popup">
-  <header><div class="brand"><img id="brand-cat" class="brand-cat" src="assets/characters/erhei/normal.svg" alt=""><div><h1 data-i18n="app.name">CaptionCat</h1><p data-i18n="app.tagline">Make captions more fun</p></div></div><div class="header-tools"><select id="ui-language" aria-label="Interface language" data-i18n-attr="aria-label:language.label"></select></div></header>
+  <header><div class="brand"><img class="logo" src="icons/48.png" alt=""><div><h1 class="wordmark" aria-label="CaptionCat" data-i18n-attr="aria-label:app.name"><span data-i18n="app.nameStart">Caption</span><span class="wordmark-cat" data-i18n="app.nameEnd">Cat</span></h1><p class="tagline"><span data-i18n="app.tagline">Make captions more fun</span></p></div></div><div class="header-tools"><select id="ui-language" aria-label="Interface language" data-i18n-attr="aria-label:language.label"></select></div></header>
   <main>
     <div class="preview" id="preview"><div class="preview-caption" id="preview-caption"><div class="preview-line"><span>Captions with a little company,</span></div><div class="preview-line"><span>and a little curiosity.</span></div></div></div>
     <section class="card" aria-label="Caption appearance" data-i18n-attr="aria-label:skins.heading">
       <label class="field"><span data-i18n="skins.label">Caption skin</span><select id="skin"></select></label>
       <label class="field"><span data-i18n="characters.label">Caption character</span><select id="character"></select></label>
-      <label class="field" id="preview-mascot-control" hidden><span data-i18n="preview.label">Preview expression / action</span><select id="preview-state"></select></label>
-    </section>
-    <section class="card" aria-label="Translation and learning" data-i18n-attr="aria-label:popup.learning">
-      <label class="toggle"><span data-i18n="translation.toggle">Hover translation</span><input id="translation" type="checkbox" role="switch"></label>
-      <label class="toggle"><span data-i18n="translation.pause">Pause video while hovering</span><input id="pause" type="checkbox" role="switch"></label>
-      <label class="toggle"><span data-i18n="vocabulary.toggle">Click to collect words</span><input id="vocabulary" type="checkbox" role="switch"></label>
+      <label class="field" id="preview-mascot-control" hidden><span data-i18n="preview.label">Preview action</span><select id="preview-state"></select></label>
     </section>
     <p class="hint" id="page-status"></p>
     <button class="primary wide" id="open-options"><span data-i18n="popup.openOptions">Settings &amp; vocabulary</span> <span aria-hidden="true">↗</span></button>

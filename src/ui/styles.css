@@ -10,6 +10,9 @@
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--background); }
+/* Chrome injects `body { font-family: system-ui; font-size: 75% }` into extension pages; take the root font back.
+   The extra `html` keeps this ahead of the injected rule regardless of stylesheet order. */
+html body { font: inherit; }
 button, input, select { font: inherit; }
 button, select, input[type='checkbox'], label:has(input[type='checkbox']) { cursor: pointer; }
 button { border: 0; border-radius: 9px; padding: 8px 12px; color: inherit; background: var(--surface); transition: background .15s, transform .1s; }
@@ -32,12 +35,19 @@ h1 { font-size: 22px; font-weight: 700; line-height: 1.3; letter-spacing: -.01em
 header p { color: var(--muted); font-size: 13px; margin-top: 2px; }
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
 /* Pixel art: keep edges crisp when scaled. */
-.brand-cat, .empty-cat, .stroll-cat { image-rendering: pixelated; user-select: none; -webkit-user-drag: none; }
-.brand-cat { flex: none; width: 46px; height: 46px; margin: -6px 0 -4px -4px; cursor: pointer; }
+.empty-cat { image-rendering: pixelated; user-select: none; -webkit-user-drag: none; }
+.logo { flex: none; width: 48px; height: 48px; image-rendering: pixelated; }
+/* The wordmark: the last word sits on a green highlighter stroke. */
+.wordmark { font-size: 24px; font-weight: 800; letter-spacing: -.03em; line-height: 1.15; }
+.wordmark-cat { padding: 0 .06em; background: linear-gradient(transparent 58%, var(--accent) 58%, var(--accent) 92%, transparent 92%); }
+/* The tagline is drawn as a paper-skin caption, so the header shows what the extension does. */
+.tagline { margin-top: 5px; line-height: 0; }
+.tagline span { display: inline-block; padding: .2em .7em; font-size: 13px; line-height: 1.3; color: #2b2927; background: #f6f4ee; border-radius: 2px; box-shadow: inset 0 0 0 1px rgba(43,41,39,.12); transform: rotate(-1.5deg); }
 .header-tools { display: flex; align-items: center; gap: 10px; flex: none; }
-.header-tools select { padding: 4px 8px; font-size: 12px; }
-.version { color: var(--faint); font-size: 12px; }
-h2 { font-size: 13px; font-weight: 600; color: var(--muted); margin: 26px 0 8px; }
+.header-tools select { padding: 4px 8px; font-size: 13px; }
+.version { color: var(--faint); font-size: 13px; }
+/* Section headings sit above the setting names (14px) and their hints (13px). */
+h2 { font-size: 16px; font-weight: 700; color: var(--foreground); margin: 26px 0 8px; }
 /* A card groups related settings; rows inside are separated by hairlines. */
 .card { border: 1px solid var(--border); border-radius: 14px; padding: 0 16px; background: var(--card); box-shadow: 0 1px 2px rgba(0,0,0,.03); }
 .card > * + *, #mascot-details, #mascot-details > * + * { border-top: 1px solid var(--border); }
@@ -45,14 +55,14 @@ h2 { font-size: 13px; font-weight: 600; color: var(--muted); margin: 26px 0 8px;
 .field, .toggle { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 50px; }
 .field select, .field input { flex: none; width: 160px; }
 .field button { flex: none; }
-.label small { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.label small { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .label small:empty { display: none; }
 .hint { color: var(--muted); font-size: 13px; line-height: 1.65; margin: 4px 0 14px; }
 .primary { color: var(--accent-ink); background: var(--accent); font-weight: 600; }
 .primary:hover:not(:disabled) { background: var(--accent-strong); }
 .secondary { background: var(--card); border: 1px solid var(--border); }
 .wide { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-.footnote { color: var(--faint); font-size: 12px; text-align: center; margin-top: 12px; }
+.footnote { color: var(--faint); font-size: 13px; text-align: center; margin-top: 12px; }
 .status { color: var(--muted); font-size: 13px; min-height: 22px; margin-top: 10px; }
 .status.error { color: var(--danger); }
 /* The character is positioned by the mascot renderer on top of the sample caption. */
@@ -63,26 +73,27 @@ h2 { font-size: 13px; font-weight: 600; color: var(--muted); margin: 26px 0 8px;
 .preview[data-skin='off'] .preview-line > span { padding: 0 .25em; background: #242424; color: white; border-radius: 0; box-shadow: none; }
 .preview.large { height: 190px; }
 .preview.large .preview-caption { font-size: 18px; }
-.preview-control { display: flex; justify-content: flex-end; align-items: center; gap: 12px; font-size: 12px; color: var(--muted); margin-top: 10px; }
-.preview-control select { padding: 4px 8px; font-size: 12px; }
+.preview-control { display: flex; justify-content: flex-end; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); margin-top: 10px; }
+.preview-control select { padding: 4px 8px; font-size: 13px; }
 .popup { width: 370px; padding: 16px 18px 18px; }
 .popup header { margin-bottom: 14px; }
-.popup h1 { font-size: 20px; }
+.popup h1 { font-size: 22px; }
 .popup .preview { height: 128px; }
 .popup .card { margin-top: 12px; padding: 0 12px; }
 .popup .field, .popup .toggle { min-height: 40px; padding: 6px 0; }
 .popup .field select { padding: 5px 8px; }
-.popup .hint { margin: 12px 2px 10px; font-size: 12px; }
+.popup .hint { margin: 12px 2px 10px; font-size: 13px; }
 .popup .footnote { margin-top: 8px; }
 .popup .status:empty { display: none; }
+.popup .preview { height: 112px; }
+.popup .field, .popup .toggle { min-height: 38px; }
 .workspace { max-width: 760px; margin: 0 auto; padding: 36px 32px 24px; }
 .workspace header { margin-bottom: 26px; }
-.workspace .brand-cat { width: 56px; height: 56px; }
 nav { display: inline-flex; gap: 2px; padding: 3px; margin-bottom: 24px; border-radius: 11px; background: var(--surface); }
 nav button { background: transparent; padding: 6px 16px; border-radius: 8px; color: var(--muted); }
 nav button:hover:not(:disabled) { background: transparent; color: var(--foreground); }
 nav button.active, nav button.active:hover { background: var(--card); color: var(--foreground); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
-nav .count { color: var(--accent-text); font-size: 12px; margin-left: 6px; }
+nav .count { color: var(--accent-text); font-size: 13px; margin-left: 6px; }
 .tab-panel > h2:first-child { margin-top: 0; }
 .check-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .check-list label { position: relative; padding: 4px 12px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; color: var(--muted); background: var(--card); user-select: none; transition: background .15s, border-color .15s; }
@@ -99,7 +110,7 @@ nav .count { color: var(--accent-text); font-size: 12px; margin-left: 6px; }
 .video-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .video-heading a { color: inherit; font-weight: 500; text-decoration: none; }
 .video-heading a:hover { text-decoration: underline; text-decoration-color: var(--accent-text); }
-.video-meta { color: var(--faint); font-size: 12px; margin: 3px 0 8px; }
+.video-meta { color: var(--faint); font-size: 13px; margin: 3px 0 8px; }
 .video-actions { display: flex; gap: 8px; margin: 12px 0 0; }
 .video-actions button { font-size: 13px; padding: 6px 10px; }
 .word-row { display: grid; grid-template-columns: 130px 1fr 34px; align-items: start; gap: 16px; padding: 8px 0; }
@@ -109,20 +120,12 @@ nav .count { color: var(--accent-text); font-size: 12px; margin-left: 6px; }
 .word-row button:hover:not(:disabled) { background: transparent; color: var(--danger); }
 .empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 30px 0; color: var(--muted); text-align: center; }
 .empty-cat { width: 72px; height: 72px; }
-footer { color: var(--faint); font-size: 12px; margin-top: 36px; }
-/* Erhei strolls back and forth along the footer rule. */
-.stroll { position: relative; height: 34px; border-bottom: 1px solid var(--border); margin-bottom: 14px; overflow: hidden; }
-.stroll-cat { position: absolute; bottom: -1px; left: 0; width: 34px; height: 34px; animation: stroll 28s linear infinite; }
-@keyframes stroll {
-  0% { left: 0; transform: scaleX(1); }
-  47% { left: calc(100% - 34px); transform: scaleX(1); }
-  50% { left: calc(100% - 34px); transform: scaleX(-1); }
-  97% { left: 0; transform: scaleX(-1); }
-  100% { left: 0; transform: scaleX(1); }
-}
+footer { color: var(--faint); font-size: 13px; margin-top: 36px; }
+/* The footer rule doubles as a caption for the brand cat; its font size sets the cat's size. */
+.stroll { position: relative; height: 72px; margin-bottom: 14px; overflow: hidden; }
+.stroll-line { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--border); font-size: 9px; }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
   button, .check-list label, .toggle input[type='checkbox'], .toggle input[type='checkbox']::after { transition: none; }
-  .stroll-cat { animation: none; }
 }
-@media(max-width: 600px) { .workspace { padding: 24px 18px; } .word-row { grid-template-columns: 88px 1fr 24px; gap: 10px; } .preview.large .preview-caption { font-size: 15px; } .field select, .field input { width: 140px; } }
+@media(max-width: 600px) { .workspace { padding: 24px 18px; } .word-row { grid-template-columns: 88px 1fr 24px; gap: 10px; } .preview.large .preview-caption { font-size: 14px; } .field select, .field input { width: 140px; } }

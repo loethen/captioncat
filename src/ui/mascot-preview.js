@@ -1,14 +1,15 @@
 import { createMascot } from '../features/mascot/controller.js';
 import { createAssetRenderer } from '../features/mascot/renderer.js';
-import { actions } from '../features/mascot/actions/index.js';
+import { actions, availableActions } from '../features/mascot/actions/index.js';
 
 // Runs the real controller and renderer on the sample caption inside the settings preview,
 // so expressions and actions look the same as on the player without touching any page.
-export function createMascotPreview(stage) {
+// With `random`, the character picks its own actions as it does on a video.
+export function createMascotPreview(stage, { lines: lineSelector = '.preview-line > span', random = false } = {}) {
   const media = matchMedia('(prefers-reduced-motion: reduce)');
   let character = null, renderer, controller, frame = 0, selected = 'state:normal', action = null, idleSince = null;
   function info() {
-    const lines = [...stage.querySelectorAll('.preview-line > span')];
+    const lines = [...stage.querySelectorAll(lineSelector)];
     if (!lines.length) return null;
     const box = stage.getBoundingClientRect(), first = lines[0].getBoundingClientRect(), last = lines.at(-1).getBoundingClientRect();
     if (!first.width || !first.height) return null;
@@ -47,7 +48,8 @@ export function createMascotPreview(stage) {
       if (!character) return;
       renderer = (character.createRenderer || createAssetRenderer)({ character, assetURL: path => chrome.runtime.getURL(path), reduced: () => media.matches });
       renderer.mount(stage);
-      controller = createMascot({ ...renderer, active: () => true, calm: () => false, info, actions: () => [] });
+      controller = createMascot({ ...renderer, active: () => true, calm: () => random && media.matches, info,
+        actions: random ? geometry => availableActions(character, actions.map(item => item.id), geometry) : () => [] });
       apply();
       frame = requestAnimationFrame(tick);
     },

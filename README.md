@@ -18,19 +18,19 @@ npm run build
 1. Open `chrome://extensions` in Chrome, or `edge://extensions` in Edge.
 2. Turn on Developer mode, choose "Load unpacked" and select the **`dist` folder**.
 3. Refresh YouTube and turn on captions for a video.
-4. Click the CaptionCat toolbar icon to change the skin, the character and the features. "Settings & vocabulary" opens the full settings page.
+4. Click the CaptionCat toolbar icon to change the skin and the character. Hover translation, word saving and everything else are on the settings page ("Settings & vocabulary").
 
 The extension is not published to a store yet.
 
 ## Features
 
 - **Caption skins.** YouTube's own look, or Paper: each caption line gets its own paper box. Font and size stay as set in YouTube. `Alt + Shift + S` switches between the two.
-- **A caption character.** Erhei, a pixel black cat, strolls along the captions, licks its paws, chases a red dot, pushes a cup off the edge and reacts to what the captions say. It works with either skin and can be turned off; each action and expression has its own switch.
-- **Hover translation.** Hover over a caption to translate the whole sentence, optionally pausing the video while you read. Twenty target languages; the default is your browser's language.
+- **A caption character.** Erhei, a pixel black cat, strolls along the captions, licks its paws, chases a red dot, pushes a cup off the edge and now and then reacts to what the captions say. It works with either skin and can be turned off; each everyday action has its own switch.
+- **Hover translation.** Hover over a caption to translate the whole sentence into your own language, optionally pausing the video while you read. Sixteen widely spoken target languages; the default is your browser's language. It is set up on the settings page.
 - **Word collection.** Click a word in English captions to save it with its sentence, grouped by video. Search the vocabulary, copy a review prompt, or export JSON.
 - **Interface language.** Follows the browser by default and can be switched between English and Chinese in the popup or on the settings page.
 
-The extension reads the captions YouTube is already showing; it does not download caption tracks or turn captions on. Word collection and caption expressions work on English captions. It targets the standard player; Shorts and embedded players are unverified.
+The extension reads the captions YouTube is already showing; it does not download caption tracks or turn captions on. Word collection works on English captions. It targets the standard player; Shorts and embedded players are unverified.
 
 ## Data and privacy
 

@@ -1,7 +1,7 @@
 import { createMascot } from './controller.js';
 import { getCharacter } from './characters/index.js';
 import { actions, availableActions } from './actions/index.js';
-import { moodOf, reactions } from './reactions/index.js';
+import { moodOf } from './reactions/index.js';
 import { enabledIds } from '../../shared/settings.js';
 import { createAssetRenderer } from './renderer.js';
 
@@ -18,7 +18,7 @@ export function createMascotFeature(source) {
   }
   function react(snapshot) {
     if (!controller || !settings) return;
-    controller.setMood(moodOf(snapshot.text, enabledIds(reactions, settings.disabledReactions), character));
+    controller.setMood(moodOf(snapshot.text, undefined, character));
     if (snapshot.changed && performance.now() - lastNod > 2400) { controller.nod(); lastNod = performance.now(); }
   }
   function rebuild() {
@@ -44,7 +44,7 @@ export function createMascotFeature(source) {
     update(value) {
       const previous = settings;
       settings = value;
-      const changed = !previous || ['characterId', 'actionsEnabled', 'disabledActions', 'disabledReactions'].some(key => JSON.stringify(previous[key]) !== JSON.stringify(value[key]));
+      const changed = !previous || ['characterId', 'actionsEnabled', 'disabledActions'].some(key => JSON.stringify(previous[key]) !== JSON.stringify(value[key]));
       if (changed) rebuild();
       if (enabled() && !frame) frame = requestAnimationFrame(tick);
       else if (!enabled()) {
