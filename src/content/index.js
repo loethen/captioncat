@@ -7,12 +7,12 @@ import { createVocabularyFeature } from '../features/vocabulary/index.js';
 import { request, watchStorage } from '../shared/messages.js';
 import { SETTINGS_KEY, normalizeSettings } from '../shared/settings.js';
 import { element } from '../shared/dom.js';
-import { AUTO, setLocale } from '../shared/i18n.js';
+import { setLocale } from '../shared/i18n.js';
 
 const instance = '__ytCaptionCompanion';
 async function start() {
   if (globalThis[instance]) return;
-  setLocale(AUTO);
+  setLocale();
   const source = new CaptionSource();
   const toast = element('div', 'ytc-toast'); toast.dataset.ytcOverlay = ''; toast.setAttribute('role', 'status');
   let toastTimer;

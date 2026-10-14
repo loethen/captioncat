@@ -8,7 +8,6 @@ export default {
   'app.footer': 'Settings save automatically · Data stays in this browser · Works in fullscreen',
 
   'language.label': 'Interface language',
-  'language.auto': 'Browser language',
 
   'nav.label': 'Settings sections',
   'nav.appearance': 'Captions & character',

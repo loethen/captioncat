@@ -6,7 +6,6 @@ export default {
   'app.footer': '设置自动保存 · 数据保留在当前浏览器 · 全屏播放也可使用',
 
   'language.label': '界面语言',
-  'language.auto': '跟随浏览器',
 
   'nav.label': '设置导航',
   'nav.appearance': '字幕与角色',

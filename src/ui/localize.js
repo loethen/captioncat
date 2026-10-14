@@ -1,4 +1,4 @@
-import { AUTO, currentLocale, setLocale, t } from '../shared/i18n.js';
+import { currentLocale, setLocale, t } from '../shared/i18n.js';
 
 const HINT_KEY = 'ytc:locale';
 
@@ -13,8 +13,8 @@ export function localize(root = document) {
 
 // Settings load asynchronously; the remembered choice only avoids a flash of the wrong language.
 export function initLocale() {
-  let hint = AUTO;
-  try { hint = localStorage.getItem(HINT_KEY) || AUTO; } catch {}
+  let hint = null;
+  try { hint = localStorage.getItem(HINT_KEY); } catch {}
   setLocale(hint); localize();
 }
 

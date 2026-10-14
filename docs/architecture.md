@@ -46,7 +46,7 @@ The page side is described in [captions.md](captions.md), [skins.md](skins.md) a
 | `words:v1` | Words grouped by video id, with the source sentence, time added and canonical video link |
 | `translations:v1` | Up to 500 `[target language + source sentence, translation]` pairs |
 
-Everything is in `chrome.storage.local`; there is no account sync. Settings are normalized on read: an id that is no longer registered is filtered out or replaced by the default. On a new install the interface language is `auto` and the translation target is the browser's language. The vocabulary holds at most 10,000 words; past that the user is asked to export or delete. Settings and vocabulary reach open pages, the popup and the settings page through [storage.onChanged](https://developer.chrome.com/docs/extensions/reference/api/storage).
+Everything is in `chrome.storage.local`; there is no account sync. Settings are normalized on read: an id that is no longer registered is filtered out or replaced by the default. On a new install the interface language and the translation target both default to the browser's language. The vocabulary holds at most 10,000 words; past that the user is asked to export or delete. Settings and vocabulary reach open pages, the popup and the settings page through [storage.onChanged](https://developer.chrome.com/docs/extensions/reference/api/storage).
 
 ## Permissions
 

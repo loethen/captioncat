@@ -1,19 +1,19 @@
 import en from '../locales/en.js';
 import zhCN from '../locales/zh-CN.js';
 
-export const AUTO = 'auto';
 // The first locale is the source: missing keys in other locales fall back to it.
 export const locales = [
   { id: 'en', name: 'English', messages: en },
   { id: 'zh-CN', name: '简体中文', messages: zhCN },
 ];
-export const uiLanguages = [AUTO, ...locales.map(locale => locale.id)];
+export const uiLanguages = locales.map(locale => locale.id);
 
 export function browserLanguage() {
   return globalThis.chrome?.i18n?.getUILanguage?.() || globalThis.navigator?.language || 'en';
 }
 
 const primary = tag => tag.toLowerCase().split('-')[0];
+// A setting that is not a known locale (including none yet) resolves from the browser language.
 export function resolveLocale(setting, browser = browserLanguage()) {
   if (locales.some(locale => locale.id === setting)) return setting;
   return (locales.find(locale => locale.id.toLowerCase() === browser.toLowerCase()) || locales.find(locale => primary(locale.id) === primary(browser)) || locales[0]).id;

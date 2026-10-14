@@ -2,7 +2,7 @@ import { skins } from '../features/skins/registry.js';
 import { characters, NO_CHARACTER } from '../features/mascot/characters/index.js';
 import { actions } from '../features/mascot/actions/index.js';
 import { reactions } from '../features/mascot/reactions/index.js';
-import { AUTO, browserLanguage, uiLanguages } from './i18n.js';
+import { browserLanguage, resolveLocale, uiLanguages } from './i18n.js';
 
 export const SETTINGS_KEY = 'settings:v1';
 export const WORDS_KEY = 'words:v1';
@@ -28,7 +28,8 @@ function defaultTargetLanguage() {
 
 export function defaultSettings() {
   return {
-    uiLanguage: AUTO, skinId: 'wa-light', characterId: characters[0].id, actionsEnabled: true,
+    // New installs start in the browser's language; the choice is stored once settings are saved.
+    uiLanguage: resolveLocale(), skinId: 'wa-light', characterId: characters[0].id, actionsEnabled: true,
     // Stored as opt-outs so newly registered actions and reactions start enabled.
     disabledActions: [], disabledReactions: [],
     translation: { enabled: true, targetLanguage: defaultTargetLanguage(), delay: 120, pauseOnHover: true },

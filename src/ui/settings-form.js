@@ -5,7 +5,7 @@ import { reactions, supportsReaction } from '../features/mascot/reactions/index.
 import { SETTINGS_KEY, enabledIds, languages, normalizeSettings, patchSettings } from '../shared/settings.js';
 import { request, watchStorage } from '../shared/messages.js';
 import { element } from '../shared/dom.js';
-import { AUTO, label, locales, t } from '../shared/i18n.js';
+import { label, locales, t } from '../shared/i18n.js';
 import { applyLocale, initLocale } from './localize.js';
 import { createMascotPreview } from './mascot-preview.js';
 
@@ -25,7 +25,7 @@ export async function bindSettingsForm({ onLocale } = {}) {
   const stage = createMascotPreview(find('preview'));
   function fillSelects() {
     const lists = {
-      'ui-language': [{ id: AUTO, name: t('language.auto') }, ...locales],
+      'ui-language': locales,
       skin: skins.map(skin => ({ id: skin.id, name: label('skin', skin) })),
       character: [{ id: NO_CHARACTER, name: t('characters.none') }, ...characters.map(character => ({ id: character.id, name: label('character', character) }))],
       language: languages,
