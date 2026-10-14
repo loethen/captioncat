@@ -1,6 +1,6 @@
 # 角色与动作插拔接口
 
-插拔在源码注册表层完成：添加 / 移除本地模块后重新构建扩展。皮肤只保留 YouTube 原版和「纸」；角色（饭团、二黑）与皮肤相互独立，可搭配任一皮肤，也可选「无」。设置页可选择角色、启停动作和表情。运行时不会从网络下载或执行插件代码。
+插拔在源码注册表层完成：添加 / 移除本地模块后重新构建扩展。皮肤只保留 YouTube 原版和「纸」；角色（目前只有二黑）与皮肤相互独立，可搭配任一皮肤，也可选「无」。设置页可选择角色、启停动作和表情。运行时不会从网络下载或执行插件代码。
 
 ## 新增或替换角色
 
@@ -39,7 +39,7 @@ props: {
 
 道具放在角色的朝向容器内，随角色自动镜像。`sizeEm`、姿势和道具都属于角色包，动作与状态机不写角色形状和素材地址。
 
-移除角色时，从注册表移除它并删除对应素材 / 模块。已保存的无效角色 id 会回退到注册表的第一个角色，因此饭团也可以移除或替换；注册表须至少保留一个角色。
+移除角色时，从注册表移除它并删除对应素材 / 模块。已保存的无效角色 id 会回退到注册表的第一个角色，注册表须至少保留一个角色。
 
 ## 新增或删除日常动作
 
@@ -74,7 +74,6 @@ export const greet = {
 | `walk` | `to`（0–1）、可选 `pose` / `speed` / `prop` | 在字幕上沿移动；默认使用 `walk` 姿势，`speed` 是速度倍数 |
 | `pose` | `ms`、可选 `pose` / `mood` / `prop` / `fx` / `body` / `turn` | 持续指定姿势、表情和道具；`turn: true` 让角色原地掉头；`fx`（`enter` / `appear` / `wave` / `jitter` / `nudge1` / `nudge2` / `tip` / `vanish` / `yank`）播放道具动效，`body`（`lunge` / `jump` / `recoil` / `poke` / `dive`·`bail` / `overstep`·`gasp`·`drop`·`cling`·`climb`）播放角色的全身动效；其中 `dive`、`overstep`、`gasp`、`drop`、`cling` 会让角色停在偏离原位的地方，直到姿势被清除或播放成对的返回动效 |
 | `wait` | `ms`、可选 `pose` | 停留，默认回到普通姿势 |
-| `throw` | 可选 `ms`（默认 800） | 播放道具抛出效果，结束后移除道具 |
 
 `pose: null` / `prop: null` 可显式清除姿势或道具。没有 `prop` 字段时保留当前道具。所有非普通字幕表情会中断日常动作，清除道具；字幕短暂消失时暂停动作，较久消失后取消。
 
@@ -84,7 +83,7 @@ export const greet = {
 
 在 `reactions/index.js` 的 `reactions` 数组中添加 `{ id, name, test }`。按数组顺序匹配，首先命中的规则生效；`test()` 收到小写字幕文本，`id` 对应角色 `states` 中的姿势名。
 
-未启用的规则和角色没有素材的规则会跳过，最后回到 `normal`。角色可用可选的 `reactions: [id, …]` 进一步限定自己响应的规则（例如二黑有 `nervous` 素材，但遇到食物只流口水）。设置页会自动列出注册的规则。饭团「遇到食物就紧张」的规则可在这里更改或移除。
+未启用的规则和角色没有素材的规则会跳过，最后回到 `normal`。设置页会自动列出注册的规则。
 
 ## 自定义渲染器
 
@@ -94,7 +93,7 @@ export const greet = {
 mount(player), size(px), place({x, y}), show(), hide(), fade()
 move(from, to, kind, done), pop(), nod(), land()
 setMood(name), override(nameOrNull), pose(nameOrNull), sleep(boolean)
-face(direction), prop(nameOrNull), propFx(name), bodyFx(name), throwProp(), dispose()
+face(direction), prop(nameOrNull), propFx(name), bodyFx(name), dispose()
 ```
 
 `move()` 完成时调用 `done()`；替换角色或销毁时，`dispose()` 必须取消动画并移除节点。`reduced()` 为真时跳过动态效果。自定义渲染器返回的方法需要可独立调用，避免依赖调用时的 `this`，因为控制器通过环境适配器调用它们。

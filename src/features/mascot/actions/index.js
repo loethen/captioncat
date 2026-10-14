@@ -1,6 +1,4 @@
 import { walk } from './walk.js';
-import { cook } from './cook.js';
-import { trash } from './trash.js';
 import { tease } from './tease.js';
 import { lick } from './lick.js';
 import { laser } from './laser.js';
@@ -12,7 +10,7 @@ import { box } from './box.js';
 import { slip } from './slip.js';
 
 // Explicit, local registration keeps MV3 free of remotely loaded executable code.
-export const actions = [walk, cook, trash, tease, lick, laser, cucumber, sneeze, stretch, cup, box, slip];
+export const actions = [walk, tease, lick, laser, cucumber, sneeze, stretch, cup, box, slip];
 
 export function supportsAction(character, action) {
   return action.requiredStates.every(state => character.states[state]) && action.requiredProps.every(prop => character.props?.[prop]);

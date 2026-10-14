@@ -91,9 +91,6 @@ export function createAssetRenderer({ character, assetURL, reduced }) {
       if (!asset) { prop.style.display = 'none'; prop.removeAttribute('src'); return; }
       Object.assign(prop.style, { display: 'block', ...asset.box }); prop.src = assetURL(asset.src);
     },
-    throwProp() {
-      if (canAnimate()) propAnimation = prop.animate([{ transform: 'translate(0,0) rotate(0)', opacity: 1 }, { transform: 'translate(120%,-130%) rotate(220deg)', opacity: 1, offset: 0.4 }, { transform: 'translate(250%,200%) rotate(540deg)', opacity: 0 }], { duration: 800, easing: 'ease-in-out', fill: 'forwards' });
-    },
     propFx(name) {
       if (!canAnimate()) return;
       cancel(propAnimation);

@@ -16,7 +16,7 @@ export function status(text, error = false) {
 const moodNames = { normal: '平常', happy: '开心', love: '喜欢', food: '馋嘴', nervous: '紧张', sleepy: '睡觉', ask: '疑问', wow: '惊讶' };
 
 export async function bindSettingsForm() {
-  let settings, pending = 0, queue = Promise.resolve();
+  let settings, loaded = false, pending = 0, queue = Promise.resolve();
   const find = id => document.getElementById(id);
   const stage = createMascotPreview(find('preview'));
   for (const [id, options] of [['skin', skins], ['character', [{ id: NO_CHARACTER, name: '无' }, ...characters]], ['language', languages]]) {
@@ -65,6 +65,9 @@ export async function bindSettingsForm() {
       const node = find(id); if (!node) continue;
       if (node.type === 'checkbox') node.checked = value; else node.value = value;
     }
+    // Settings that only matter while their parent switch is on.
+    if (find('pause')) find('pause').disabled = !loaded || !settings.translation.enabled;
+    if (find('action-list')) find('action-list').inert = !settings.actionsEnabled;
     preview();
     const character = getCharacter(settings.characterId);
     if (!character) return;
@@ -94,8 +97,9 @@ export async function bindSettingsForm() {
   const controls = Object.keys(handlers).map(find).filter(Boolean);
   controls.forEach(node => { node.disabled = true; });
   try {
-    settings = await request('settings:get'); render(); status('');
+    settings = await request('settings:get');
     controls.forEach(node => { node.disabled = false; });
+    loaded = true; render(); status('');
     for (const [id, handler] of Object.entries(handlers)) find(id)?.addEventListener('change', event => {
       if (!event.target.validity.valid || event.target.type === 'number' && !Number.isFinite(event.target.valueAsNumber)) { status('延迟请输入 0–2000 的数字', true); return; }
       save(handler(event.target));

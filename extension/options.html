@@ -10,33 +10,34 @@
         <div class="preview large" id="preview"><div class="preview-caption" id="preview-caption"><div class="preview-line"><span>Captions with a little company,</span></div><div class="preview-line"><span>and a little curiosity.</span></div></div></div>
         <div class="preview-control" id="preview-mascot-control" hidden><label for="preview-state">预览表情 / 动作</label><select id="preview-state"></select></div>
         <h2>字幕外观</h2>
-        <label class="field"><span>字幕皮肤</span><select id="skin"></select></label>
-        <p class="hint">字体和字号沿用 YouTube 字幕设置。Alt + Shift + S 快速切换皮肤。</p>
+        <div class="card">
+          <label class="field"><span class="label">字幕皮肤<small>字体和字号沿用 YouTube 字幕设置。Alt + Shift + S 快速切换皮肤。</small></span><select id="skin"></select></label>
+        </div>
         <h2>字幕角色</h2>
-        <label class="field"><span>选择角色</span><select id="character"></select></label>
-        <p class="hint" id="character-description"></p>
-        <div id="mascot-details" hidden>
-        <label class="toggle"><span>让角色做自己的事</span><input id="actions-enabled" type="checkbox"></label>
-        <div id="action-list" class="check-list" aria-label="日常动作"></div>
-        <h2>跟随字幕的表情</h2>
-        <p class="hint">遇到字幕关键词时，角色会做出相应表情。</p>
-        <div id="reaction-list" class="check-list" aria-label="字幕表情"></div>
+        <div class="card">
+          <label class="field"><span class="label">选择角色<small id="character-description"></small></span><select id="character"></select></label>
+          <div id="mascot-details" hidden>
+            <label class="toggle"><span class="label">让角色做自己的事<small>字幕没有触发表情时，随机做下面选中的日常动作。</small></span><input id="actions-enabled" type="checkbox" role="switch"></label>
+            <div class="row"><span class="label">日常动作</span><div id="action-list" class="check-list" aria-label="日常动作"></div></div>
+            <div class="row"><span class="label">跟随字幕的表情<small>遇到字幕关键词时，角色会做出相应表情。</small></span><div id="reaction-list" class="check-list" aria-label="字幕表情"></div></div>
+          </div>
         </div>
       </section>
       <section id="translation-panel" class="tab-panel" hidden>
         <h2>悬停翻译</h2>
-        <p class="hint">把鼠标放在字幕上，查看整句翻译；移开后收起。</p>
-        <label class="toggle"><span>启用悬停翻译</span><input id="translation" type="checkbox"></label>
-        <label class="toggle"><span>悬停时暂停视频，移开后恢复</span><input id="pause" type="checkbox"></label>
-        <label class="field"><span>目标语言</span><select id="language"></select></label>
-        <label class="field"><span>悬停延迟（毫秒）</span><input id="delay" type="number" min="0" max="2000" step="10"></label>
-        <p class="hint">翻译沿用原脚本的 Google 翻译接口。仅悬停时发送当前字幕；结果在本机缓存，最多 500 条。</p>
-        <button class="secondary" id="clear-cache">清除翻译缓存</button>
+        <div class="card">
+          <label class="toggle"><span class="label">启用悬停翻译<small>把鼠标放在字幕上，查看整句翻译；移开后收起。</small></span><input id="translation" type="checkbox" role="switch"></label>
+          <label class="toggle"><span class="label">悬停时暂停视频<small>移开鼠标后恢复播放。</small></span><input id="pause" type="checkbox" role="switch"></label>
+          <label class="field"><span class="label">目标语言</span><select id="language"></select></label>
+          <label class="field"><span class="label">悬停延迟（毫秒）<small>鼠标停留多久后开始翻译，0–2000。</small></span><input id="delay" type="number" min="0" max="2000" step="10"></label>
+          <div class="field"><span class="label">翻译缓存<small>翻译沿用原脚本的 Google 翻译接口。仅悬停时发送当前字幕；结果在本机缓存，最多 500 条。</small></span><button class="secondary" id="clear-cache">清除缓存</button></div>
+        </div>
       </section>
       <section id="words-panel" class="tab-panel" hidden>
         <h2>单词本</h2>
-        <label class="toggle"><span>点击英文字幕收集单词</span><input id="vocabulary" type="checkbox"></label>
-        <p class="hint">单词按视频保存在本机，可复制复习 Prompt，也可导出带原句的 JSON。</p>
+        <div class="card">
+          <label class="toggle"><span class="label">点击英文字幕收集单词<small>单词按视频保存在本机，可复制复习 Prompt，也可导出带原句的 JSON。</small></span><input id="vocabulary" type="checkbox" role="switch"></label>
+        </div>
         <div class="word-tools"><input id="word-search" type="search" placeholder="搜索单词或视频" aria-label="搜索单词或视频"><button class="secondary" id="export-words">导出 JSON</button></div>
         <div id="video-list"></div>
       </section>

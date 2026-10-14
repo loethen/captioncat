@@ -52,9 +52,6 @@ export function createMascot(env, random = Math.random, config = timing) {
         if (step.body) env.bodyFx(step.body);
       }
       if (now - activity.started >= step.ms) next();
-    } else if (step.type === 'throw') {
-      if (activity.started === null) { activity.started = now; env.pose(null); env.throwProp(); }
-      if (now - activity.started >= (step.ms || 800)) { env.prop(null); next(); }
     } else {
       // An invalid plugin cannot leave the mascot stuck forever.
       endActivity(now);

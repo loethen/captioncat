@@ -5,15 +5,15 @@
   <header><div><h1>字幕伙伴</h1><p>让字幕更有意思</p></div><span class="version">0.1</span></header>
   <main>
     <div class="preview" id="preview"><div class="preview-caption" id="preview-caption"><div class="preview-line"><span>Captions with a little company,</span></div><div class="preview-line"><span>and a little curiosity.</span></div></div></div>
-    <section aria-label="字幕外观">
+    <section class="card" aria-label="字幕外观">
       <label class="field"><span>字幕皮肤</span><select id="skin"></select></label>
       <label class="field"><span>字幕角色</span><select id="character"></select></label>
       <label class="field" id="preview-mascot-control" hidden><span>预览表情 / 动作</span><select id="preview-state"></select></label>
     </section>
-    <section aria-label="翻译和学习">
-      <label class="toggle"><span>悬停翻译</span><input id="translation" type="checkbox"></label>
-      <label class="toggle sub"><span>悬停时暂停视频</span><input id="pause" type="checkbox"></label>
-      <label class="toggle"><span>点击收集单词</span><input id="vocabulary" type="checkbox"></label>
+    <section class="card" aria-label="翻译和学习">
+      <label class="toggle"><span>悬停翻译</span><input id="translation" type="checkbox" role="switch"></label>
+      <label class="toggle"><span>悬停时暂停视频</span><input id="pause" type="checkbox" role="switch"></label>
+      <label class="toggle"><span>点击收集单词</span><input id="vocabulary" type="checkbox" role="switch"></label>
     </section>
     <p class="hint" id="page-status">正在读取设置…</p>
     <button class="primary wide" id="open-options">设置与单词本 <span aria-hidden="true">↗</span></button>

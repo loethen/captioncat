@@ -1,8 +1,7 @@
-import { onigiri } from './onigiri/index.js';
 import { erhei } from './erhei/index.js';
 
 // Add/remove a character here. No controller changes are needed.
-export const characters = [onigiri, erhei];
+export const characters = [erhei];
 // Characters are independent of skins; this id means the captions have no character.
 export const NO_CHARACTER = 'none';
 export function getCharacter(id) { return id === NO_CHARACTER ? null : characters.find(character => character.id === id) || characters[0]; }

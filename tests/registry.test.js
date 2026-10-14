@@ -15,22 +15,22 @@ test('registered characters have packaged, valid artwork and unique IDs', async 
 });
 test('character capabilities and short captions filter activities', () => {
   const enabled = actions.map(action => action.id);
-  assert.deepEqual(availableActions(characters[0], enabled, { fs: 20, span: 200 }).map(action => action.id), ['walk', 'cook', 'trash']);
+  assert.deepEqual(availableActions(characters[0], enabled, { fs: 20, span: 200 }).map(action => action.id), ['walk', 'tease', 'lick', 'laser', 'cucumber', 'sneeze', 'stretch', 'cup', 'box', 'slip']);
   assert.deepEqual(availableActions({ states: { walk: {} }, props: {} }, enabled, { fs: 20, span: 200 }).map(action => action.id), ['walk']);
-  assert.deepEqual(availableActions(characters[0], enabled, { fs: 20, span: 0 }).map(action => action.id), ['cook']);
+  assert.deepEqual(availableActions(characters[0], enabled, { fs: 20, span: 0 }).map(action => action.id), ['tease', 'lick', 'cucumber', 'sneeze', 'stretch', 'cup', 'slip']);
   assert.deepEqual(availableActions(characters[0], [], { fs: 20, span: 200 }), []);
 });
 test('reaction priority, disabling and missing artwork fall back safely', () => {
   assert.equal(moodOf('thank you, I love it!'), 'happy');
-  assert.equal(moodOf('I want rice'), 'nervous');
+  assert.equal(moodOf('I want fish'), 'food');
   assert.equal(moodOf('What happened'), 'ask');
   assert.equal(moodOf('What happened', []), 'normal');
   assert.equal(moodOf('What happened', ['ask'], { states: { normal: {} } }), 'normal');
 });
 test('invalid storage is normalized; partial changes preserve nested settings', () => {
-  const normalized = normalizeSettings({ skinId: 'gone', characterId: 'gone', disabledActions: ['cook', 'gone', 'cook'], translation: { delay: -12, targetLanguage: 'gone' } });
-  assert.equal(normalized.skinId, 'wa-light'); assert.equal(normalized.characterId, 'onigiri');
-  assert.deepEqual(normalized.disabledActions, ['cook']); assert.equal(normalized.translation.delay, 0);
+  const normalized = normalizeSettings({ skinId: 'gone', characterId: 'gone', disabledActions: ['lick', 'gone', 'lick'], translation: { delay: -12, targetLanguage: 'gone' } });
+  assert.equal(normalized.skinId, 'wa-light'); assert.equal(normalized.characterId, 'erhei');
+  assert.deepEqual(normalized.disabledActions, ['lick']); assert.equal(normalized.translation.delay, 0);
   const patched = patchSettings(defaultSettings(), { translation: { enabled: false } });
   assert.equal(patched.translation.pauseOnHover, true); assert.equal(patched.translation.enabled, false);
   assert.deepEqual(normalizeSettings(null), defaultSettings());

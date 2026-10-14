@@ -10,8 +10,6 @@ export const erhei = {
   id: 'erhei', name: '二黑', description: '胖胖的像素小黑猫，会巡逻、舔爪，还爱扑逗猫草。',
   // 素材画布是 48×48，猫本身 48×30，所以猫的高度约为 2.4 倍字高。
   sizeEm: 3.84, states,
-  // 二黑听到吃的会流口水而不是紧张；nervous 只在字幕消失、脚下没东西时使用。
-  reactions: ['happy', 'love', 'food', 'sleepy', 'ask', 'wow'],
   props: {
     // 同一根黄瓜的两个位置：身后，以及掉头之后的面前（朝向容器会镜像，所以落在同一处）。
     cucumber: { src: asset('cucumber'), box: { left: '-34%', bottom: '2%', width: '29.2%', height: '10.4%' } },
