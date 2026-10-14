@@ -5,6 +5,8 @@ import { reactions, supportsReaction } from '../features/mascot/reactions/index.
 import { SETTINGS_KEY, enabledIds, languages, normalizeSettings, patchSettings } from '../shared/settings.js';
 import { request, watchStorage } from '../shared/messages.js';
 import { element } from '../shared/dom.js';
+import { AUTO, label, locales, t } from '../shared/i18n.js';
+import { applyLocale, initLocale } from './localize.js';
 import { createMascotPreview } from './mascot-preview.js';
 
 export function status(text, error = false) {
@@ -13,16 +15,24 @@ export function status(text, error = false) {
 }
 
 // Expressions offered in the preview; other states are steps inside actions.
-const moodNames = { normal: '平常', happy: '开心', love: '喜欢', food: '馋嘴', nervous: '紧张', sleepy: '睡觉', ask: '疑问', wow: '惊讶' };
+const previewMoods = ['normal', 'happy', 'love', 'food', 'nervous', 'sleepy', 'ask', 'wow'];
 
-export async function bindSettingsForm() {
+// `onLocale` runs after the interface language changes, for text the caller renders itself.
+export async function bindSettingsForm({ onLocale } = {}) {
+  initLocale();
   let settings, loaded = false, pending = 0, queue = Promise.resolve();
   const find = id => document.getElementById(id);
   const stage = createMascotPreview(find('preview'));
-  for (const [id, options] of [['skin', skins], ['character', [{ id: NO_CHARACTER, name: '无' }, ...characters]], ['language', languages]]) {
-    const select = find(id);
-    if (select) select.replaceChildren(...options.map(item => new Option(item.name, item.id)));
+  function fillSelects() {
+    const lists = {
+      'ui-language': [{ id: AUTO, name: t('language.auto') }, ...locales],
+      skin: skins.map(skin => ({ id: skin.id, name: label('skin', skin) })),
+      character: [{ id: NO_CHARACTER, name: t('characters.none') }, ...characters.map(character => ({ id: character.id, name: label('character', character) }))],
+      language: languages,
+    };
+    for (const [id, options] of Object.entries(lists)) find(id)?.replaceChildren(...options.map(item => new Option(item.name, item.id)));
   }
+  fillSelects(); status(t('status.loading'));
   function preview() {
     const character = getCharacter(settings.characterId);
     const select = find('preview-state');
@@ -30,8 +40,8 @@ export async function bindSettingsForm() {
       const chosen = select.value;
       const group = (label, options) => { const node = element('optgroup'); node.label = label; node.append(...options); return node; };
       select.replaceChildren(
-        group('表情', Object.keys(moodNames).filter(id => character.states[id]).map(id => new Option(moodNames[id], `state:${id}`))),
-        group('动作', actions.filter(action => supportsAction(character, action)).map(action => new Option(action.name, `action:${action.id}`))),
+        group(t('preview.moods'), previewMoods.filter(id => character.states[id]).map(id => new Option(t(`mood.${id}`), `state:${id}`))),
+        group(t('preview.actions'), actions.filter(action => supportsAction(character, action)).map(action => new Option(label('action', action), `action:${action.id}`))),
       );
       if ([...select.options].some(option => option.value === chosen)) select.value = chosen;
     }
@@ -41,22 +51,23 @@ export async function bindSettingsForm() {
       const node = find(id); if (node) node.hidden = !character;
     }
     find('preview').dataset.skin = settings.skinId;
-    if (find('character-description')) find('character-description').textContent = character?.description || '字幕上不显示角色。';
+    if (find('character-description')) find('character-description').textContent = character ? label('character', character, 'description') : t('characters.noneDescription');
   }
-  function pluginList(id, registry, enabled, compatible, callback) {
+  function pluginList(id, kind, registry, enabled, compatible, callback) {
     const root = find(id);
     if (!root) return;
     root.replaceChildren(...registry.map(plugin => {
-      const label = element('label');
+      const row = element('label');
       const checkbox = element('input'); checkbox.type = 'checkbox'; checkbox.checked = enabled.includes(plugin.id); checkbox.disabled = !compatible(plugin);
-      if (checkbox.disabled) label.title = '当前角色不支持此动作或表情';
+      if (checkbox.disabled) row.title = t('plugins.unsupported');
       checkbox.addEventListener('change', () => callback(plugin.id, checkbox.checked));
-      label.append(checkbox, element('span', '', plugin.name)); return label;
+      row.append(checkbox, element('span', '', label(kind, plugin))); return row;
     }));
   }
   function render() {
+    if (applyLocale(settings.uiLanguage)) { fillSelects(); onLocale?.(); }
     const values = {
-      skin: settings.skinId, character: settings.characterId,
+      'ui-language': settings.uiLanguage, skin: settings.skinId, character: settings.characterId,
       'actions-enabled': settings.actionsEnabled, translation: settings.translation.enabled,
       pause: settings.translation.pauseOnHover, vocabulary: settings.vocabulary.enabled,
       language: settings.translation.targetLanguage, delay: settings.translation.delay,
@@ -72,15 +83,15 @@ export async function bindSettingsForm() {
     const character = getCharacter(settings.characterId);
     if (!character) return;
     const toggle = (key, id, enabled) => save({ [key]: enabled ? settings[key].filter(value => value !== id) : [...settings[key], id] });
-    pluginList('action-list', actions, enabledIds(actions, settings.disabledActions), action => supportsAction(character, action), (id, enabled) => toggle('disabledActions', id, enabled));
-    pluginList('reaction-list', reactions, enabledIds(reactions, settings.disabledReactions), reaction => supportsReaction(character, reaction), (id, enabled) => toggle('disabledReactions', id, enabled));
+    pluginList('action-list', 'action', actions, enabledIds(actions, settings.disabledActions), action => supportsAction(character, action), (id, enabled) => toggle('disabledActions', id, enabled));
+    pluginList('reaction-list', 'reaction', reactions, enabledIds(reactions, settings.disabledReactions), reaction => supportsReaction(character, reaction), (id, enabled) => toggle('disabledReactions', id, enabled));
   }
   function save(patch) {
-    settings = patchSettings(settings, patch); pending++; render(); status('保存中…');
+    settings = patchSettings(settings, patch); pending++; render(); status(t('status.saving'));
     queue = queue.then(async () => {
       try {
         const result = await request('settings:patch', { patch });
-        pending--; if (!pending) { settings = result; render(); status('已自动保存'); }
+        pending--; if (!pending) { settings = result; render(); status(t('status.saved')); }
       } catch (error) {
         pending--; status(error.message, true);
         if (!pending) { try { settings = await request('settings:get'); render(); } catch {} }
@@ -88,6 +99,7 @@ export async function bindSettingsForm() {
     });
   }
   const handlers = {
+    'ui-language': node => ({ uiLanguage: node.value }),
     skin: node => ({ skinId: node.value }), character: node => ({ characterId: node.value }),
     'actions-enabled': node => ({ actionsEnabled: node.checked }),
     translation: node => ({ translation: { enabled: node.checked } }), pause: node => ({ translation: { pauseOnHover: node.checked } }),
@@ -101,7 +113,7 @@ export async function bindSettingsForm() {
     controls.forEach(node => { node.disabled = false; });
     loaded = true; render(); status('');
     for (const [id, handler] of Object.entries(handlers)) find(id)?.addEventListener('change', event => {
-      if (!event.target.validity.valid || event.target.type === 'number' && !Number.isFinite(event.target.valueAsNumber)) { status('延迟请输入 0–2000 的数字', true); return; }
+      if (!event.target.validity.valid || event.target.type === 'number' && !Number.isFinite(event.target.valueAsNumber)) { status(t('translation.delayInvalid'), true); return; }
       save(handler(event.target));
     });
     find('preview-state')?.addEventListener('change', preview);

@@ -1,4 +1,5 @@
 import { request } from '../../shared/messages.js';
+import { label, t } from '../../shared/i18n.js';
 import { skins } from './registry.js';
 import skinCSS from './skins.css';
 
@@ -56,7 +57,7 @@ export function createSkinFeature(source, notify) {
     try {
       const next = await request('skin:next');
       settings = next; apply();
-      notify(`字幕皮肤：${skins.find(skin => skin.id === next.skinId).name}`);
+      notify(t('skins.switched', { name: label('skin', skins.find(skin => skin.id === next.skinId)) }));
     } catch (error) { notify(error.message); }
   }
   window.addEventListener('keydown', keydown, true);

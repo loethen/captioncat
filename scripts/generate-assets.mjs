@@ -12,4 +12,4 @@ await writeFile(`${root}/extension/assets/characters/erhei/cucumber.svg`, cucumb
 await writeFile(`${root}/extension/assets/characters/erhei/cup.svg`, cupSVG());
 await writeFile(`${root}/extension/assets/characters/erhei/box.svg`, boxSVG());
 
-console.log('二黑的角色与道具 SVG 已生成。');
+console.log('Generated the Erhei character and prop SVGs.');

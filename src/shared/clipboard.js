@@ -1,3 +1,5 @@
+import { t } from './i18n.js';
+
 export async function copyText(text) {
   try { await navigator.clipboard.writeText(text); return; } catch { /* Fullscreen player may lack focus. */ }
   const field = document.createElement('textarea');
@@ -9,5 +11,5 @@ export async function copyText(text) {
   const copied = document.execCommand('copy');
   field.remove();
   previous?.focus?.({ preventScroll: true });
-  if (!copied) throw new Error('复制失败，请在单词本中重试');
+  if (!copied) throw new Error(t('error.copyFailed'));
 }

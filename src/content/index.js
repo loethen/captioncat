@@ -7,10 +7,12 @@ import { createVocabularyFeature } from '../features/vocabulary/index.js';
 import { request, watchStorage } from '../shared/messages.js';
 import { SETTINGS_KEY, normalizeSettings } from '../shared/settings.js';
 import { element } from '../shared/dom.js';
+import { AUTO, setLocale } from '../shared/i18n.js';
 
 const instance = '__ytCaptionCompanion';
 async function start() {
   if (globalThis[instance]) return;
+  setLocale(AUTO);
   const source = new CaptionSource();
   const toast = element('div', 'ytc-toast'); toast.dataset.ytcOverlay = ''; toast.setAttribute('role', 'status');
   let toastTimer;
@@ -22,6 +24,7 @@ async function start() {
   const features = [createSkinFeature(source, notify), createMascotFeature(source), createTranslationFeature(source), createVocabularyFeature(source, notify)];
   function update(value) {
     const settings = normalizeSettings(value);
+    setLocale(settings.uiLanguage);
     document.documentElement.toggleAttribute('data-ytc-interactive', settings.translation.enabled || settings.vocabulary.enabled);
     features.forEach(feature => feature.update(settings));
   }

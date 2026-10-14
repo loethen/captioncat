@@ -26,10 +26,10 @@ const config = {
 if (process.argv.includes('--watch')) {
   const ctx = await context(config);
   await ctx.watch();
-  console.log('正在监听 src/；修改 manifest、HTML 或素材后请重新运行，并在扩展管理页重新加载。');
+  console.log('Watching src/. After changing the manifest, HTML or assets, run the build again and reload the extension.');
 } else {
   await build(config);
   const manifest = JSON.parse(await readFile(path.join(out, 'manifest.json'), 'utf8'));
   await writeFile(path.join(out, 'build-info.json'), JSON.stringify({ version: manifest.version }, null, 2));
-  console.log(`扩展已生成：${out}`);
+  console.log(`Extension built: ${out}`);
 }

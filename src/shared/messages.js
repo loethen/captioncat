@@ -1,6 +1,11 @@
+import { t } from './i18n.js';
+
 export async function request(type, payload = {}) {
   const result = await chrome.runtime.sendMessage({ type, ...payload });
-  if (!result?.ok) throw new Error(result?.error || '扩展连接已断开，请刷新 YouTube 页面');
+  if (!result?.ok) {
+    const { code = 'disconnected', params } = result?.error || {};
+    throw new Error(t(`error.${code}`, params));
+  }
   return result.data;
 }
 

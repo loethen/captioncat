@@ -20,6 +20,8 @@ header { display: flex; align-items: center; justify-content: space-between; }
 h1, h2, p { margin: 0; }
 h1 { font-size: 22px; font-weight: 600; line-height: 1.4; }
 header p { color: var(--muted); font-size: 13px; margin-top: 3px; }
+.header-tools { display: flex; align-items: center; gap: 10px; }
+.header-tools select { padding: 4px 8px; font-size: 12px; }
 .version { color: #909090; font-size: 12px; }
 h2 { font-size: 13px; font-weight: 600; color: var(--muted); margin: 26px 0 8px; }
 /* A card groups related settings; rows inside are separated by hairlines. */
@@ -65,7 +67,7 @@ nav { display: inline-flex; gap: 2px; padding: 3px; margin-bottom: 24px; border-
 nav button { background: transparent; padding: 6px 16px; border-radius: 7px; color: var(--muted); }
 nav button:hover:not(:disabled) { background: transparent; color: var(--foreground); }
 nav button.active, nav button.active:hover { background: white; color: var(--foreground); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.12); }
-nav span { color: #888; font-size: 12px; margin-left: 6px; }
+nav .count { color: #888; font-size: 12px; margin-left: 6px; }
 .tab-panel > h2:first-child { margin-top: 0; }
 .check-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .check-list label { position: relative; padding: 4px 12px; border: 1px solid #ddd; border-radius: 999px; font-size: 13px; color: var(--muted); user-select: none; }

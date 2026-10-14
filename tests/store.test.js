@@ -45,5 +45,5 @@ test('concurrent settings patches and shortcut cycles are atomic', async () => {
   assert.equal(settings.translation.enabled, false); assert.equal(settings.translation.pauseOnHover, false); assert.equal(settings.skinId, 'wa-light');
 });
 test('review prompt retains the numbered vocabulary and canonical video link', () => {
-  assert.equal(reviewPrompt([{ word: 'hello' }, { word: 'world' }], 'https://www.youtube.com/watch?v=a'), '把所有单词加入我的复习计划，并生成单词的含义和例句。\n\n1. hello\n2. world\n\nhttps://www.youtube.com/watch?v=a');
+  assert.equal(reviewPrompt([{ word: 'hello' }, { word: 'world' }], 'https://www.youtube.com/watch?v=a'), 'Add all of these words to my review plan, and give the meaning and an example sentence for each.\n\n1. hello\n2. world\n\nhttps://www.youtube.com/watch?v=a');
 });

@@ -3,6 +3,7 @@ import { wordAtOffset, videoContext, reviewPrompt } from '../../shared/text.js';
 import { request, watchStorage } from '../../shared/messages.js';
 import { WORDS_KEY } from '../../shared/settings.js';
 import { copyText } from '../../shared/clipboard.js';
+import { t } from '../../shared/i18n.js';
 
 export function getWordAtPoint(x, y, window) {
   const caret = document.caretPositionFromPoint?.(x, y);
@@ -23,30 +24,35 @@ export function getWordAtPoint(x, y, window) {
 
 export function createVocabularyFeature(source, notify) {
   const root = element('div', 'ytc-vocabulary'); root.dataset.ytcOverlay = '';
-  const pill = element('button', 'ytc-pill', 'Aa'); pill.type = 'button'; pill.setAttribute('aria-label', '当前视频的单词'); pill.setAttribute('aria-expanded', 'false');
+  const pill = element('button', 'ytc-pill', 'Aa'); pill.type = 'button'; pill.setAttribute('aria-expanded', 'false');
   const card = element('div', 'ytc-word-card');
-  const title = element('div', 'ytc-word-heading', '当前视频');
+  const title = element('div', 'ytc-word-heading');
   const list = element('div', 'ytc-word-list');
   const bar = element('div', 'ytc-word-bar');
-  const clear = element('button', '', '清空'), copy = element('button', '', '复制复习 Prompt');
+  const clear = element('button'), copy = element('button');
   bar.append(clear, copy); card.append(title, list, bar); root.append(pill, card); stopPlayerEvents(root);
   let settings, all = {}, context = videoContext(location.href, document.title), pinned = false, closeTimer, flashTimer, revision = 0, escapeClosing = false;
   const current = () => context && all[context.id];
+  function relabel() {
+    pill.setAttribute('aria-label', t('vocabulary.panelLabel')); title.textContent = t('vocabulary.thisVideo');
+    clear.textContent = t('vocabulary.clear'); copy.textContent = t('vocabulary.copyPrompt');
+  }
   function setOpen(value) { root.classList.toggle('ytc-open', value); pill.setAttribute('aria-expanded', String(value)); }
   function render() {
     const words = current()?.words || [];
     if (!root.classList.contains('ytc-flash')) pill.textContent = words.length ? `Aa ${words.length}` : 'Aa';
     list.replaceChildren(); clear.disabled = copy.disabled = !words.length;
-    if (!words.length) list.append(element('span', 'ytc-empty', '点击英文字幕中的单词即可收录'));
+    if (!words.length) list.append(element('span', 'ytc-empty', t('vocabulary.panelEmpty')));
     for (const item of words) {
       const chip = element('button', 'ytc-word-chip', item.word);
-      chip.title = `点击删除 ${item.word}`; chip.setAttribute('aria-label', `删除单词 ${item.word}`);
+      chip.title = t('vocabulary.removeTitle', { word: item.word }); chip.setAttribute('aria-label', t('vocabulary.remove', { word: item.word }));
       chip.addEventListener('click', async () => {
         try { await request('words:remove', { videoId: context.id, word: item.word }); } catch (error) { notify(error.message); }
       });
       list.append(chip);
     }
   }
+  relabel();
   const unwatch = watchStorage(WORDS_KEY, value => { revision++; all = value || {}; render(); });
   const initialRevision = revision;
   request('words:get').then(value => { if (initialRevision === revision) { all = value; render(); } }).catch(error => notify(error.message));
@@ -92,14 +98,14 @@ export function createVocabularyFeature(source, notify) {
   window.addEventListener('click', click, true);
   copy.addEventListener('click', async () => {
     if (!current()?.words.length) return;
-    try { await copyText(reviewPrompt(current().words, context.url)); notify('复习 Prompt 已复制'); } catch (error) { notify(error.message); }
+    try { await copyText(reviewPrompt(current().words, context.url)); notify(t('vocabulary.promptCopied')); } catch (error) { notify(error.message); }
   });
   clear.addEventListener('click', async () => {
     if (!context) return;
     try { await request('words:clear-video', { videoId: context.id }); } catch (error) { notify(error.message); }
   });
   return {
-    update(value) { settings = value; root.style.display = value.vocabulary.enabled && context ? '' : 'none'; },
+    update(value) { settings = value; relabel(); render(); root.style.display = value.vocabulary.enabled && context ? '' : 'none'; },
     dispose() { clearTimeout(closeTimer); clearTimeout(flashTimer); unwatch(); unmount(); root.remove(); window.removeEventListener('pointerdown', pointerdown, true); window.removeEventListener('dblclick', dblclick, true); window.removeEventListener('click', click, true); },
   };
 }

@@ -1,6 +1,6 @@
 export const skins = Object.freeze([
-  { id: 'off', name: 'YouTube 原版' },
-  { id: 'wa-light', name: '纸' },
+  { id: 'off', name: 'YouTube default' },
+  { id: 'wa-light', name: 'Paper' },
 ]);
 
 export function nextSkin(id) {

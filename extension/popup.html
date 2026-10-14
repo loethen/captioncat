@@ -1,23 +1,23 @@
 <!doctype html>
-<html lang="zh-CN">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>字幕伙伴</title><link rel="stylesheet" href="popup.css"></head>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-i18n="app.name">Caption Companion</title><link rel="stylesheet" href="popup.css"></head>
 <body class="popup">
-  <header><div><h1>字幕伙伴</h1><p>让字幕更有意思</p></div><span class="version">0.1</span></header>
+  <header><div><h1 data-i18n="app.name">Caption Companion</h1><p data-i18n="app.tagline">Make captions more fun</p></div><div class="header-tools"><select id="ui-language" aria-label="Interface language" data-i18n-attr="aria-label:language.label"></select><span class="version">0.1</span></div></header>
   <main>
     <div class="preview" id="preview"><div class="preview-caption" id="preview-caption"><div class="preview-line"><span>Captions with a little company,</span></div><div class="preview-line"><span>and a little curiosity.</span></div></div></div>
-    <section class="card" aria-label="字幕外观">
-      <label class="field"><span>字幕皮肤</span><select id="skin"></select></label>
-      <label class="field"><span>字幕角色</span><select id="character"></select></label>
-      <label class="field" id="preview-mascot-control" hidden><span>预览表情 / 动作</span><select id="preview-state"></select></label>
+    <section class="card" aria-label="Caption appearance" data-i18n-attr="aria-label:skins.heading">
+      <label class="field"><span data-i18n="skins.label">Caption skin</span><select id="skin"></select></label>
+      <label class="field"><span data-i18n="characters.label">Caption character</span><select id="character"></select></label>
+      <label class="field" id="preview-mascot-control" hidden><span data-i18n="preview.label">Preview expression / action</span><select id="preview-state"></select></label>
     </section>
-    <section class="card" aria-label="翻译和学习">
-      <label class="toggle"><span>悬停翻译</span><input id="translation" type="checkbox" role="switch"></label>
-      <label class="toggle"><span>悬停时暂停视频</span><input id="pause" type="checkbox" role="switch"></label>
-      <label class="toggle"><span>点击收集单词</span><input id="vocabulary" type="checkbox" role="switch"></label>
+    <section class="card" aria-label="Translation and learning" data-i18n-attr="aria-label:popup.learning">
+      <label class="toggle"><span data-i18n="translation.toggle">Hover translation</span><input id="translation" type="checkbox" role="switch"></label>
+      <label class="toggle"><span data-i18n="translation.pause">Pause video while hovering</span><input id="pause" type="checkbox" role="switch"></label>
+      <label class="toggle"><span data-i18n="vocabulary.toggle">Click to collect words</span><input id="vocabulary" type="checkbox" role="switch"></label>
     </section>
-    <p class="hint" id="page-status">正在读取设置…</p>
-    <button class="primary wide" id="open-options">设置与单词本 <span aria-hidden="true">↗</span></button>
-    <p class="footnote">Alt + Shift + S 切换字幕皮肤</p>
+    <p class="hint" id="page-status"></p>
+    <button class="primary wide" id="open-options"><span data-i18n="popup.openOptions">Settings &amp; vocabulary</span> <span aria-hidden="true">↗</span></button>
+    <p class="footnote" data-i18n="skins.shortcut">Alt + Shift + S switches the caption skin</p>
     <p class="status" id="status" role="status"></p>
   </main>
   <script src="popup.js"></script>

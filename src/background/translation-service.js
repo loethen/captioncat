@@ -1,9 +1,10 @@
 import { CACHE_KEY, languages } from '../shared/settings.js';
+import { AppError } from '../shared/errors.js';
 
 export function parseTranslation(data) {
-  if (!Array.isArray(data?.[0])) throw new Error('翻译服务返回格式异常');
+  if (!Array.isArray(data?.[0])) throw new AppError('badResponse');
   const translated = data[0].map(item => typeof item?.[0] === 'string' ? item[0] : '').join('').trim();
-  if (!translated) throw new Error('翻译结果为空');
+  if (!translated) throw new AppError('emptyResult');
   return translated;
 }
 
@@ -24,19 +25,19 @@ export function createTranslationService({ storage, fetcher = fetch, maxCache = 
       const url = new URL('https://translate.googleapis.com/translate_a/single');
       url.search = new URLSearchParams({ client: 'gtx', sl: 'auto', tl: target, dt: 't', q: text }).toString();
       const response = await fetcher(url.href, { signal: controller.signal, credentials: 'omit' });
-      if (!response.ok) throw new Error(response.status === 429 ? '翻译请求过于频繁，请稍后重试' : `翻译服务暂不可用（${response.status}）`);
+      if (!response.ok) throw response.status === 429 ? new AppError('rateLimited') : new AppError('unavailable', { status: response.status });
       return parseTranslation(await response.json());
     } catch (error) {
-      if (error.name === 'AbortError') throw new Error('翻译请求超时');
-      if (error instanceof TypeError) throw new Error('网络连接失败，请稍后重试');
+      if (error.name === 'AbortError') throw new AppError('timeout');
+      if (error instanceof TypeError) throw new AppError('network');
       throw error;
     } finally { clearTimeout(timer); }
   }
 
   return {
     async translate(text, target) {
-      if (typeof text !== 'string' || !text.trim() || text.length > 2000) throw new Error('字幕为空或过长（最多 2000 字）');
-      if (!languages.some(language => language.id === target)) throw new Error('不支持的翻译语言');
+      if (typeof text !== 'string' || !text.trim() || text.length > 2000) throw new AppError('invalidText');
+      if (!languages.some(language => language.id === target)) throw new AppError('unsupportedLanguage');
       text = text.trim();
       await load();
       const key = `${target}\n${text}`;

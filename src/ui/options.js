@@ -5,9 +5,10 @@ import { WORDS_KEY } from '../shared/settings.js';
 import { element } from '../shared/dom.js';
 import { reviewPrompt } from '../shared/text.js';
 import { copyText } from '../shared/clipboard.js';
+import { plural, t } from '../shared/i18n.js';
 
-bindSettingsForm();
 let all = {}, revision = 0;
+bindSettingsForm({ onLocale: renderWords });
 for (const button of document.querySelectorAll('[data-tab]')) button.addEventListener('click', () => {
   for (const tab of document.querySelectorAll('[data-tab]')) { const active = button === tab; tab.classList.toggle('active', active); tab.setAttribute('aria-pressed', String(active)); }
   for (const panel of document.querySelectorAll('.tab-panel')) panel.hidden = panel.id !== button.dataset.tab;
@@ -28,38 +29,38 @@ function renderWords() {
     const heading = element('div', 'video-heading');
     const link = element('a', '', video.title || video.id); link.href = video.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
     heading.append(link);
-    entry.append(heading, element('p', 'video-meta', `${video.words.length} 个单词`));
+    entry.append(heading, element('p', 'video-meta', plural('vocabulary.count', video.words.length)));
     for (const item of words) {
       const row = element('div', 'word-row');
-      const remove = element('button', '', '×'); remove.setAttribute('aria-label', `删除 ${item.word}`);
+      const remove = element('button', '', '×'); remove.setAttribute('aria-label', t('vocabulary.remove', { word: item.word }));
       remove.addEventListener('click', async () => {
         try { await request('words:remove', { videoId: video.id, word: item.word }); } catch (error) { status(error.message, true); }
       });
       row.append(element('strong', '', item.word), element('p', '', item.caption), remove); entry.append(row);
     }
     const controls = element('div', 'video-actions');
-    const copy = element('button', '', '复制复习 Prompt');
+    const copy = element('button', '', t('vocabulary.copyPrompt'));
     copy.addEventListener('click', async () => {
-      try { await copyText(reviewPrompt(video.words, video.url)); status('复习 Prompt 已复制'); } catch (error) { status(error.message, true); }
+      try { await copyText(reviewPrompt(video.words, video.url)); status(t('vocabulary.promptCopied')); } catch (error) { status(error.message, true); }
     });
-    const clear = element('button', '', '清空此视频');
+    const clear = element('button', '', t('vocabulary.clearVideo'));
     clear.addEventListener('click', async () => {
       try { await request('words:clear-video', { videoId: video.id }); } catch (error) { status(error.message, true); }
     });
     controls.append(copy, clear); entry.append(controls); container.append(entry);
   }
-  if (!container.children.length) container.append(element('p', 'empty', search ? '没有找到匹配的单词或视频。' : '还没有单词。打开 YouTube 视频，点击英文字幕中的单词开始收集。'));
+  if (!container.children.length) container.append(element('p', 'empty', search ? t('vocabulary.noMatch') : t('vocabulary.empty')));
 }
 document.querySelector('#word-search').addEventListener('input', renderWords);
 document.querySelector('#export-words').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), videos: Object.values(all) }, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob), link = element('a');
   link.href = url; link.download = 'youtube-vocabulary.json'; document.body.append(link); link.click(); link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000); status('单词本已导出');
+  setTimeout(() => URL.revokeObjectURL(url), 1000); status(t('vocabulary.exported'));
 });
 document.querySelector('#clear-cache').addEventListener('click', async event => {
   const button = event.currentTarget; button.disabled = true;
-  try { await request('translation:clear'); status('翻译缓存已清除'); } catch (error) { status(error.message, true); }
+  try { await request('translation:clear'); status(t('translation.cacheCleared')); } catch (error) { status(error.message, true); }
   finally { button.disabled = false; }
 });
 watchStorage(WORDS_KEY, value => { revision++; all = value || {}; renderWords(); });

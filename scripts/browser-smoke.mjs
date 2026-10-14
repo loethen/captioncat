@@ -93,7 +93,7 @@ try {
   await page.mouse.move(5, 5);
   await page.evaluate(() => document.querySelector('.ytp-caption-segment').textContent = 'old sentence');
   await page.locator('.ytp-caption-segment').hover();
-  await page.waitForFunction(() => document.querySelector('.ytc-translation').textContent === '翻译中…');
+  await page.waitForFunction(() => document.querySelector('.ytc-translation').textContent === 'Translating…');
   await page.evaluate(() => document.querySelector('.ytp-caption-segment').textContent = 'new sentence');
   await page.waitForFunction(() => document.querySelector('.ytc-translation').textContent === '译文：new sentence');
   await page.waitForTimeout(550); assert.equal(await page.locator('.ytc-translation').textContent(), '译文：new sentence'); pass('late translation responses cannot overwrite refreshed captions');
@@ -107,7 +107,7 @@ try {
   await popup.locator('#mascot').check(); await page.waitForFunction(() => getComputedStyle(document.querySelector('.ytc-mascot')).display === 'block'); pass('popup settings propagate to existing YouTube pages');
   await popup.locator('#translation').check(); await popup.locator('#vocabulary').check();
   await page.waitForFunction(() => document.documentElement.hasAttribute('data-ytc-interactive'));
-  await popup.waitForFunction(() => document.querySelector('#status').textContent === '已自动保存');
+  await popup.waitForFunction(() => document.querySelector('#status').textContent === 'Saved');
   await popup.setViewportSize({ width: 370, height: 600 });
   const popupHeight = await popup.evaluate(() => document.body.getBoundingClientRect().height);
   assert.ok(popupHeight <= 600, `popup height: ${popupHeight}`); pass('popup fits the browser height limit including save feedback');
@@ -116,8 +116,8 @@ try {
   await popup.setViewportSize({ width: 370, height: 630 }); await popup.screenshot({ path: `${screenshots}/popup.png` });
   await page.screenshot({ path: `${screenshots}/player-fixture.png` });
   assert.deepEqual(errors, []); pass('all extension pages run without JavaScript errors');
-  console.log(`浏览器检查通过：${results.length} 项（模拟 YouTube DOM 与翻译响应）。`);
+  console.log(`Browser check passed: ${results.length} items (simulated YouTube DOM and translation responses).`);
 } catch (error) {
-  console.error('页面错误：', errors);
+  console.error('Page errors:', errors);
   throw error;
 } finally { await context.close(); await rm(profile, { recursive: true, force: true }); }

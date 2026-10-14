@@ -1,5 +1,6 @@
 import { createStore } from './store.js';
 import { createTranslationService } from './translation-service.js';
+import { AppError } from '../shared/errors.js';
 
 const store = createStore(chrome.storage.local);
 const translator = createTranslationService({ storage: chrome.storage.local, fetcher: (...args) => fetch(...args) });
@@ -22,19 +23,19 @@ async function handle(message) {
     }
     case 'translation:translate': {
       const settings = await store.getSettings();
-      if (!settings.translation.enabled) throw new Error('悬停翻译已关闭');
+      if (!settings.translation.enabled) throw new AppError('translationDisabled');
       return translator.translate(message.text, settings.translation.targetLanguage);
     }
     case 'translation:clear': await translator.clear(); return null;
     case 'words:get': return store.getWords();
     case 'words:add': {
       const settings = await store.getSettings();
-      if (!settings.vocabulary.enabled) throw new Error('单词收集已关闭');
+      if (!settings.vocabulary.enabled) throw new AppError('vocabularyDisabled');
       return store.addWord(message);
     }
     case 'words:remove': return store.removeWord(message.videoId, message.word);
     case 'words:clear-video': return store.clearVideo(message.videoId);
-    default: throw new Error('未知请求');
+    default: throw new AppError('unknownRequest');
   }
 }
 
@@ -42,7 +43,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!trustedSender(sender)) return false;
   Promise.resolve().then(() => handle(message)).then(
     data => sendResponse({ ok: true, data }),
-    error => sendResponse({ ok: false, error: error.message || '操作失败' }),
+    error => {
+      if (!(error instanceof AppError)) console.error(error);
+      sendResponse({ ok: false, error: { code: error.code || 'failed', params: error.params } });
+    },
   );
   return true;
 });

@@ -1,49 +1,49 @@
 <!doctype html>
-<html lang="zh-CN">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>字幕伙伴 · 设置与单词本</title><link rel="stylesheet" href="options.css"></head>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-i18n="app.optionsTitle">Caption Companion · Settings &amp; vocabulary</title><link rel="stylesheet" href="options.css"></head>
 <body class="options">
   <div class="workspace">
-    <header><div><h1>字幕伙伴</h1><p>YouTube 字幕设置与单词本</p></div><span class="version">v0.1.0</span></header>
-    <nav aria-label="设置导航"><button class="active" data-tab="appearance" aria-pressed="true">字幕与角色</button><button data-tab="translation-panel" aria-pressed="false">翻译</button><button data-tab="words-panel" aria-pressed="false">单词本 <span id="word-count">0</span></button></nav>
+    <header><div><h1 data-i18n="app.name">Caption Companion</h1><p data-i18n="app.optionsSubtitle">Caption settings and vocabulary</p></div><div class="header-tools"><select id="ui-language" aria-label="Interface language" data-i18n-attr="aria-label:language.label"></select><span class="version">v0.1.0</span></div></header>
+    <nav aria-label="Settings sections" data-i18n-attr="aria-label:nav.label"><button class="active" data-tab="appearance" aria-pressed="true" data-i18n="nav.appearance">Captions &amp; character</button><button data-tab="translation-panel" aria-pressed="false" data-i18n="nav.translation">Translation</button><button data-tab="words-panel" aria-pressed="false"><span data-i18n="nav.words">Vocabulary</span> <span class="count" id="word-count">0</span></button></nav>
     <main>
       <section id="appearance" class="tab-panel">
         <div class="preview large" id="preview"><div class="preview-caption" id="preview-caption"><div class="preview-line"><span>Captions with a little company,</span></div><div class="preview-line"><span>and a little curiosity.</span></div></div></div>
-        <div class="preview-control" id="preview-mascot-control" hidden><label for="preview-state">预览表情 / 动作</label><select id="preview-state"></select></div>
-        <h2>字幕外观</h2>
+        <div class="preview-control" id="preview-mascot-control" hidden><label for="preview-state" data-i18n="preview.label">Preview expression / action</label><select id="preview-state"></select></div>
+        <h2 data-i18n="skins.heading">Caption appearance</h2>
         <div class="card">
-          <label class="field"><span class="label">字幕皮肤<small>字体和字号沿用 YouTube 字幕设置。Alt + Shift + S 快速切换皮肤。</small></span><select id="skin"></select></label>
+          <label class="field"><span class="label"><span data-i18n="skins.label">Caption skin</span><small data-i18n="skins.hint">Font and size follow your YouTube caption settings. Press Alt + Shift + S to switch skins.</small></span><select id="skin"></select></label>
         </div>
-        <h2>字幕角色</h2>
+        <h2 data-i18n="characters.heading">Caption character</h2>
         <div class="card">
-          <label class="field"><span class="label">选择角色<small id="character-description"></small></span><select id="character"></select></label>
+          <label class="field"><span class="label"><span data-i18n="characters.choose">Choose a character</span><small id="character-description"></small></span><select id="character"></select></label>
           <div id="mascot-details" hidden>
-            <label class="toggle"><span class="label">让角色做自己的事<small>字幕没有触发表情时，随机做下面选中的日常动作。</small></span><input id="actions-enabled" type="checkbox" role="switch"></label>
-            <div class="row"><span class="label">日常动作</span><div id="action-list" class="check-list" aria-label="日常动作"></div></div>
-            <div class="row"><span class="label">跟随字幕的表情<small>遇到字幕关键词时，角色会做出相应表情。</small></span><div id="reaction-list" class="check-list" aria-label="字幕表情"></div></div>
+            <label class="toggle"><span class="label"><span data-i18n="actions.toggle">Let the character do its own thing</span><small data-i18n="actions.toggleHint">When no caption triggers an expression, it picks one of the everyday actions selected below.</small></span><input id="actions-enabled" type="checkbox" role="switch"></label>
+            <div class="row"><span class="label" data-i18n="actions.list">Everyday actions</span><div id="action-list" class="check-list" aria-label="Everyday actions" data-i18n-attr="aria-label:actions.list"></div></div>
+            <div class="row"><span class="label"><span data-i18n="reactions.label">Expressions that follow captions</span><small data-i18n="reactions.hint">The character reacts when a caption contains certain keywords.</small></span><div id="reaction-list" class="check-list" aria-label="Caption expressions" data-i18n-attr="aria-label:reactions.list"></div></div>
           </div>
         </div>
       </section>
       <section id="translation-panel" class="tab-panel" hidden>
-        <h2>悬停翻译</h2>
+        <h2 data-i18n="translation.heading">Hover translation</h2>
         <div class="card">
-          <label class="toggle"><span class="label">启用悬停翻译<small>把鼠标放在字幕上，查看整句翻译；移开后收起。</small></span><input id="translation" type="checkbox" role="switch"></label>
-          <label class="toggle"><span class="label">悬停时暂停视频<small>移开鼠标后恢复播放。</small></span><input id="pause" type="checkbox" role="switch"></label>
-          <label class="field"><span class="label">目标语言</span><select id="language"></select></label>
-          <label class="field"><span class="label">悬停延迟（毫秒）<small>鼠标停留多久后开始翻译，0–2000。</small></span><input id="delay" type="number" min="0" max="2000" step="10"></label>
-          <div class="field"><span class="label">翻译缓存<small>翻译沿用原脚本的 Google 翻译接口。仅悬停时发送当前字幕；结果在本机缓存，最多 500 条。</small></span><button class="secondary" id="clear-cache">清除缓存</button></div>
+          <label class="toggle"><span class="label"><span data-i18n="translation.enable">Enable hover translation</span><small data-i18n="translation.enableHint">Hover over a caption to see the whole sentence translated; move away to dismiss it.</small></span><input id="translation" type="checkbox" role="switch"></label>
+          <label class="toggle"><span class="label"><span data-i18n="translation.pause">Pause video while hovering</span><small data-i18n="translation.pauseHint">Playback resumes when the pointer leaves.</small></span><input id="pause" type="checkbox" role="switch"></label>
+          <label class="field"><span class="label" data-i18n="translation.target">Target language</span><select id="language"></select></label>
+          <label class="field"><span class="label"><span data-i18n="translation.delay">Hover delay (ms)</span><small data-i18n="translation.delayHint">How long the pointer rests before translating, 0–2000.</small></span><input id="delay" type="number" min="0" max="2000" step="10"></label>
+          <div class="field"><span class="label"><span data-i18n="translation.cache">Translation cache</span><small data-i18n="translation.cacheHint">Uses Google Translate. Only the caption you hover is sent; results are cached on this device, up to 500 entries.</small></span><button class="secondary" id="clear-cache" data-i18n="translation.clearCache">Clear cache</button></div>
         </div>
       </section>
       <section id="words-panel" class="tab-panel" hidden>
-        <h2>单词本</h2>
+        <h2 data-i18n="vocabulary.heading">Vocabulary</h2>
         <div class="card">
-          <label class="toggle"><span class="label">点击英文字幕收集单词<small>单词按视频保存在本机，可复制复习 Prompt，也可导出带原句的 JSON。</small></span><input id="vocabulary" type="checkbox" role="switch"></label>
+          <label class="toggle"><span class="label"><span data-i18n="vocabulary.enable">Click English captions to collect words</span><small data-i18n="vocabulary.enableHint">Words are saved per video on this device. Copy a review prompt, or export JSON with the original sentences.</small></span><input id="vocabulary" type="checkbox" role="switch"></label>
         </div>
-        <div class="word-tools"><input id="word-search" type="search" placeholder="搜索单词或视频" aria-label="搜索单词或视频"><button class="secondary" id="export-words">导出 JSON</button></div>
+        <div class="word-tools"><input id="word-search" type="search" placeholder="Search words or videos" aria-label="Search words or videos" data-i18n-attr="placeholder:vocabulary.search;aria-label:vocabulary.search"><button class="secondary" id="export-words" data-i18n="vocabulary.export">Export JSON</button></div>
         <div id="video-list"></div>
       </section>
-      <p id="status" class="status" role="status" aria-live="polite">正在读取设置…</p>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
     </main>
-    <footer>设置自动保存 · 数据保留在当前浏览器 · 全屏播放也可使用</footer>
+    <footer data-i18n="app.footer">Settings save automatically · Data stays in this browser · Works in fullscreen</footer>
   </div>
   <script src="options.js"></script>
 </body></html>

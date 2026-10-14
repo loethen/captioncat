@@ -33,12 +33,12 @@ test('invalid input, malformed responses and HTTP failures return useful errors'
   assert.throws(() => parseTranslation({}));
   assert.equal(parseTranslation([[['你'], ['好']]]), '你好');
   const service = createTranslationService({ storage: memoryStorage(), fetcher: async () => ({ ok: false, status: 429 }) });
-  await assert.rejects(service.translate('', 'zh-CN'), /为空/);
-  await assert.rejects(service.translate('hello', 'unknown'), /语言/);
-  await assert.rejects(service.translate('hello', 'zh-CN'), /频繁/);
+  await assert.rejects(service.translate('', 'zh-CN'), { code: 'invalidText' });
+  await assert.rejects(service.translate('hello', 'unknown'), { code: 'unsupportedLanguage' });
+  await assert.rejects(service.translate('hello', 'zh-CN'), { code: 'rateLimited' });
 });
 test('timeout aborts the request and can be retried', async () => {
   const service = createTranslationService({ storage: memoryStorage(), timeout: 5, fetcher: (_, { signal }) => new Promise((resolve, reject) => { signal.addEventListener('abort', () => reject(Object.assign(new Error(), { name: 'AbortError' }))); }) });
-  await assert.rejects(service.translate('hello', 'zh-CN'), /超时/);
-  await assert.rejects(service.translate('hello', 'zh-CN'), /超时/);
+  await assert.rejects(service.translate('hello', 'zh-CN'), { code: 'timeout' });
+  await assert.rejects(service.translate('hello', 'zh-CN'), { code: 'timeout' });
 });

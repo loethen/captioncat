@@ -1,6 +1,7 @@
 import { element, captionWindow, captionText, clamp } from '../../shared/dom.js';
 import { isMostlyChinese } from '../../shared/text.js';
 import { request } from '../../shared/messages.js';
+import { t } from '../../shared/i18n.js';
 
 export function createTranslationFeature(source) {
   const tip = element('div', 'ytc-translation');
@@ -34,7 +35,7 @@ export function createTranslationFeature(source) {
     if (!text || /^zh/.test(settings.targetLanguage) && isMostlyChinese(text)) { tip.style.display = 'none'; displayedText = text; return; }
     displayedText = text;
     const id = ++requestId;
-    tip.textContent = '翻译中…'; tip.classList.add('ytc-loading'); tip.style.display = 'block'; place();
+    tip.textContent = t('translation.loading'); tip.classList.add('ytc-loading'); tip.style.display = 'block'; place();
     try {
       const translated = await request('translation:translate', { text });
       if (id !== requestId || !hovered) return;

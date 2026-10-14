@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "YouTube 字幕皮肤、悬停翻译与单词收集扩展",
+  "description": "Browser extension for caption skins, hover translation and vocabulary collection",
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/build.mjs --watch",

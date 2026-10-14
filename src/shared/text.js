@@ -1,3 +1,5 @@
+import { t } from './i18n.js';
+
 export function wordAtOffset(text, offset) {
   if (!Number.isInteger(offset) || offset < 0 || offset > text.length) return null;
   const pattern = /[a-zA-Z]+(?:['’\-][a-zA-Z]+)*/g;
@@ -24,5 +26,5 @@ export function videoContext(href, title = '') {
 }
 
 export function reviewPrompt(words, url) {
-  return `把所有单词加入我的复习计划，并生成单词的含义和例句。\n\n${words.map((word, i) => `${i + 1}. ${typeof word === 'string' ? word : word.word}`).join('\n')}\n\n${url}`;
+  return `${t('vocabulary.reviewPrompt')}\n\n${words.map((word, i) => `${i + 1}. ${typeof word === 'string' ? word : word.word}`).join('\n')}\n\n${url}`;
 }
