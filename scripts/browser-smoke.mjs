@@ -78,7 +78,7 @@ try {
   await options.locator('#word-search').fill('missing-word'); assert.equal(await options.locator('.word-row').count(), 0);
   await options.locator('#word-search').fill('curiosity'); assert.equal(await options.locator('.word-row').count(), 1); pass('word notebook reflects persistent entries and search');
   const downloadEvent = options.waitForEvent('download'); await options.locator('#export-words').click();
-  const download = await downloadEvent; assert.equal(download.suggestedFilename(), 'youtube-vocabulary.json'); pass('word notebook exports JSON');
+  const download = await downloadEvent; assert.equal(download.suggestedFilename(), 'captioncat-vocabulary.json'); pass('word notebook exports JSON');
   await page.reload(); await page.waitForFunction(() => document.querySelector('.ytc-word-chip')?.textContent === 'curiosity'); pass('settings and vocabulary survive page reload');
   await page.mouse.move(5, 5);
   await page.evaluate(() => {

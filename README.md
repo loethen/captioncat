@@ -1,8 +1,10 @@
-# Caption Companion
+# CaptionCat
 
-A Manifest V3 browser extension for YouTube captions: a paper caption skin, whole-sentence translation on hover, word collection with a click, and a small pixel cat that lives on the captions. It targets Chrome and Edge (Chromium 120+).
+**Make captions more fun.** (Chinese name: 字幕猫, "让字幕更有意思")
 
-Caption Companion is a working name. The interface is available in English and Simplified Chinese.
+A Manifest V3 browser extension that dresses up YouTube captions with a paper skin and a small pixel cat that lives on them. Hover translation and one-click word saving come along as extras. It targets Chrome and Edge (Chromium 120+); the name leaves room for other video sites later.
+
+The interface is available in English and Simplified Chinese.
 
 ## Install
 
@@ -16,7 +18,7 @@ npm run build
 1. Open `chrome://extensions` in Chrome, or `edge://extensions` in Edge.
 2. Turn on Developer mode, choose "Load unpacked" and select the **`dist` folder**.
 3. Refresh YouTube and turn on captions for a video.
-4. Click the Caption Companion toolbar icon to change the skin, the character and the features. "Settings & vocabulary" opens the full settings page.
+4. Click the CaptionCat toolbar icon to change the skin, the character and the features. "Settings & vocabulary" opens the full settings page.
 
 The extension is not published to a store yet.
 

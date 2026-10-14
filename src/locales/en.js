@@ -1,9 +1,9 @@
 // Source locale: every key must exist here. Other locales fall back to these strings.
 // Plural namespaces (`skins.*`) are interface text; singular ones (`skin.<id>`) translate registry items.
 export default {
-  'app.name': 'Caption Companion',
+  'app.name': 'CaptionCat',
   'app.tagline': 'Make captions more fun',
-  'app.optionsTitle': 'Caption Companion · Settings & vocabulary',
+  'app.optionsTitle': 'CaptionCat · Settings & vocabulary',
   'app.optionsSubtitle': 'Caption settings and vocabulary',
   'app.footer': 'Settings save automatically · Data stays in this browser · Works in fullscreen',
 

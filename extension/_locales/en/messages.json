@@ -1,5 +1,11 @@
 {
-  "extensionName": { "message": "Caption Companion" },
-  "extensionDescription": { "message": "Restyle video captions, translate a sentence on hover, collect words with a click, and keep a little character for company." },
-  "actionTitle": { "message": "Caption Companion" }
+  "extensionName": {
+    "message": "CaptionCat"
+  },
+  "extensionDescription": {
+    "message": "Make captions more fun: a paper caption skin and a pixel cat that lives on your subtitles, plus hover translation and word saving."
+  },
+  "actionTitle": {
+    "message": "CaptionCat"
+  }
 }

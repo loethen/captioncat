@@ -1,7 +1,7 @@
 export default {
-  'app.name': '字幕伙伴',
+  'app.name': '字幕猫',
   'app.tagline': '让字幕更有意思',
-  'app.optionsTitle': '字幕伙伴 · 设置与单词本',
+  'app.optionsTitle': '字幕猫 · 设置与单词本',
   'app.optionsSubtitle': '字幕设置与单词本',
   'app.footer': '设置自动保存 · 数据保留在当前浏览器 · 全屏播放也可使用',
 

@@ -55,7 +55,7 @@ document.querySelector('#word-search').addEventListener('input', renderWords);
 document.querySelector('#export-words').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), videos: Object.values(all) }, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob), link = element('a');
-  link.href = url; link.download = 'youtube-vocabulary.json'; document.body.append(link); link.click(); link.remove();
+  link.href = url; link.download = 'captioncat-vocabulary.json'; document.body.append(link); link.click(); link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000); status(t('vocabulary.exported'));
 });
 document.querySelector('#clear-cache').addEventListener('click', async event => {
