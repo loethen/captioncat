@@ -7,7 +7,8 @@ export const cucumber = {
     const ahead = Math.abs(spot - position) < 0.02 ? facing : Math.sign(spot - position);
     return [
       { type: 'walk', to: spot },
-      { type: 'pose', pose: 'lick', prop: 'cucumber', fx: 'sneak', ms: 1700 },   // 专心舔爪，黄瓜悄悄滑到身后
+      { type: 'pose', pose: 'lick', ms: 700 },                                    // 专心舔爪
+      { type: 'pose', pose: 'lick', prop: 'cucumber', ms: 1200 },                // 身后忽然多了根黄瓜
       { type: 'pose', pose: null, ms: 450 },                                     // 舔完了
       { type: 'pose', pose: 'watch', turn: true, prop: 'cucumberAhead', ms: 420 },   // 掉头——眼前有根黄瓜
       { type: 'pose', pose: 'wow', body: 'jump', ms: 700 },                      // 炸毛弹起

@@ -22,11 +22,9 @@ const HEAD_DY = { food: 1, lick: -1, sniff: -1, achoo: 2, yawn: -1, peer: 3 };  
 const SPRITE = { normal: 'stand', nervous: 'miss', sleepy: 'loaf' };
 
 function sprite(pose, f) {
-  const blank = () => Array.from({ length: SH }, () => Array(SW).fill(null));
-  const grid = blank();
-  let cur = grid;
+  const grid = Array.from({ length: SH }, () => Array(SW).fill(null));
   const R = (a, b, w, h, col) => {
-    for (let j = Math.max(0, b); j < Math.min(SH, b + h); j++) for (let i = Math.max(0, a); i < Math.min(SW, a + w); i++) cur[j][i] = col;
+    for (let j = Math.max(0, b); j < Math.min(SH, b + h); j++) for (let i = Math.max(0, a); i < Math.min(SW, a + w); i++) grid[j][i] = col;
   };
   const G = (g, gx, gy, col) => GLY[g].forEach((r, j) => [...r].forEach((ch, i) => { if (ch === '#') R(gx + i, gy + j, 1, 1, col); }));
   const eyeAt = (k, ex, ey, w) => {           // w=5 近处的眼睛，w=4 远处的眼睛
@@ -90,12 +88,6 @@ function sprite(pose, f) {
     [[35, 15], [36, 12], [37, 9], [38, 6]].forEach(p => R(p[0], p[1], 3, 4, K));               // 从肩膀斜着伸上去的前腿
     R(39, 4, 4, 3, K); R(42, 4, 4, 2, WT);                                                     // 扒住边缘的爪子
     R(19, 2, 1, 2, BL); R(19, 4 + kick, 1, 1, BL);
-  } else if (pose === 'peek') {                // 趴在上沿，头倒着探下去（画布下半截在字幕上沿以下）
-    tail([[4, 3], [3, 1], [2 + ts, 0]]);
-    body(5, 5, 24, 7); R(22, 12, 4, 2, WT);
-    cur = blank(); head(27, 6, f % 12 === 11 ? 'down' : 'n', false);
-    const upright = cur; cur = grid;
-    upright.forEach((row, j) => row.forEach((col, i) => { if (col) R(i, 29 - j, 1, 1, col); }));
   } else {                                     // 站着的各种样子
     const wk = pose === 'walk', by = (wk && f % 2) ? 1 : 0, dy = pose === 'wow' ? -1 : 0, nd = wk ? sw : 0;
     const lk = pose === 'lick' ? (f >> 1) % 2 : 0;                                             // 舔爪：低头伸舌头、抬头，交替

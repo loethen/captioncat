@@ -19,15 +19,17 @@ export function createMascot(env, random = Math.random, config = timing) {
 
   function startActivity(info, now) {
     const available = env.actions(info);
-    const fresh = available.filter(action => action.id !== lastKind);
-    const choices = fresh.length ? fresh : available;
+    // Incidental actions only happen as part of another action, never on their own.
+    const eligible = available.filter(action => !action.incidental);
+    const fresh = eligible.filter(action => action.id !== lastKind);
+    const choices = fresh.length ? fresh : eligible;
     if (!choices.length) { nextActionAt = now + config.actionGap[1]; return; }
-    begin(choices[Math.floor(random() * choices.length)], info);
+    begin(choices[Math.floor(random() * choices.length)], info, available);
   }
 
-  function begin(plugin, info) {
+  function begin(plugin, info, available) {
     lastKind = plugin.id;
-    activity = { id: plugin.id, index: 0, started: null, steps: plugin.buildSteps({ random, position, facing, info }) };
+    activity = { id: plugin.id, index: 0, started: null, steps: plugin.buildSteps({ random, position, facing, info, available }) };
   }
 
   function stepActivity(info, now, dt) {
@@ -134,7 +136,7 @@ export function createMascot(env, random = Math.random, config = timing) {
       const info = env.info();
       if (state !== 'perched' || busy || !info) return false;
       if (activity) endActivity(lastNow || 0);
-      begin(plugin, info); return true;
+      begin(plugin, info, env.actions(info)); return true;
     },
     nod() { if (state === 'perched' && !busy && !activity) env.nod(); },
     setMood(value) {

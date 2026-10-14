@@ -1,8 +1,9 @@
 const asset = name => `assets/characters/erhei/${name}.svg`;
-export const stateIds = ['normal', 'happy', 'love', 'food', 'nervous', 'sleepy', 'ask', 'wow', 'walk', 'lick', 'watch', 'crouch', 'pounce', 'catch', 'miss', 'sniff', 'achoo', 'stretch', 'yawn', 'paw', 'peer', 'inbox', 'hang', 'peek'];
+export const stateIds = ['normal', 'happy', 'love', 'food', 'nervous', 'sleepy', 'ask', 'wow', 'walk', 'lick', 'watch', 'crouch', 'pounce', 'catch', 'miss', 'sniff', 'achoo', 'stretch', 'yawn', 'paw', 'peer', 'inbox', 'hang'];
 const states = Object.fromEntries(stateIds.map(name => [name, {
-  // 带文字符号的素材，镜像会变形，所以不翻转
-  src: asset(name), mirror: !['ask', 'wow', 'happy', 'love', 'sleepy'].includes(name),
+  // 带问号、音符、z 的素材镜像后符号会反，所以不翻转；感叹号和爱心左右对称，照常翻转，
+  // 这样炸毛（wow）在朝左的动作里方向和位置才是对的。
+  src: asset(name), mirror: !['ask', 'happy', 'sleepy'].includes(name),
 }]));
 
 export const erhei = {

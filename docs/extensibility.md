@@ -63,6 +63,8 @@ export const greet = {
 
 在 `actions/index.js` 导入并加入 `actions` 数组。删除动作时从数组移除即可，相关设置会自动过滤。新增动作会出现在设置页并默认启用：设置只保存用户关掉的动作和表情（`disabledActions` / `disabledReactions`）。弹窗和设置页的预览区用同一套控制器和渲染器，选中表情或动作即在示例字幕上播放，不影响页面字幕。
 
+带 `incidental: true` 的动作不会被单独随机选中，只能由别的动作在自己的步骤里引用（例如散步走到尽头时有概率接上「差点滑下去」），但仍可在设置页开关、在预览里单独播放。
+
 动作匹配会同时检查：用户是否启用、角色是否有 `requiredStates` 和 `requiredProps`、字幕可走区域是否达到 `minSpanEm`。替换后的角色缺少所需姿势或道具时，对应动作会自动停用。
 
 通用步骤：
@@ -70,13 +72,13 @@ export const greet = {
 | `type` | 字段 | 行为 |
 | --- | --- | --- |
 | `walk` | `to`（0–1）、可选 `pose` / `speed` / `prop` | 在字幕上沿移动；默认使用 `walk` 姿势，`speed` 是速度倍数 |
-| `pose` | `ms`、可选 `pose` / `mood` / `prop` / `fx` / `body` / `turn` | 持续指定姿势、表情和道具；`turn: true` 让角色原地掉头；`fx`（`enter` / `sneak` / `appear` / `wave` / `jitter` / `nudge1` / `nudge2` / `tip` / `vanish` / `yank`）播放道具动效，`body`（`lunge` / `jump` / `recoil` / `poke` / `dive`·`bail` / `slip`·`cling`·`climb` / `lower`·`raise`）播放角色的全身动效；其中 `dive`、`slip`、`cling`、`lower` 会让角色停在偏离原位的地方，直到姿势被清除或播放成对的返回动效 |
+| `pose` | `ms`、可选 `pose` / `mood` / `prop` / `fx` / `body` / `turn` | 持续指定姿势、表情和道具；`turn: true` 让角色原地掉头；`fx`（`enter` / `appear` / `wave` / `jitter` / `nudge1` / `nudge2` / `tip` / `vanish` / `yank`）播放道具动效，`body`（`lunge` / `jump` / `recoil` / `poke` / `dive`·`bail` / `overstep`·`gasp`·`drop`·`cling`·`climb`）播放角色的全身动效；其中 `dive`、`overstep`、`gasp`、`drop`、`cling` 会让角色停在偏离原位的地方，直到姿势被清除或播放成对的返回动效 |
 | `wait` | `ms`、可选 `pose` | 停留，默认回到普通姿势 |
 | `throw` | 可选 `ms`（默认 800） | 播放道具抛出效果，结束后移除道具 |
 
 `pose: null` / `prop: null` 可显式清除姿势或道具。没有 `prop` 字段时保留当前道具。所有非普通字幕表情会中断日常动作，清除道具；字幕短暂消失时暂停动作，较久消失后取消。
 
-`buildSteps()` 接收可注入的随机函数、当前上沿位置、朝向（`facing`，1 为右）和字幕几何信息，返回步骤数组。用已有步骤组合新动作不需要修改 `controller.js`。新增全新的步骤类型时，需要在执行器中增加对应处理。默认只检查语法，功能由用户手动验证。
+`buildSteps()` 接收可注入的随机函数、当前上沿位置、朝向（`facing`，1 为右）、字幕几何信息和当前可用的动作列表（`available`），返回步骤数组。用已有步骤组合新动作不需要修改 `controller.js`。新增全新的步骤类型时，需要在执行器中增加对应处理。默认只检查语法，功能由用户手动验证。
 
 ## 字幕表情规则
 

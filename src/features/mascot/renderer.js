@@ -31,13 +31,13 @@ export function createAssetRenderer({ character, assetURL, reduced }) {
     poke: [[{ transform: 'none' }, { transform: 'translateX(11%)', offset: 0.45 }, { transform: 'none' }], { duration: 320, easing: 'ease-out' }],
     dive: [[{ transform: 'none' }, { transform: 'translate(40%,-38%)', offset: 0.5 }, { transform: 'translate(75%,0)' }], { duration: 350, ...hold }],
     bail: [[{ transform: 'translate(75%,0)' }, { transform: 'translate(35%,-60%)', offset: 0.5 }, { transform: 'none' }], { duration: 500 }],
-    slip: [[{ transform: 'none' }, { transform: 'translate(60%,-4%)', offset: 0.45 }, { transform: 'translate(90%,48%)' }], { duration: 420, easing: 'ease-in', ...hold }],
+    overstep: [[{ transform: 'none' }, { transform: 'translateX(122%)' }], { duration: 1560, ...hold }],
+    gasp: [[{ transform: 'translateX(122%)' }, { transform: 'translate(122%,-10%)', offset: 0.35 }, { transform: 'translateX(122%)' }], { duration: 300, easing: 'ease-out', ...hold }],
+    drop: [[{ transform: 'translateX(122%)' }, { transform: 'translate(110%,48%)' }], { duration: 260, easing: 'ease-in', ...hold }],
     cling: [[{ transform: 'translate(-110%,48%)' }, { transform: 'translate(-110%,48%)' }], { duration: 1, ...hold }],
-    climb: [[{ transform: 'translate(-110%,48%)' }, { transform: 'translate(-98%,-14%)', offset: 0.55 }, { transform: 'none' }], { duration: 650, easing: 'ease-out' }],
-    lower: [[{ transform: 'none' }, { transform: 'translateY(31.25%)' }], { duration: 260, easing: 'ease-out', ...hold }],
-    raise: [[{ transform: 'translateY(31.25%)' }, { transform: 'none' }], { duration: 260, easing: 'ease-out' }],
+    climb: [[{ transform: 'translate(-110%,48%)' }, { transform: 'translate(-70%,-22%)', offset: 0.55 }, { transform: 'none' }], { duration: 600, easing: 'ease-out' }],
     lunge: [[{ transform: 'none' }, { transform: 'translate(18%,-28%)', offset: 0.4 }, { transform: 'translate(10%,0)', offset: 0.75 }, { transform: 'none' }], { duration: 450, easing: 'ease-out' }],
-    jump: [[{ transform: 'none', easing: 'cubic-bezier(.2,.7,.4,1)' }, { transform: 'translateY(-85%)', offset: 0.45, easing: 'cubic-bezier(.6,0,.8,.4)' }, { transform: 'none' }], { duration: 700 }],
+    jump: [[{ transform: 'none', easing: 'cubic-bezier(.2,.7,.4,1)' }, { transform: 'translateY(-45%)', offset: 0.45, easing: 'cubic-bezier(.6,0,.8,.4)' }, { transform: 'none' }], { duration: 700 }],
     recoil: [[{ transform: 'none' }, { transform: 'translate(-20%,-8%)', offset: 0.25 }, { transform: 'none' }], { duration: 340, easing: 'ease-out' }],
   };
   function play(node, frames, options) { if (canAnimate()) node.animate(frames, options); }
@@ -98,7 +98,6 @@ export function createAssetRenderer({ character, assetURL, reduced }) {
       if (!canAnimate()) return;
       cancel(propAnimation);
       if (name === 'enter') propAnimation = prop.animate([{ transform: 'translateX(120%)' }, { transform: 'none' }], { duration: 600, easing: 'ease-out', fill: 'forwards' });
-      else if (name === 'sneak') propAnimation = prop.animate([{ transform: 'translateX(-140%)' }, { transform: 'none' }], { duration: 1300, easing: 'ease-out', fill: 'forwards' });
       else if (name === 'appear') propAnimation = prop.animate([{ transform: 'translateY(-60%) scale(.6)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 320, easing: 'ease-out' });
       else if (name === 'nudge1') propAnimation = prop.animate([{ transform: 'none' }, { transform: 'translateX(40%)' }], { duration: 260, delay: 120, easing: 'ease-out', fill: 'forwards' });
       else if (name === 'nudge2') propAnimation = prop.animate([{ transform: 'translateX(40%)' }, { transform: 'translateX(85%)' }], { duration: 260, delay: 120, easing: 'ease-out', fill: 'both' });
