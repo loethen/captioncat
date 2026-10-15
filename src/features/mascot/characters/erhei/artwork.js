@@ -22,12 +22,13 @@ const HEAD_DY = { food: 1, sniff: -1, achoo: 2, yawn: -1, peer: 3 };   // head d
 // State name → artwork name; other pose names (walk, lick…) are the artwork names themselves
 const SPRITE = { normal: 'stand', nervous: 'miss', sleepy: 'loaf' };
 
-function sprite(pose, f) {
+// `left` draws the glyphs back to front, for artwork the renderer mirrors when the cat faces left.
+function sprite(pose, f, left = false) {
   const grid = Array.from({ length: TOP + SH }, () => Array(SW).fill(null));   // grid[TOP + y] is row y
   const R = (a, b, w, h, col) => {
     for (let j = Math.max(-TOP, b); j < Math.min(SH, b + h); j++) for (let i = Math.max(0, a); i < Math.min(SW, a + w); i++) grid[TOP + j][i] = col;
   };
-  const G = (g, gx, gy, col) => GLY[g].forEach((r, j) => [...r].forEach((ch, i) => { if (ch === '#') R(gx + i, gy + j, 1, 1, col); }));
+  const G = (g, gx, gy, col) => GLY[g].forEach((r, j) => [...r].forEach((ch, i) => { if (ch === '#') R(gx + (left ? r.length - 1 - i : i), gy + j, 1, 1, col); }));
   const eyeAt = (k, ex, ey, w) => {           // w=5 near eye, w=4 far eye
     if (k === 'up' || k === 'down') {
       const u = k === 'up';
@@ -153,11 +154,11 @@ export function portraitGrid() {
   return sprite('portrait', 0).slice(TOP, TOP + 24).map(row => row.slice(0, 24));
 }
 
-export function catSVG(state) {
+export function catSVG(state, left = false) {
   const key = SPRITE[state] || state;
   const images = [], shown = [];               // deduplicated images, and which one each frame shows
   for (let f = 0; f < FRAMES; f++) {
-    const art = paths(sprite(key, f));
+    const art = paths(sprite(key, f, left));
     let index = images.indexOf(art);
     if (index < 0) index = images.push(art) - 1;
     shown.push(index);

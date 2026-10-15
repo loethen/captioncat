@@ -32,7 +32,7 @@ export const cat = {
 };
 ```
 
-`normal` is required; other poses are optional. The default renderer uses `<img>` and accepts SVG, PNG, WebP and GIF. Use a transparent background and one canvas size for all poses. Each pose can have its own artwork without touching the state machine. Artwork that contains a question mark, an exclamation mark or text can set `mirror: false` so it does not read backwards when the character walks left.
+`normal` is required; other poses are optional. The default renderer uses `<img>` and accepts SVG, PNG, WebP and GIF. Use a transparent background and one canvas size for all poses. Each pose can have its own artwork without touching the state machine. Artwork that contains a question mark or text would read backwards when the character faces left. Give such a pose a `leftSrc` drawn with the text back to front: it is used instead of `src` when facing left and is mirrored like everything else, so the character turns and the text reads the right way. Erhei does this for `ask`, `happy` and `sleepy`. `mirror: false` still turns flipping off for a pose altogether.
 
 Props use the character's own artwork and a position relative to the character:
 
@@ -77,7 +77,7 @@ export const greet = {
 
 Import it in `actions/index.js` and add it to the `actions` array. To remove one, take it out of the array; saved settings that mention it are filtered automatically. A new action shows up on the settings page and starts enabled, because settings store only what the user turned off (`disabledActions`). The previews in the popup and on the settings page run the same controller and renderer on a sample caption, so choosing an action there plays it without touching the page's captions. The preview starts on the stroll.
 
-An action with `incidental: true` is never picked at random on its own. Another action refers to it from its own steps: a stroll now and then ends in "Near slip", or else often in "Rest at the edge", where the character lies down at one end of the caption for several seconds. It can still be switched on and off and previewed.
+An action with `incidental: true` is never picked at random on its own. Another action refers to it from its own steps: a stroll now and then ends in "Near slip", or else often in "Rest at the edge", where the character lies down at one end of the caption, more often than not falls asleep and wakes with a yawn. It can still be switched on and off and previewed.
 
 Picking is weighted by the action's optional `weight` (default 1). Quiet everyday actions weigh more (the stroll 4, licking a paw and stretching 2), so the big set pieces stay occasional. The same action is not picked twice in a row unless it is the only one available.
 

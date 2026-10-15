@@ -20,9 +20,10 @@ export function createAssetRenderer({ character, assetURL, reduced }) {
   function paint() {
     const key = asleep ? 'sleepy' : override || pose || mood;
     const asset = character.states[key] || character.states.normal;
-    const src = assetURL(asset.src);
+    const mirrored = direction < 0 && asset.mirror !== false;
+    const src = assetURL(mirrored && asset.leftSrc || asset.src);
     if (inner.getAttribute('src') !== src) inner.src = src;
-    flip.style.transform = direction < 0 && asset.mirror !== false ? 'scaleX(-1)' : '';
+    flip.style.transform = mirrored ? 'scaleX(-1)' : '';
   }
   // Whole-body moves an action step can request with `body`. Effects with fill: 'forwards'
   // keep the character off its spot (in a box, hanging off the edge) until the pose is cleared.
