@@ -8,9 +8,15 @@ import { currentLocale, label, locales, t } from '../shared/i18n.js';
 import { applyLocale, initLocale } from './localize.js';
 import { createMascotPreview } from './mascot-preview.js';
 
-export function status(text, error = false) {
+// A toast in the bottom-left corner. Notices fade after a moment and errors stay longer;
+// `sticky` keeps an in-progress message up until the next one replaces it.
+let toastTimer = 0;
+export function status(text, error = false, sticky = false) {
   const node = document.querySelector('#status');
-  node.textContent = text; node.classList.toggle('error', error);
+  clearTimeout(toastTimer);
+  if (text) node.textContent = text;
+  node.classList.toggle('error', error); node.classList.toggle('show', !!text);
+  if (text && !sticky) toastTimer = setTimeout(() => node.classList.remove('show'), error ? 5000 : 1800);
 }
 
 
@@ -34,11 +40,10 @@ export async function bindSettingsForm({ onLocale } = {}) {
       skin: skins.map(skin => ({ id: skin.id, name: label('skin', skin) })),
       character: [{ id: NO_CHARACTER, name: t('characters.none') }, ...characters.map(character => ({ id: character.id, name: label('character', character) }))],
       language: targetLanguages(),
-      activity: activityLevels.map(id => ({ id, name: t(`activity.${id}`) })),
     };
     for (const [id, options] of Object.entries(lists)) find(id)?.replaceChildren(...options.map(item => new Option(item.name, item.id)));
   }
-  fillSelects(); status(t('status.loading'));
+  fillSelects(); status(t('status.loading'), false, true);
   function preview() {
     const character = getCharacter(settings.characterId);
     const select = find('preview-state');
@@ -67,11 +72,18 @@ export async function bindSettingsForm({ onLocale } = {}) {
       row.append(checkbox, element('span', '', label(kind, plugin))); return row;
     }));
   }
+  // The slider stores a level index; its fill and the level's name follow the knob while dragging.
+  function showLevel(node) {
+    const name = t(`activity.${activityLevels[node.valueAsNumber]}`);
+    node.style.setProperty('--level', node.valueAsNumber / (activityLevels.length - 1));
+    node.setAttribute('aria-valuetext', name);
+    if (find('activity-name')) find('activity-name').textContent = name;
+  }
   function render() {
     if (applyLocale(settings.uiLanguage)) { fillSelects(); onLocale?.(); }
     const values = {
       'ui-language': settings.uiLanguage, skin: settings.skinId, character: settings.characterId,
-      'actions-enabled': settings.actionsEnabled, activity: settings.activity, translation: settings.translation.enabled,
+      'actions-enabled': settings.actionsEnabled, activity: activityLevels.indexOf(settings.activity), translation: settings.translation.enabled,
       pause: settings.translation.pauseOnHover, vocabulary: settings.vocabulary.enabled,
       language: settings.translation.targetLanguage, delay: settings.translation.delay,
     };
@@ -82,7 +94,7 @@ export async function bindSettingsForm({ onLocale } = {}) {
     // Settings that only matter while their parent switch is on.
     if (find('pause')) find('pause').disabled = !loaded || !settings.translation.enabled;
     if (find('action-list')) find('action-list').inert = !settings.actionsEnabled;
-    if (find('activity')) find('activity').disabled = !loaded || !settings.actionsEnabled;
+    if (find('activity')) { find('activity').disabled = !loaded || !settings.actionsEnabled; showLevel(find('activity')); }
     preview();
     const character = getCharacter(settings.characterId);
     if (!character) return;
@@ -90,7 +102,7 @@ export async function bindSettingsForm({ onLocale } = {}) {
     pluginList('action-list', 'action', actions, enabledIds(actions, settings.disabledActions), action => supportsAction(character, action), (id, enabled) => toggle('disabledActions', id, enabled));
   }
   function save(patch) {
-    settings = patchSettings(settings, patch); pending++; render(); status(t('status.saving'));
+    settings = patchSettings(settings, patch); pending++; render(); status(t('status.saving'), false, true);
     queue = queue.then(async () => {
       try {
         const result = await request('settings:patch', { patch });
@@ -104,7 +116,7 @@ export async function bindSettingsForm({ onLocale } = {}) {
   const handlers = {
     'ui-language': node => ({ uiLanguage: node.value }),
     skin: node => ({ skinId: node.value }), character: node => ({ characterId: node.value }),
-    'actions-enabled': node => ({ actionsEnabled: node.checked }), activity: node => ({ activity: node.value }),
+    'actions-enabled': node => ({ actionsEnabled: node.checked }), activity: node => ({ activity: activityLevels[node.valueAsNumber] }),
     translation: node => ({ translation: { enabled: node.checked } }), pause: node => ({ translation: { pauseOnHover: node.checked } }),
     vocabulary: node => ({ vocabulary: { enabled: node.checked } }), language: node => ({ translation: { targetLanguage: node.value } }),
     delay: node => ({ translation: { delay: node.valueAsNumber } }),
@@ -120,6 +132,7 @@ export async function bindSettingsForm({ onLocale } = {}) {
       save(handler(event.target));
     });
     find('preview-state')?.addEventListener('change', preview);
+    find('activity')?.addEventListener('input', event => showLevel(event.target));
     watchStorage(SETTINGS_KEY, value => { if (!pending) { settings = normalizeSettings(value); render(); } });
   } catch (error) { status(error.message, true); }
 }
