@@ -113,7 +113,7 @@ The character does not pick actions at random with idle gaps in between; it foll
 | `patrol` | Stroll | Walks all the way to one end of the caption, often back to the other end, now and then stopping part way to look at something. |
 | `chore` | Lick a paw, Stretch, Sneeze | Small things done on the spot. An action without a `kind` counts as a chore. |
 | `play` | Cat grass, Red dot, Cucumber, Cup, Box | The big set pieces. |
-| `rest` | Rest at the edge | Walks to the nearer end, sits and lies down facing back along the caption, dozes and often falls asleep, then gets up with a stretch and a yawn. |
+| `rest` | Rest at the edge | Walks to an end, usually the nearer one, sits and lies down facing back along the caption, dozes and often falls asleep, then gets up with a stretch and a yawn. |
 
 The character is awake for a stretch of time. While awake, it picks a patrol, a chore or play in the proportions of the activity level, with only a short, natural pause between actions, so it is never left standing about. Within a kind, actions share the kind's share by their own optional `weight` (default 1). The same action is not picked twice in a row unless it is the only one, and a play action that has run stays out for a cooldown set by the activity level, so the set pieces do not repeat within minutes. Once the awake stretch is used up, the next action is the rest; finishing the rest starts a new awake stretch. If the user turned the rest off, it simply stays awake.
 
@@ -153,8 +153,9 @@ A renderer for local video or Lottie can handle playback, state changes and tear
 ## Runtime behaviour to preserve
 
 - While a character is shown, the caption position is read on every animation frame, with no frame-rate cap; a time threshold makes walking stutter. The loop is skipped while the page is hidden and cancelled when the character is "None".
-- The character waits for the top edge of the caption to be stable before changing level when captions scroll.
-- Changing lines keeps the character's x, clamped to the new line, so it drops or hops straight instead of sliding to the same fraction of a line with a different width.
+- The character waits for the top edge of the caption to be stable before changing level when captions scroll, but its action carries on meanwhile at the old height.
+- Whenever the line under it moves or changes width, the character keeps its x, clamped to the new line, so it drops or hops straight instead of sliding to the same fraction of a line with a different width.
+- A change of line never pauses a walk: it keeps walking while the new line settles and while it hops or drops, landing where it took off and catching up, and through a blank of under a second between two captions it carries on along the last line.
 - A brief caption gap keeps the character perched. A longer gap makes it fall, rest, sleep and finally fade; it returns when captions come back.
 - Coordinates account for the player's CSS scale, and the overlay lives inside the player so it shows in fullscreen.
 - `controller.js` is a state machine with no DOM access; keep it that way.

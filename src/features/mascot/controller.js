@@ -20,7 +20,7 @@ export function createMascot(env, random = Math.random, config = timing) {
   let activity = null, nextActionAt = 0, lastKind = '', lastNow = null, mood = 'normal', facing = 1;
   let awakeSince = 0, awakeFor = 0, posture = 'stand', interrupted = null;
   const playedAt = new Map();
-  let candidate = null, candidateSince = 0, stable = null;
+  let candidate = null, candidateSince = 0, stable = null, line = null, lastInfo = null;
   const between = (lo, hi) => lo + random() * (hi - lo);
   // The user's activity level, when the environment supplies one.
   const pace = () => env.pace?.() || paces.normal;
@@ -154,10 +154,19 @@ export function createMascot(env, random = Math.random, config = timing) {
 
   function reset(fade = false) {
     generation++; busy = false; activity = interrupted = null; worried = false; sleeping = false;
-    missingSince = null; candidate = stable = null; lastNow = null;
+    missingSince = null; candidate = stable = line = lastInfo = null; lastNow = null;
     setPose(null); env.prop(null); env.override(null); env.sleep(false);
     if (fade) env.fade(); else env.hide();
     state = 'hidden';
+  }
+
+  // Eases the cat to its spot on the line; a change of height bigger than a small step becomes a hop or a drop.
+  function glide(info, dt) {
+    const to = { x: info.x0 + info.span * position, y: stable.perchY };
+    const smooth = dt > 0 ? 1 - Math.exp(-dt * 18) : 1;
+    const dy = to.y - current.y;
+    if (Math.abs(dy) > info.fs * 0.6) go(to, dy > 0 ? 'fall' : 'hop', false);
+    else { current = { x: current.x + (to.x - current.x) * smooth, y: to.y }; env.place(current); }
   }
 
   function tick(now) {
@@ -174,12 +183,13 @@ export function createMascot(env, random = Math.random, config = timing) {
       if (!candidate || Math.abs(info.perchY - candidate.perchY) > tolerance || Math.abs(info.groundY - candidate.groundY) > tolerance) {
         candidate = { perchY: info.perchY, groundY: info.groundY }; candidateSince = now;
       }
-      const previous = stable;
       if (!stable || now - candidateSince >= config.settle) stable = candidate;
       const settling = stable !== candidate;
-      // Lines differ in width, so a change of line keeps the cat's x instead of its fraction of the
-      // line; otherwise it slides sideways while it drops or hops to the new line.
-      const rebase = point => { if (info.span > 0) position = Math.max(0, Math.min(1, (point.x - info.x0) / info.span)); };
+      const rebase = x => { if (info.span > 0) position = Math.max(0, Math.min(1, (x - info.x0) / info.span)); };
+      // Lines differ in place and width, so whenever the line under the cat changes it keeps its x
+      // rather than its fraction of the line; otherwise it would slide sideways.
+      if (line && state === 'perched' && (Math.abs(info.x0 - line.x0) > 1 || Math.abs(info.span - line.span) > 1)) rebase(line.x0 + line.span * position);
+      line = { x0: info.x0, span: info.span }; lastInfo = info;
       const target = () => ({ x: info.x0 + info.span * position, y: stable.perchY });
       if (state === 'hidden') {
         generation++; busy = false; activity = interrupted = null; env.sleep(false); env.override(null);
@@ -189,28 +199,23 @@ export function createMascot(env, random = Math.random, config = timing) {
         current = destination = target(); env.place(current); env.show(); env.pop(); state = 'perched';
       } else if (state === 'resting') {
         state = 'perched'; nextActionAt = now + between(...pace().pause); stable = candidate;
-        rebase(current); go(target(), 'hop', true);
+        rebase(current.x); go(target(), 'hop', true);
       } else if (busy) {
-        if (previous !== stable) rebase(destination);
-        if (!settling) destination = target();
+        // Hopping or dropping to a new line does not stop a walk: it lands where it took off and catches up.
+        if (activity) stepActivity(info, now, dt);
+        if (!settling) destination = { x: destination.x, y: stable.perchY };
       } else {
-        if (previous !== stable) rebase(current);
-        // While the new line settles, hold still where the old one was.
-        if (!settling) {
-          if (activity) stepActivity(info, now, dt);
-          else if (mood === 'normal' && !env.calm() && now >= nextActionAt) startActivity(info, now);
-        }
-        const to = settling ? { x: current.x, y: stable.perchY } : target();
-        const smooth = dt > 0 ? 1 - Math.exp(-dt * 18) : 1;
-        const next = { x: current.x + (to.x - current.x) * smooth, y: to.y };
-        const dy = to.y - current.y;
-        if (Math.abs(dy) > info.fs * 0.6) go(to, dy > 0 ? 'fall' : 'hop', false);
-        else { current = next; env.place(current); }
+        // The new line's height takes a moment to settle; the cat keeps going at the old height meanwhile.
+        if (activity) stepActivity(info, now, dt);
+        else if (mood === 'normal' && !env.calm() && now >= nextActionAt) startActivity(info, now);
+        glide(info, dt);
       }
       ground = { x: current.x, y: stable.groundY };
     } else if (state === 'perched') {
       if (missingSince === null) missingSince = now;
       const gone = now - missingSince;
+      // The blank between two captions does not stop it either: it carries on along the last line for a moment.
+      if (gone < config.worry && lastInfo && !busy && activity) { stepActivity(lastInfo, now, dt); glide(lastInfo, dt); }
       if (gone >= config.worry && !worried) { worried = true; interrupt(now); env.override('nervous'); }
       if (gone >= config.fall && ground) {
         worried = false; state = 'resting'; restSince = now; go(ground, 'fall', true);
