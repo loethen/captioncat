@@ -57,7 +57,6 @@ src/
   ui/             popup and settings page
 scripts/          build, package, asset generation, optional browser check
 tests/            unit tests and a page fixture
-reference/        the original userscripts, kept for comparison
 docs/             guides for each part of the project
 ```
 
