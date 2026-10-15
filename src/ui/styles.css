@@ -46,16 +46,14 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 h1, h2, p { margin: 0; }
 h1 { font-size: 22px; font-weight: 700; line-height: 1.3; letter-spacing: -.01em; }
 header p { color: var(--muted); font-size: 13px; margin-top: 2px; }
-.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
 /* Pixel art: keep edges crisp when scaled. */
 .empty-cat { image-rendering: pixelated; user-select: none; -webkit-user-drag: none; }
-.logo { flex: none; width: 48px; height: 48px; image-rendering: pixelated; }
+/* The 32 px icon is drawn for this size, so the pixel art stays crisp. */
+.logo { flex: none; width: 32px; height: 32px; image-rendering: pixelated; }
 /* The wordmark: the last word sits on a green highlighter stroke. */
-.wordmark { font-size: 24px; font-weight: 800; letter-spacing: -.03em; line-height: 1.15; }
-.wordmark-cat { padding: 0 .06em; background: linear-gradient(transparent 58%, var(--accent) 58%, var(--accent) 92%, transparent 92%); }
-/* The tagline is drawn as a paper-skin caption, so the header shows what the extension does. */
-.tagline { margin-top: 5px; line-height: 0; }
-.tagline span { display: inline-block; padding: .2em .7em; font-size: 13px; line-height: 1.3; color: #2b2927; background: #f6f4ee; border-radius: 2px; box-shadow: inset 0 0 0 1px rgba(43,41,39,.12); transform: rotate(-1.5deg); }
+.wordmark { font-size: 17px; font-weight: 700; letter-spacing: -.01em; line-height: 1.2; }
+.wordmark-cat { padding: 0 .06em; background: linear-gradient(transparent 66%, var(--accent) 66%, var(--accent) 92%, transparent 92%); }
 .header-tools { display: flex; align-items: center; gap: 10px; flex: none; }
 .header-tools select { padding: 4px 8px; font-size: 13px; }
 .version { color: var(--faint); font-size: 13px; }
@@ -91,7 +89,6 @@ h2 { font-size: 16px; font-weight: 700; color: var(--foreground); margin: 26px 0
 .preview-control select { padding: 4px 8px; font-size: 13px; }
 .popup { width: 370px; padding: 16px 18px 18px; }
 .popup header { margin-bottom: 14px; }
-.popup h1 { font-size: 22px; }
 .popup .preview { height: 128px; }
 .popup .card { margin-top: 12px; padding: 0 12px; }
 .popup .field, .popup .toggle { min-height: 40px; padding: 6px 0; }
