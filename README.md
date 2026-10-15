@@ -1,6 +1,6 @@
 # CaptionCat
 
-**Make captions more fun.** (Chinese name: 字幕猫, "让字幕更有意思")
+**Here to watch with you.** (Chinese name: 字幕猫, "陪你看视频")
 
 A Manifest V3 browser extension that dresses up YouTube captions with a paper skin and a small pixel cat that lives on them. Hover translation and one-click word saving come along as extras. It targets Chrome and Edge (Chromium 120+); the name leaves room for other video sites later.
 

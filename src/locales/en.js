@@ -4,7 +4,7 @@ export default {
   'app.name': 'CaptionCat',
   'app.nameStart': 'Caption',
   'app.nameEnd': 'Cat',
-  'app.tagline': 'Make captions more fun',
+  'app.tagline': 'Here to watch with you',
   'app.optionsTitle': 'CaptionCat · Settings & vocabulary',
   'app.footer': 'Settings save automatically · Data stays in this browser · Works in fullscreen',
 
