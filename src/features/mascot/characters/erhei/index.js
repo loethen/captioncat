@@ -1,5 +1,5 @@
 const asset = name => `assets/characters/erhei/${name}.svg`;
-export const stateIds = ['normal', 'happy', 'love', 'food', 'nervous', 'sleepy', 'ask', 'wow', 'walk', 'lick', 'watch', 'crouch', 'pounce', 'catch', 'miss', 'sniff', 'achoo', 'stretch', 'yawn', 'paw', 'peer', 'inbox', 'hang'];
+export const stateIds = ['normal', 'happy', 'love', 'food', 'nervous', 'sleepy', 'ask', 'wow', 'walk', 'lick', 'watch', 'crouch', 'pounce', 'catch', 'miss', 'sniff', 'achoo', 'stretch', 'yawn', 'paw', 'peer', 'inbox', 'hang', 'rest'];
 const states = Object.fromEntries(stateIds.map(name => [name, {
   // Artwork with a question mark, notes or z's would read backwards when mirrored, so it is not flipped.
   // Exclamation marks and hearts are symmetric and flip as usual, which keeps wow facing the right way when heading left.

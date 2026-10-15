@@ -57,10 +57,11 @@ function sprite(pose, f) {
 
   if (pose === 'portrait') {                   // the head alone, for the extension icon
     head(3, 8, 'n', false);
-  } else if (pose === 'loaf') {                // loaf (asleep)
-    tail([[3, 21], [2, 19], [2, 17]]); body(5, 17, 26, 8); R(5, 24, 26, 1, K);
-    head(26, 13, 'down', false); R(30, 26, 6, 2, WT);
-    G('z', 44, 6 - ((f % 8) >> 2), BL);
+  } else if (pose === 'loaf' || pose === 'rest') {   // loaf: asleep; rest: dozing, the tail tip flicking and an eye opening now and then
+    const rest = pose === 'rest';
+    tail(rest ? [[3, 21], [2, 19], [2 + ts, 17]] : [[3, 21], [2, 19], [2, 17]]); body(5, 17, 26, 8); R(5, 24, 26, 1, K);
+    head(26, 13, rest && f % 24 >= 21 ? 'n' : 'down', false); R(30, 26, 6, 2, WT);
+    if (!rest) G('z', 44, 6 - ((f % 8) >> 2), BL);
   } else if (pose === 'crouch') {              // winding up, wiggling
     const j = f % 2 ? -1 : 1;
     leg(11 + j, 23, 2, FAR, FW); leg(27, 23, 2, FAR, FW);

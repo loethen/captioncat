@@ -40,6 +40,11 @@ export default {
   'actions.toggleHint': '时不时随机做下面选中的日常动作。',
   'actions.list': '日常动作',
   'plugins.unsupported': '当前角色不会这个动作',
+  'activity.label': '活跃程度',
+  'activity.hint': '角色多久自己做一次动作。',
+  'activity.calm': '安静',
+  'activity.normal': '适中',
+  'activity.lively': '活泼',
 
   'translation.heading': '悬停翻译',
   'translation.enable': '启用悬停翻译',
@@ -111,4 +116,5 @@ export default {
   'action.cup': '推杯子',
   'action.box': '钻纸箱',
   'action.slip': '差点滑下去',
+  'action.nap': '在字幕边上歇会儿',
 };

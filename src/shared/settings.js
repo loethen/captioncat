@@ -11,6 +11,8 @@ export const CACHE_KEY = 'translations:v1';
 export const languages = [
   'en', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'pt', 'it', 'ru', 'ja', 'ko', 'ar', 'hi', 'id', 'vi', 'tr',
 ].map(id => ({ id }));
+// How often the character starts an action of its own; the timings are in the mascot controller.
+export const activityLevels = ['calm', 'normal', 'lively'];
 
 // The name of a language as written in `inLocale`; by default in the language itself.
 export function languageName(id, inLocale = id) {
@@ -30,7 +32,7 @@ function defaultTargetLanguage() {
 export function defaultSettings() {
   return {
     // New installs start in the browser's language; the choice is stored once settings are saved.
-    uiLanguage: resolveLocale(), skinId: 'wa-light', characterId: characters[0].id, actionsEnabled: true,
+    uiLanguage: resolveLocale(), skinId: 'wa-light', characterId: characters[0].id, actionsEnabled: true, activity: 'normal',
     // Stored as opt-outs so newly registered actions start enabled.
     disabledActions: [],
     translation: { enabled: false, targetLanguage: defaultTargetLanguage(), delay: 120, pauseOnHover: true },
@@ -50,6 +52,7 @@ export function normalizeSettings(input = {}) {
     characterId: input?.characterId === NO_CHARACTER || input?.mascotEnabled === false ? NO_CHARACTER
       : characters.some(character => character.id === input?.characterId) ? input.characterId : defaults.characterId,
     actionsEnabled: bool(input?.actionsEnabled, true),
+    activity: activityLevels.includes(input?.activity) ? input.activity : defaults.activity,
     disabledActions: ids(input?.disabledActions, actions),
     translation: {
       enabled: bool(translation.enabled, false), pauseOnHover: bool(translation.pauseOnHover, true),

@@ -42,7 +42,7 @@ The page side is described in [captions.md](captions.md), [skins.md](skins.md) a
 
 | Key | Content |
 | --- | --- |
-| `settings:v1` | Interface language, skin, character, disabled actions, translation and collection settings |
+| `settings:v1` | Interface language, skin, character, disabled actions, activity level, translation and collection settings |
 | `words:v1` | Words grouped by video id, with the source sentence, time added and canonical video link |
 | `translations:v1` | Up to 500 `[target language + source sentence, translation]` pairs |
 

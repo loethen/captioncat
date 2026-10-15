@@ -77,7 +77,11 @@ export const greet = {
 
 Import it in `actions/index.js` and add it to the `actions` array. To remove one, take it out of the array; saved settings that mention it are filtered automatically. A new action shows up on the settings page and starts enabled, because settings store only what the user turned off (`disabledActions`). The previews in the popup and on the settings page run the same controller and renderer on a sample caption, so choosing an action there plays it without touching the page's captions. The preview starts on the stroll.
 
-An action with `incidental: true` is never picked at random on its own. Another action refers to it from its own steps, for example a stroll that reaches the end has a chance of continuing into "Near slip". It can still be switched on and off and previewed.
+An action with `incidental: true` is never picked at random on its own. Another action refers to it from its own steps: a stroll now and then ends in "Near slip", or else often in "Rest at the edge", where the character lies down at one end of the caption for several seconds. It can still be switched on and off and previewed.
+
+Picking is weighted by the action's optional `weight` (default 1). Quiet everyday actions weigh more (the stroll 4, licking a paw and stretching 2), so the big set pieces stay occasional. The same action is not picked twice in a row unless it is the only one available.
+
+How often an action starts follows the user's activity level (`activity` in settings: `calm`, `normal` or `lively`). The pauses for each level are in `paces` in `controller.js`; the content script passes the current level through `env.pace()`, so a change applies from the next pause without rebuilding the character. The popup and the settings page offer the levels by name, not as numbers.
 
 An action is available only when all of these hold: the user has it enabled, the character has its `requiredStates` and `requiredProps`, and the walkable caption width reaches `minSpanEm`. When a replacement character lacks a pose or prop, the actions that need it switch off by themselves.
 

@@ -1,4 +1,4 @@
-import { createMascot } from './controller.js';
+import { createMascot, paces } from './controller.js';
 import { getCharacter } from './characters/index.js';
 import { actions, availableActions } from './actions/index.js';
 import { moodOf } from './reactions/index.js';
@@ -32,6 +32,7 @@ export function createMascotFeature(source) {
       active: () => enabled() && !!source.player && !document.hidden,
       calm, info: () => source.geometry(character.sizeEm),
       actions: info => settings.actionsEnabled ? availableActions(character, enabledActions, info) : [],
+      pace: () => paces[settings.activity],
     });
     react(source.snapshot());
   }

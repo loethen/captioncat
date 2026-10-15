@@ -43,6 +43,11 @@ export default {
   'actions.toggleHint': 'Now and then it picks one of the everyday actions selected below.',
   'actions.list': 'Everyday actions',
   'plugins.unsupported': 'The current character cannot do this action',
+  'activity.label': 'Activity',
+  'activity.hint': 'How often the character starts an action of its own.',
+  'activity.calm': 'Calm',
+  'activity.normal': 'Balanced',
+  'activity.lively': 'Lively',
 
   'translation.heading': 'Hover translation',
   'translation.enable': 'Enable hover translation',

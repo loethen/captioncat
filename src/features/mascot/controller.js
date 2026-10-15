@@ -4,17 +4,26 @@ export const timing = {
   actionGap: [1200, 3500], walkSpeed: 3, settle: 150,
 };
 
+// Activity levels: the pause before the first action and between actions, in ms.
+export const paces = {
+  calm: { firstAction: 5000, actionGap: [12000, 24000] },
+  normal: { firstAction: 2500, actionGap: [4500, 9000] },
+  lively: { firstAction: 1200, actionGap: [1200, 3500] },
+};
+
 export function createMascot(env, random = Math.random, config = timing) {
   let state = 'hidden', current = null, destination = null, ground = null, position = 1;
   let busy = false, generation = 0, missingSince = null, restSince = 0, sleeping = false, worried = false;
   let activity = null, nextActionAt = 0, lastKind = '', lastNow = null, mood = 'normal', facing = 1;
   let candidate = null, candidateSince = 0, stable = null;
   const between = (lo, hi) => lo + random() * (hi - lo);
+  // How often actions start follows the user's activity level when the environment supplies one.
+  const paced = key => env.pace?.()?.[key] ?? config[key];
 
   function endActivity(now) {
     activity = null;
     env.pose(null); env.prop(null); env.override(null);
-    nextActionAt = now + between(...config.actionGap);
+    nextActionAt = now + between(...paced('actionGap'));
   }
 
   function startActivity(info, now) {
@@ -23,8 +32,10 @@ export function createMascot(env, random = Math.random, config = timing) {
     const eligible = available.filter(action => !action.incidental);
     const fresh = eligible.filter(action => action.id !== lastKind);
     const choices = fresh.length ? fresh : eligible;
-    if (!choices.length) { nextActionAt = now + config.actionGap[1]; return; }
-    begin(choices[Math.floor(random() * choices.length)], info, available);
+    if (!choices.length) { nextActionAt = now + paced('actionGap')[1]; return; }
+    // Quiet everyday actions carry more weight than the big set pieces, so those stay a treat.
+    let roll = random() * choices.reduce((sum, action) => sum + (action.weight ?? 1), 0);
+    begin(choices.find(action => (roll -= action.weight ?? 1) < 0) || choices.at(-1), info, available);
   }
 
   function begin(plugin, info, available) {
@@ -100,10 +111,10 @@ export function createMascot(env, random = Math.random, config = timing) {
       const target = () => ({ x: info.x0 + info.span * position, y: stable.perchY });
       if (state === 'hidden') {
         generation++; busy = false; activity = null; env.sleep(false); env.override(null);
-        position = 1; nextActionAt = now + config.firstAction; stable = candidate;
+        position = 1; nextActionAt = now + paced('firstAction'); stable = candidate;
         current = destination = target(); env.place(current); env.show(); env.pop(); state = 'perched';
       } else if (state === 'resting') {
-        state = 'perched'; nextActionAt = now + config.firstAction; stable = candidate;
+        state = 'perched'; nextActionAt = now + paced('firstAction'); stable = candidate;
         rebase(current); go(target(), 'hop', true);
       } else if (busy) {
         if (previous !== stable) rebase(destination);
