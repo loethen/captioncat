@@ -104,8 +104,8 @@ export default {
   // Registry items: `<kind>.<id>` overrides the English name carried by the item itself.
   'skin.off': 'YouTube 原版',
   'skin.wa-light': '纸',
-  'character.erhei': '二黑',
-  'character.erhei.description': '胖胖的像素小黑猫，会巡逻、舔爪，还爱扑逗猫草。',
+  'character.tuxedo': '奶牛猫',
+  'character.tuxedo.description': '像素奶牛猫，会巡逻、舔爪，还爱扑逗猫草。',
   'action.walk': '散步',
   'action.tease': '逗猫草',
   'action.lick': '舔爪',

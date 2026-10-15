@@ -1,4 +1,4 @@
-const asset = name => `assets/characters/erhei/${name}.svg`;
+const asset = name => `assets/characters/tuxedo/${name}.svg`;
 export const stateIds = ['normal', 'happy', 'love', 'food', 'nervous', 'sleepy', 'ask', 'wow', 'walk', 'lick', 'watch', 'crouch', 'pounce', 'catch', 'miss', 'sniff', 'achoo', 'stretch', 'yawn', 'paw', 'peer', 'inbox', 'hang', 'rest', 'sit'];
 // A question mark, notes or z's would read backwards when mirrored, so these poses also come with
 // artwork whose glyphs are drawn back to front for facing left. Exclamation marks and hearts are symmetric.
@@ -7,8 +7,8 @@ const states = Object.fromEntries(stateIds.map(name => [name, {
   src: asset(name), ...(glyphStates.includes(name) && { leftSrc: asset(`${name}-left`) }),
 }]));
 
-export const erhei = {
-  id: 'erhei', name: 'Erhei', description: 'A chubby pixel black cat that patrols, licks its paws and loves to pounce on cat grass.',
+export const tuxedo = {
+  id: 'tuxedo', name: 'Tuxedo Cat', description: 'A pixel tuxedo cat that patrols, licks its paws and loves to pounce on cat grass.',
   // The canvas is 48×48 and the cat itself 48×30, so the cat stands about 2.4 times the text height.
   sizeEm: 3.84, states,
   // Poses other than standing, each with the base pose shown on the way in or out; stretching gets up from anything.

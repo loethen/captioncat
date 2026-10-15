@@ -1,10 +1,10 @@
-// Writes the CaptionCat icons in extension/icons/: Erhei's head from the character artwork,
+// Writes the CaptionCat icons in extension/icons/: the tuxedo cat's head from the character artwork,
 // on a transparent background. 48 and 128 px are exact integer upscales of the 24×24 grid;
 // 16 and 32 px are area-averaged, since the grid does not divide evenly into them.
 import { writeFile } from 'node:fs/promises';
 import { deflateSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
-import { portraitGrid } from '../src/features/mascot/characters/erhei/artwork.js';
+import { portraitGrid } from '../src/features/mascot/characters/tuxedo/artwork.js';
 
 const grid = portraitGrid();
 const outputs = [

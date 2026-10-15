@@ -4,7 +4,7 @@ Read this before adding or changing a character, an action, an expression or its
 
 ## Scope
 
-- There is one character, Erhei (id `erhei`), a pixel black cat. Do not add a character unless the user asks.
+- There is one character, the Tuxedo Cat (id `tuxedo`), a pixel black-and-white cat. Do not add a character unless the user asks.
 - Characters and skins are independent: a character works with either skin, and "None" shows no character.
 - Plugging happens in the source registries: add or remove a local module, then rebuild. Nothing is downloaded or executed from the network at runtime.
 - Names are written in English in the module. Translations are optional entries in the locale files; see [i18n.md](i18n.md).
@@ -32,7 +32,7 @@ export const cat = {
 };
 ```
 
-`normal` is required; other poses are optional. The default renderer uses `<img>` and accepts SVG, PNG, WebP and GIF. Use a transparent background and one canvas size for all poses. Each pose can have its own artwork without touching the state machine. Artwork that contains a question mark or text would read backwards when the character faces left. Give such a pose a `leftSrc` drawn with the text back to front: it is used instead of `src` when facing left and is mirrored like everything else, so the character turns and the text reads the right way. Erhei does this for `ask`, `happy` and `sleepy`. `mirror: false` still turns flipping off for a pose altogether.
+`normal` is required; other poses are optional. The default renderer uses `<img>` and accepts SVG, PNG, WebP and GIF. Use a transparent background and one canvas size for all poses. Each pose can have its own artwork without touching the state machine. Artwork that contains a question mark or text would read backwards when the character faces left. Give such a pose a `leftSrc` drawn with the text back to front: it is used instead of `src` when facing left and is mirrored like everything else, so the character turns and the text reads the right way. The tuxedo cat does this for `ask`, `happy` and `sleepy`. `mirror: false` still turns flipping off for a pose altogether.
 
 Props use the character's own artwork and a position relative to the character:
 
@@ -61,9 +61,9 @@ Props sit inside the character's facing container, so they mirror with it. `size
 
 To remove a character, take it out of the registry and delete its artwork and module. A saved id that no longer exists falls back to the first registered character, so the registry must keep at least one.
 
-### Erhei's artwork
+### The tuxedo cat's artwork
 
-Erhei is drawn in code. `src/features/mascot/characters/erhei/artwork.js` paints each pose frame by frame, and `node scripts/generate-assets.mjs` bakes the poses and props into frame-switching SVGs under `extension/assets/characters/erhei/`. Edit `artwork.js` and regenerate; do not edit the SVGs by hand.
+The tuxedo cat is drawn in code. `src/features/mascot/characters/tuxedo/artwork.js` paints each pose frame by frame, and `node scripts/generate-assets.mjs` bakes the poses and props into frame-switching SVGs under `extension/assets/characters/tuxedo/`. Edit `artwork.js` and regenerate; do not edit the SVGs by hand.
 
 The settings page also uses these SVGs directly: the sleeping cat in an empty vocabulary, and the cat living on the settings page footer, which runs the real controller with random actions (`createMascotPreview(stage, { random: true })`). They are part of the CaptionCat brand and stay visible when the caption character is set to None.
 

@@ -1,10 +1,10 @@
-// Preserved original Erhei pixel artwork; behavior lives in ../actions and controller.
+// Preserved original tuxedo cat pixel artwork; behavior lives in ../actions and controller.
 // scripts/generate-assets.mjs bakes every pose into an SVG whose frames switch every 120ms.
 const K = '#1c1a20', FAR = '#3a3846', FW = '#cfcdc4', WT = '#fbfaf6', PK = '#ff8fa8', AM = '#f2a81d';
 const BX = '#c9a26b', BXD = '#9c7645', CUP = '#f4f6fb', CUPD = '#b9bfd3';
 const GR = '#6fae4a', GL = '#a6d37c', BL = '#8ec5f0', VR = '#d8452e', OL = '#9d9bbb', MR = '#7a2f3d', WH = '#e6e8f5';
 
-// ───────────── Erhei: a pixel black cat (tuxedo markings, chubby) ─────────────
+// ───────────── Tuxedo Cat: a pixel black cat with white tuxedo markings ─────────────
 // 48×30 pixel art; each pose is drawn once per frame number and animates by switching frames.
 const SW = 48, SH = 30, FRAMES = 24, FRAME_MS = 120;   // 24 is a common multiple of 4, 8, 12 and 2, so every loop joins up
 // The output canvas is a 48×48 square (the character box is square); the cat sits on the bottom edge with one row left for the outline.
@@ -154,7 +154,7 @@ function paths(grid) {
   return [...byColor].map(([col, d]) => `<path fill='${col}' d='${d}'/>`).join('');
 }
 
-// Erhei's head on its own, as a 24×24 grid of colours (null is transparent), outline included.
+// The tuxedo cat's head on its own, as a 24×24 grid of colours (null is transparent), outline included.
 export function portraitGrid() {
   return sprite('portrait', 0).slice(TOP, TOP + 24).map(row => row.slice(0, 24));
 }

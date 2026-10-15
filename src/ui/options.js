@@ -56,7 +56,7 @@ function renderWords() {
   }
   if (!container.children.length) {
     const empty = element('div', 'empty'), cat = element('img', 'empty-cat');
-    cat.src = `assets/characters/erhei/${search ? 'ask' : 'sleepy'}.svg`; cat.alt = '';
+    cat.src = `assets/characters/tuxedo/${search ? 'ask' : 'sleepy'}.svg`; cat.alt = '';
     empty.append(cat, element('p', '', search ? t('vocabulary.noMatch') : t('vocabulary.empty'))); container.append(empty);
   }
 }

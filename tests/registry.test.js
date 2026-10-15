@@ -29,7 +29,7 @@ test('reaction priority, disabling and missing artwork fall back safely', () => 
 });
 test('invalid storage is normalized; partial changes preserve nested settings', () => {
   const normalized = normalizeSettings({ skinId: 'gone', characterId: 'gone', disabledActions: ['lick', 'gone', 'lick'], translation: { delay: -12, targetLanguage: 'gone' } });
-  assert.equal(normalized.skinId, 'wa-light'); assert.equal(normalized.characterId, 'erhei');
+  assert.equal(normalized.skinId, 'wa-light'); assert.equal(normalized.characterId, 'tuxedo');
   assert.deepEqual(normalized.disabledActions, ['lick']); assert.equal(normalized.translation.delay, 0);
   const patched = patchSettings(defaultSettings(), { translation: { enabled: false } });
   assert.equal(patched.translation.pauseOnHover, true); assert.equal(patched.translation.enabled, false);
