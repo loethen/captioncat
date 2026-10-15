@@ -25,6 +25,7 @@ export const tuxedo = {
     // Aligned with the box drawn in the inbox artwork and the landing point of the dive effect.
     box: { src: asset('box'), box: { left: '102.1%', bottom: '4.17%', width: '52.1%', height: '18.75%' } },
     dot: { src: asset('dot'), box: { left: '106%', bottom: '2%', width: '12.5%', height: '12.5%' } },
-    blade: { src: asset('blade'), box: { left: '83%', bottom: '10.4%', width: '96%', height: '20.8%' } },
+    // Starts just past the cat's nose so they don't overlap; the 18% lunge still reaches the tip.
+    blade: { src: asset('blade'), box: { left: '102%', bottom: '10.4%', width: '96%', height: '20.8%' } },
   },
 };
