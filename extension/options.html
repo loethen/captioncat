@@ -17,9 +17,8 @@
         <div class="card">
           <label class="field"><span class="label"><span data-i18n="characters.choose">Choose a character</span><small id="character-description"></small></span><select id="character"></select></label>
           <div id="mascot-details" hidden>
-            <label class="toggle"><span class="label"><span data-i18n="actions.toggle">Let the character do its own thing</span><small data-i18n="actions.toggleHint">When no caption triggers an expression, it picks one of the everyday actions selected below.</small></span><input id="actions-enabled" type="checkbox" role="switch"></label>
             <label class="field"><span class="label"><span><span data-i18n="activity.label">Activity</span> <output class="level-name" id="activity-name"></output></span><small data-i18n="activity.hint">Calm rests and naps a lot; lively spends most of its time on the move and playing.</small></span><input id="activity" class="level-slider" type="range" min="0" max="2" step="1" aria-label="Activity" data-i18n-attr="aria-label:activity.label"></label>
-            <div class="row"><span class="label" data-i18n="actions.list">Everyday actions</span><div id="action-list" class="check-list" aria-label="Everyday actions" data-i18n-attr="aria-label:actions.list"></div></div>
+            <div class="row"><span class="label"><span data-i18n="actions.list">Everyday actions</span><small data-i18n="actions.listHint">Now and then it picks one of the actions checked below.</small></span><div id="action-list" class="check-grid" aria-label="Everyday actions" data-i18n-attr="aria-label:actions.list"></div></div>
           </div>
         </div>
       </section>

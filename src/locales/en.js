@@ -39,9 +39,8 @@ export default {
 
   'preview.label': 'Preview action',
 
-  'actions.toggle': 'Let the character do its own thing',
-  'actions.toggleHint': 'Now and then it picks one of the everyday actions selected below.',
   'actions.list': 'Everyday actions',
+  'actions.listHint': 'Now and then it picks one of the actions checked below.',
   'plugins.unsupported': 'The current character cannot do this action',
   'activity.label': 'Activity',
   'activity.hint': 'Calm rests and naps a lot; lively spends most of its time on the move and playing.',

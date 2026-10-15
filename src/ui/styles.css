@@ -21,7 +21,7 @@ button:hover:not(:disabled) { background: var(--surface-hover); }
 button:active:not(:disabled) { transform: translateY(1px); }
 button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
 select, input[type='number'], input[type='search'] { border: 1px solid var(--border); background: var(--card); border-radius: 8px; padding: 7px 10px; color: var(--foreground); max-width: 100%; }
-/* On/off settings are switches; multi-choice lists further down are chips. */
+/* On/off settings are switches; the list of everyday actions is checkboxes. */
 .toggle input[type='checkbox'] { appearance: none; flex: none; position: relative; width: 38px; height: 22px; margin: 0; border-radius: 999px; background: #d9d9d9; transition: background .15s; }
 .toggle input[type='checkbox']::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: white; box-shadow: 0 1px 3px rgba(0,0,0,.22); transition: transform .2s cubic-bezier(.3,1.5,.6,1); }
 .toggle input[type='checkbox']:checked { background: var(--accent); }
@@ -114,14 +114,13 @@ nav button:hover:not(:disabled) { background: transparent; color: var(--foregrou
 nav button.active, nav button.active:hover { background: var(--card); color: var(--foreground); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
 nav .count { color: var(--accent-text); font-size: 13px; margin-left: 6px; }
 .tab-panel > h2:first-child { margin-top: 0; }
-.check-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-.check-list label { position: relative; padding: 4px 12px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; color: var(--muted); background: var(--card); user-select: none; transition: background .15s, border-color .15s; }
-.check-list input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; }
-.check-list label:hover { border-color: var(--faint); }
-.check-list label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
-.check-list label:has(input:focus-visible) { outline: 2px solid var(--accent-text); outline-offset: 3px; }
-.check-list label:has(input:disabled) { opacity: .45; cursor: default; }
-.check-list[inert] { opacity: .45; }
+/* Everyday actions: a compact grid of checkboxes, three to a row. */
+.check-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 16px; margin-top: 10px; }
+.check-grid label { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 4px 0; font-size: 14px; user-select: none; }
+.check-grid label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.check-grid input { flex: none; width: 16px; height: 16px; margin: 0; accent-color: var(--accent-text); }
+.check-grid label:has(input:disabled) { color: var(--faint); cursor: default; }
+.check-grid[inert] { opacity: .45; }
 .word-tools { display: flex; gap: 12px; margin: 16px 0 4px; }
 .word-tools input { flex: 1; min-width: 0; }
 .video-entry { padding: 20px 0; border-top: 1px solid var(--border); }
@@ -145,6 +144,6 @@ footer { color: var(--faint); font-size: 13px; margin-top: 36px; }
 .stroll-line { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--border); font-size: 9px; }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
-  button, .check-list label, .toggle input[type='checkbox'], .toggle input[type='checkbox']::after { transition: none; }
+  button, .toggle input[type='checkbox'], .toggle input[type='checkbox']::after { transition: none; }
 }
-@media(max-width: 600px) { .workspace { padding: 24px 18px; } .word-row { grid-template-columns: 88px 1fr 24px; gap: 10px; } .preview.large .preview-caption { font-size: 14px; } .field select, .field input { width: 140px; } }
+@media(max-width: 600px) { .workspace { padding: 24px 18px; } .word-row { grid-template-columns: 88px 1fr 24px; gap: 10px; } .preview.large .preview-caption { font-size: 14px; } .field select, .field input { width: 140px; } .check-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

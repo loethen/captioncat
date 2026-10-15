@@ -83,7 +83,7 @@ export async function bindSettingsForm({ onLocale } = {}) {
     if (applyLocale(settings.uiLanguage)) { fillSelects(); onLocale?.(); }
     const values = {
       'ui-language': settings.uiLanguage, skin: settings.skinId, character: settings.characterId,
-      'actions-enabled': settings.actionsEnabled, activity: activityLevels.indexOf(settings.activity), translation: settings.translation.enabled,
+      activity: activityLevels.indexOf(settings.activity), translation: settings.translation.enabled,
       pause: settings.translation.pauseOnHover, vocabulary: settings.vocabulary.enabled,
       language: settings.translation.targetLanguage, delay: settings.translation.delay,
     };
@@ -93,8 +93,7 @@ export async function bindSettingsForm({ onLocale } = {}) {
     }
     // Settings that only matter while their parent switch is on.
     if (find('pause')) find('pause').disabled = !loaded || !settings.translation.enabled;
-    if (find('action-list')) find('action-list').inert = !settings.actionsEnabled;
-    if (find('activity')) { find('activity').disabled = !loaded || !settings.actionsEnabled; showLevel(find('activity')); }
+    if (find('activity')) { find('activity').disabled = !loaded; showLevel(find('activity')); }
     preview();
     const character = getCharacter(settings.characterId);
     if (!character) return;
@@ -116,7 +115,7 @@ export async function bindSettingsForm({ onLocale } = {}) {
   const handlers = {
     'ui-language': node => ({ uiLanguage: node.value }),
     skin: node => ({ skinId: node.value }), character: node => ({ characterId: node.value }),
-    'actions-enabled': node => ({ actionsEnabled: node.checked }), activity: node => ({ activity: activityLevels[node.valueAsNumber] }),
+    activity: node => ({ activity: activityLevels[node.valueAsNumber] }),
     translation: node => ({ translation: { enabled: node.checked } }), pause: node => ({ translation: { pauseOnHover: node.checked } }),
     vocabulary: node => ({ vocabulary: { enabled: node.checked } }), language: node => ({ translation: { targetLanguage: node.value } }),
     delay: node => ({ translation: { delay: node.valueAsNumber } }),

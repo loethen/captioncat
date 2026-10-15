@@ -36,9 +36,8 @@ export default {
 
   'preview.label': '预览动作',
 
-  'actions.toggle': '让角色做自己的事',
-  'actions.toggleHint': '时不时随机做下面选中的日常动作。',
   'actions.list': '日常动作',
+  'actions.listHint': '时不时随机做下面勾选的动作。',
   'plugins.unsupported': '当前角色不会这个动作',
   'activity.label': '活跃程度',
   'activity.hint': '安静时多半在歇着、打盹；活泼时大多在走动和玩耍。',

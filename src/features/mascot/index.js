@@ -31,7 +31,7 @@ export function createMascotFeature(source) {
     controller = createMascot({ ...renderer,
       active: () => enabled() && !!source.player && !document.hidden,
       calm, info: () => source.geometry(character.sizeEm),
-      actions: info => settings.actionsEnabled ? availableActions(character, enabledActions, info) : [],
+      actions: info => availableActions(character, enabledActions, info),
       pace: () => paces[settings.activity], postures: () => character.postures,
     });
     react(source.snapshot());
@@ -45,7 +45,7 @@ export function createMascotFeature(source) {
     update(value) {
       const previous = settings;
       settings = value;
-      const changed = !previous || ['characterId', 'actionsEnabled', 'disabledActions'].some(key => JSON.stringify(previous[key]) !== JSON.stringify(value[key]));
+      const changed = !previous || ['characterId', 'disabledActions'].some(key => JSON.stringify(previous[key]) !== JSON.stringify(value[key]));
       if (changed) rebuild();
       if (enabled() && !frame) frame = requestAnimationFrame(tick);
       else if (!enabled()) {

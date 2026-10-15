@@ -32,7 +32,7 @@ function defaultTargetLanguage() {
 export function defaultSettings() {
   return {
     // New installs start in the browser's language; the choice is stored once settings are saved.
-    uiLanguage: resolveLocale(), skinId: 'wa-light', characterId: characters[0].id, actionsEnabled: true, activity: 'normal',
+    uiLanguage: resolveLocale(), skinId: 'wa-light', characterId: characters[0].id, activity: 'normal',
     // Stored as opt-outs so newly registered actions start enabled.
     disabledActions: [],
     translation: { enabled: false, targetLanguage: defaultTargetLanguage(), delay: 120, pauseOnHover: true },
@@ -51,7 +51,6 @@ export function normalizeSettings(input = {}) {
     // Settings saved before characters could be empty used a separate mascotEnabled switch.
     characterId: input?.characterId === NO_CHARACTER || input?.mascotEnabled === false ? NO_CHARACTER
       : characters.some(character => character.id === input?.characterId) ? input.characterId : defaults.characterId,
-    actionsEnabled: bool(input?.actionsEnabled, true),
     activity: activityLevels.includes(input?.activity) ? input.activity : defaults.activity,
     disabledActions: ids(input?.disabledActions, actions),
     translation: {
