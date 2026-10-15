@@ -12,8 +12,8 @@ export const erhei = {
   sizeEm: 3.84, states,
   props: {
     // The same cucumber in two places: behind, and ahead after turning (the facing container mirrors, so both land on one spot).
-    cucumber: { src: asset('cucumber'), box: { left: '-34%', bottom: '2%', width: '29.2%', height: '10.4%' } },
-    cucumberAhead: { src: asset('cucumber'), box: { left: '104.8%', bottom: '2%', width: '29.2%', height: '10.4%' } },
+    cucumber: { src: asset('cucumber'), box: { left: '-42.3%', bottom: '0', width: '37.5%', height: '14.6%' } },
+    cucumberAhead: { src: asset('cucumber'), box: { left: '104.8%', bottom: '0', width: '37.5%', height: '14.6%' } },
     cup: { src: asset('cup'), box: { left: '101%', bottom: '2%', width: '12.5%', height: '14.6%' } },
     // Aligned with the box drawn in the inbox artwork and the landing point of the dive effect.
     box: { src: asset('box'), box: { left: '102.1%', bottom: '4.17%', width: '52.1%', height: '18.75%' } },

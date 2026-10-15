@@ -9,6 +9,7 @@ const GR = '#6fae4a', GL = '#a6d37c', BL = '#8ec5f0', VR = '#d8452e', OL = '#9d9
 const SW = 48, SH = 30, FRAMES = 24, FRAME_MS = 120;   // 24 is a common multiple of 4, 8, 12 and 2, so every loop joins up
 // The output canvas is a 48×48 square (the character box is square); the cat sits on the bottom edge with one row left for the outline.
 const VIEW_BOX = `0 ${SH - 1 - SW} ${SW} ${SW}`;
+const TOP = 8;                                 // rows above 0 inside the canvas, for poses taller than standing (sitting)
 const GLY = {
   '?': ['.###.', '#...#', '..##.', '.....', '..#..'],
   '!': ['..#..', '..#..', '..#..', '.....', '..#..'],
@@ -17,14 +18,14 @@ const GLY = {
   'z': ['.###.', '...#.', '..#..', '.#...', '.###.'],
 };
 const EYE = { stand: 'n', walk: 'n', ask: 'n', wow: 'big', happy: 'up', love: 'down', food: 'big', lick: 'down', miss: 'dot', catch: 'up', watch: 'big', sniff: 'dot', achoo: 'up', yawn: 'up', peer: 'big' };
-const HEAD_DY = { food: 1, lick: -1, sniff: -1, achoo: 2, yawn: -1, peer: 3 };   // head down / head up
+const HEAD_DY = { food: 1, sniff: -1, achoo: 2, yawn: -1, peer: 3 };   // head down / head up
 // State name → artwork name; other pose names (walk, lick…) are the artwork names themselves
 const SPRITE = { normal: 'stand', nervous: 'miss', sleepy: 'loaf' };
 
 function sprite(pose, f) {
-  const grid = Array.from({ length: SH }, () => Array(SW).fill(null));
+  const grid = Array.from({ length: TOP + SH }, () => Array(SW).fill(null));   // grid[TOP + y] is row y
   const R = (a, b, w, h, col) => {
-    for (let j = Math.max(0, b); j < Math.min(SH, b + h); j++) for (let i = Math.max(0, a); i < Math.min(SW, a + w); i++) grid[j][i] = col;
+    for (let j = Math.max(-TOP, b); j < Math.min(SH, b + h); j++) for (let i = Math.max(0, a); i < Math.min(SW, a + w); i++) grid[TOP + j][i] = col;
   };
   const G = (g, gx, gy, col) => GLY[g].forEach((r, j) => [...r].forEach((ch, i) => { if (ch === '#') R(gx + i, gy + j, 1, 1, col); }));
   const eyeAt = (k, ex, ey, w) => {           // w=5 near eye, w=4 far eye
@@ -90,25 +91,31 @@ function sprite(pose, f) {
     [[35, 15], [36, 12], [37, 9], [38, 6]].forEach(p => R(p[0], p[1], 3, 4, K));               // foreleg reaching up diagonally from the shoulder
     R(39, 4, 4, 3, K); R(42, 4, 4, 2, WT);                                                     // paw gripping the edge
     R(19, 2, 1, 2, BL); R(19, 4 + kick, 1, 1, BL);
+  } else if (pose === 'lick') {               // sitting up on its haunches, one front paw raised to the mouth
+    const lk = (f >> 1) % 2;                                                                   // head dips with the tongue out, then lifts, alternating
+    leg(24, 21, 4, FAR, FW);                                                                   // far front leg, straight down
+    tail([[8, 24], [6, 23], [5, 21], [5, 19], [6 + ts, 17]]);
+    body(9, 17, 15, 8); R(14, 13, 7, 4, K); R(17, 11, 4, 2, K); R(20, 8, 7, 14, K);          // haunch, back sloping up to the chest
+    R(23, 14, 4, 7, WT); R(18, 25, 5, 2, WT);                                                  // white bib, hind paw on the ground
+    const hy = lk;
+    head(20, hy, 'down', false);
+    R(27, 15, 4, 5, K); R(30, 14, 3, 4, K);                                                   // near foreleg rising close to the chest
+    R(33, 11, 6, 6, K); R(34, 12, 4, 3, WT); R(35, 11, 2, 1, WT); R(35, 15, 2, 1, WT);       // rounded white paw tucked under the chin
+    R(32, hy + 10, 2, 1, MR); R(32, hy + 11, 2, 1 + lk, PK);                                   // tongue out, lengthening onto the paw
   } else {                                     // the standing poses
     const wk = pose === 'walk', by = (wk && f % 2) ? 1 : 0, dy = pose === 'wow' ? -1 : 0, nd = wk ? sw : 0;
-    const lk = pose === 'lick' ? (f >> 1) % 2 : 0;                                             // lick: head down with tongue out, head up, alternating
     leg(11 - nd, 23, 2, FAR, FW); leg(26 + nd, 23, 2, FAR, FW);
     tail(pose === 'wow' ? [[4, 17], [3, 14], [3, 11], [4, 8], [5, 6]] : [[4, 18], [3, 16], [2, 14], [2, 12], [3 + ts, 10]]);
     body(5, 13 + by + dy, 23, 10);
     R(23, 18 + by + dy, 5, 5, WT); R(14, 22 + by + dy, 9, 2, WT);                              // white chest and belly
     if (pose === 'wow') [8, 11, 14, 17, 20].forEach(sx => R(sx, 9, 1, 3, K));                  // fur on end
     leg(7 + nd, 23, 2, K, WT);
-    const hy = 6 + by + dy + (HEAD_DY[pose] || 0) + lk;
-    if (pose !== 'lick' && pose !== 'paw') leg(22 - nd, 23, 2, K, WT);
+    const hy = 6 + by + dy + (HEAD_DY[pose] || 0);
+    if (pose !== 'paw') leg(22 - nd, 23, 2, K, WT);
     let ek = EYE[pose] || 'n'; if (ek === 'n' && f % 12 === 11) ek = 'down';                   // blink
-    head(pose === 'lick' ? 24 : pose === 'peer' ? 28 : 26, hy, ek, ['wow', 'happy', 'food', 'sniff', 'achoo'].includes(pose));
+    head(pose === 'peer' ? 28 : 26, hy, ek, ['wow', 'happy', 'food', 'sniff', 'achoo'].includes(pose));
     if (pose === 'yawn') { R(35, hy + 9, 5, 4, MR); R(36, hy + 11, 3, 2, PK); }                 // big yawn
     if (pose === 'achoo') [[44, 9], [46, 11], [45, 7]].forEach((p, i) => R(p[0] + (f + i) % 2, hy + p[1], 1, 1, BL));   // spray
-    if (pose === 'lick') {                                                                     // front paw raised diagonally along the chin to the mouth
-      R(28, 22, 5, 2, K); R(32, 21, 5, 2, K); R(36, 20, 4, 2, K); R(39, 15 - lk, 4, 6 + lk, K); R(40, 15 - lk, 3, 3, WT);   // the paw rises to meet the lowered head
-      if (lk) R(38, hy + 9, 2, 1, PK);                                                         // tongue reaches the paw
-    }
     if (pose === 'paw') { R(28, 21, 13, 2, K); R(41, 21, 3, 2, WT); }                           // paw reaching forward
     if (pose === 'ask') G('?', 43, 0, VR);
     if (pose === 'wow') G('!', 43, 0, VR);
@@ -119,9 +126,9 @@ function sprite(pose, f) {
     if (pose === 'catch') { const w = f % 2; R(37, hy + 10, 10, 1, GR); R(37, hy + 10, 4, 1, GL); R(45, hy + 9 + w, 2, 1, GR); }
   }
   // A light outline keeps the black cat readable on any video background
-  const a = (i, j) => i >= 0 && j >= 0 && i < SW && j < SH && grid[j][i];
+  const a = (i, j) => i >= 0 && j >= 0 && i < SW && j < TOP + SH && grid[j][i];
   const o = [];
-  for (let j = 0; j < SH; j++) for (let i = 0; i < SW; i++) if (!a(i, j) && (a(i - 1, j) || a(i + 1, j) || a(i, j - 1) || a(i, j + 1))) o.push([i, j]);
+  for (let j = 0; j < TOP + SH; j++) for (let i = 0; i < SW; i++) if (!a(i, j) && (a(i - 1, j) || a(i + 1, j) || a(i, j - 1) || a(i, j + 1))) o.push([i, j]);
   o.forEach(p => { grid[p[1]][p[0]] = OL; });
   return grid;
 }
@@ -133,7 +140,7 @@ function paths(grid) {
     for (let i = 0; i < row.length;) {
       const col = row[i]; let w = 1;
       while (i + w < row.length && row[i + w] === col) w++;
-      if (col) byColor.set(col, (byColor.get(col) || '') + `M${i} ${j}h${w}v1h-${w}z`);
+      if (col) byColor.set(col, (byColor.get(col) || '') + `M${i} ${j - TOP}h${w}v1h-${w}z`);
       i += w;
     }
   });
@@ -142,7 +149,7 @@ function paths(grid) {
 
 // Erhei's head on its own, as a 24×24 grid of colours (null is transparent), outline included.
 export function portraitGrid() {
-  return sprite('portrait', 0).slice(0, 24).map(row => row.slice(0, 24));
+  return sprite('portrait', 0).slice(TOP, TOP + 24).map(row => row.slice(0, 24));
 }
 
 export function catSVG(state) {
@@ -177,10 +184,26 @@ export function boxSVG() {
   return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25 9' shape-rendering='crispEdges'>${d}</svg>\n`;
 }
 
-// Cucumber: lying on its side
+// Cucumber: lying on its side, stem on the left, a dried flower at the tip, a pale stripe on top and bumps underneath.
+// It gets the same light outline as the cat so it reads on any video.
 export function cucumberSVG() {
-  const d = `<path fill='#4f8a3a' d='M2 0h10v5h-10zM1 1h12v3h-12zM0 2h14v1h-14z'/><path fill='${GL}' d='M3 1h1v1h-1zM6 1h2v1h-2zM10 1h1v1h-1z'/><path fill='#3b6b2c' d='M4 3h1v1h-1zM8 3h1v1h-1zM11 2h1v1h-1z'/>`;
-  return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 5' shape-rendering='crispEdges'>${d}</svg>\n`;
+  const C = { S: '#8a6a2e', D: '#2f6b2a', M: '#4f8a3a', L: GL, B: '#cfe8a8', Y: '#e8cf5a' };
+  const art = [
+    '...MMMMMMMMMMM..',
+    'SDMLLLMLLLLMLLM.',
+    'SDMMMMMMMMMMMMMY',
+    '.DDMBDDDBDDDBDD.',
+    '...DDDDDDDDDDD..',
+  ].map(r => `.${r}.`);
+  art.unshift('.'.repeat(art[0].length)); art.push(art[0]);
+  const at = (i, j) => art[j]?.[i] && art[j][i] !== '.';
+  const byColor = new Map();
+  art.forEach((r, j) => [...r].forEach((ch, i) => {
+    const col = ch !== '.' ? C[ch] : (at(i - 1, j) || at(i + 1, j) || at(i, j - 1) || at(i, j + 1)) ? OL : null;
+    if (col) byColor.set(col, (byColor.get(col) || '') + `M${i} ${j}h1v1h-1z`);
+  }));
+  const d = [...byColor].map(([col, path]) => `<path fill='${col}' d='${path}'/>`).join('');
+  return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${art[0].length} ${art.length}' shape-rendering='crispEdges'>${d}</svg>\n`;
 }
 
 // Laser dot: a bright core with a halo
