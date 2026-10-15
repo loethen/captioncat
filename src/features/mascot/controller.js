@@ -91,7 +91,12 @@ export function createMascot(env, random = Math.random, config = timing) {
       if (!candidate || Math.abs(info.perchY - candidate.perchY) > tolerance || Math.abs(info.groundY - candidate.groundY) > tolerance) {
         candidate = { perchY: info.perchY, groundY: info.groundY }; candidateSince = now;
       }
+      const previous = stable;
       if (!stable || now - candidateSince >= config.settle) stable = candidate;
+      const settling = stable !== candidate;
+      // Lines differ in width, so a change of line keeps the cat's x instead of its fraction of the
+      // line; otherwise it slides sideways while it drops or hops to the new line.
+      const rebase = point => { if (info.span > 0) position = Math.max(0, Math.min(1, (point.x - info.x0) / info.span)); };
       const target = () => ({ x: info.x0 + info.span * position, y: stable.perchY });
       if (state === 'hidden') {
         generation++; busy = false; activity = null; env.sleep(false); env.override(null);
@@ -99,17 +104,22 @@ export function createMascot(env, random = Math.random, config = timing) {
         current = destination = target(); env.place(current); env.show(); env.pop(); state = 'perched';
       } else if (state === 'resting') {
         state = 'perched'; nextActionAt = now + config.firstAction; stable = candidate;
-        go(target(), 'hop', true);
+        rebase(current); go(target(), 'hop', true);
       } else if (busy) {
-        destination = target();
+        if (previous !== stable) rebase(destination);
+        if (!settling) destination = target();
       } else {
-        if (activity) stepActivity(info, now, dt);
-        else if (mood === 'normal' && !env.calm() && now >= nextActionAt) startActivity(info, now);
-        const to = target();
+        if (previous !== stable) rebase(current);
+        // While the new line settles, hold still where the old one was.
+        if (!settling) {
+          if (activity) stepActivity(info, now, dt);
+          else if (mood === 'normal' && !env.calm() && now >= nextActionAt) startActivity(info, now);
+        }
+        const to = settling ? { x: current.x, y: stable.perchY } : target();
         const smooth = dt > 0 ? 1 - Math.exp(-dt * 18) : 1;
         const next = { x: current.x + (to.x - current.x) * smooth, y: to.y };
         const dy = to.y - current.y;
-        if (Math.abs(dy) > info.fs * 0.6) go(next, dy > 0 ? 'fall' : 'hop', false);
+        if (Math.abs(dy) > info.fs * 0.6) go(to, dy > 0 ? 'fall' : 'hop', false);
         else { current = next; env.place(current); }
       }
       ground = { x: current.x, y: stable.groundY };

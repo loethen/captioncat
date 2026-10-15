@@ -122,6 +122,7 @@ A renderer for local video or Lottie can handle playback, state changes and tear
 
 - While a character is shown, the caption position is read on every animation frame, with no frame-rate cap; a time threshold makes walking stutter. The loop is skipped while the page is hidden and cancelled when the character is "None".
 - The character waits for the top edge of the caption to be stable before changing level when captions scroll.
+- Changing lines keeps the character's x, clamped to the new line, so it drops or hops straight instead of sliding to the same fraction of a line with a different width.
 - A brief caption gap keeps the character perched. A longer gap makes it fall, rest, sleep and finally fade; it returns when captions come back.
 - Coordinates account for the player's CSS scale, and the overlay lives inside the player so it shows in fullscreen.
 - `controller.js` is a state machine with no DOM access; keep it that way.
