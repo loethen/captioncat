@@ -32,7 +32,7 @@ export function createMascotFeature(source) {
       active: () => enabled() && !!source.player && !document.hidden,
       calm, info: () => source.geometry(character.sizeEm),
       actions: info => settings.actionsEnabled ? availableActions(character, enabledActions, info) : [],
-      pace: () => paces[settings.activity],
+      pace: () => paces[settings.activity], postures: () => character.postures,
     });
     react(source.snapshot());
   }

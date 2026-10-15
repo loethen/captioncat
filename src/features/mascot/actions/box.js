@@ -1,6 +1,6 @@
 // A box that is plainly too small appears ahead; it squeezes in anyway.
 export const box = {
-  id: 'box', name: 'Squeeze into a box', requiredStates: ['walk', 'watch', 'crouch', 'pounce', 'inbox', 'wow', 'miss'], requiredProps: ['box'], minSpanEm: 8,
+  id: 'box', name: 'Squeeze into a box', requiredStates: ['walk', 'watch', 'crouch', 'pounce', 'inbox', 'wow', 'miss'], requiredProps: ['box'], minSpanEm: 8, kind: 'play',
   buildSteps({ random }) {
     return [
       { type: 'walk', to: 0.4 + random() * 0.2 },                              // walk to the middle so the box fits ahead

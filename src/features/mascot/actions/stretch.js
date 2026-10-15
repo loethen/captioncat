@@ -1,5 +1,5 @@
 export const stretch = {
-  id: 'stretch', name: 'Stretch', requiredStates: ['stretch', 'yawn'], requiredProps: [], minSpanEm: 0, weight: 2,
+  id: 'stretch', name: 'Stretch', requiredStates: ['stretch', 'yawn'], requiredProps: [], minSpanEm: 0, kind: 'chore',
   buildSteps() {
     return [
       { type: 'pose', pose: 'stretch', ms: 1800 },    // front paws out, rump up

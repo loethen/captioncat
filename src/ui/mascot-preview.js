@@ -48,7 +48,7 @@ export function createMascotPreview(stage, { lines: lineSelector = '.preview-lin
       if (!character) return;
       renderer = (character.createRenderer || createAssetRenderer)({ character, assetURL: path => chrome.runtime.getURL(path), reduced: () => media.matches });
       renderer.mount(stage);
-      controller = createMascot({ ...renderer, active: () => true, calm: () => random && media.matches, info,
+      controller = createMascot({ ...renderer, active: () => true, calm: () => random && media.matches, info, postures: () => character.postures,
         actions: random ? geometry => availableActions(character, actions.map(item => item.id), geometry) : () => [] });
       apply();
       frame = requestAnimationFrame(tick);

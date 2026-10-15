@@ -1,5 +1,5 @@
 export const sneeze = {
-  id: 'sneeze', name: 'Sneeze', requiredStates: ['sniff', 'achoo', 'miss'], requiredProps: [], minSpanEm: 0,
+  id: 'sneeze', name: 'Sneeze', requiredStates: ['sniff', 'achoo', 'miss'], requiredProps: [], minSpanEm: 0, kind: 'chore',
   buildSteps({ random }) {
     const achoo = [
       { type: 'pose', pose: 'sniff', ms: 500 + random() * 400 },        // ah…

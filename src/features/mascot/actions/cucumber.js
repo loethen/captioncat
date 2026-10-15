@@ -1,6 +1,6 @@
 // A cucumber appears behind the character, which only notices on turning around and bolts.
 export const cucumber = {
-  id: 'cucumber', name: 'Cucumber scare', requiredStates: ['walk', 'lick', 'watch', 'wow', 'miss'], requiredProps: ['cucumber', 'cucumberAhead'], minSpanEm: 0,
+  id: 'cucumber', name: 'Cucumber scare', requiredStates: ['walk', 'lick', 'watch', 'wow', 'miss'], requiredProps: ['cucumber', 'cucumberAhead'], minSpanEm: 4, kind: 'play',
   buildSteps({ random, position, facing }) {
     // Walk to the middle first to leave room to flee; the facing afterwards decides where the cucumber sits and which way to run.
     const spot = 0.4 + random() * 0.2;

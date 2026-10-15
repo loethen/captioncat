@@ -41,7 +41,7 @@ export default {
   'actions.list': '日常动作',
   'plugins.unsupported': '当前角色不会这个动作',
   'activity.label': '活跃程度',
-  'activity.hint': '角色多久自己做一次动作。',
+  'activity.hint': '安静时多半在歇着、打盹；活泼时大多在走动和玩耍。',
   'activity.calm': '安静',
   'activity.normal': '适中',
   'activity.lively': '活泼',

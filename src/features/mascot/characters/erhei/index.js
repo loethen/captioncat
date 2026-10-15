@@ -1,5 +1,5 @@
 const asset = name => `assets/characters/erhei/${name}.svg`;
-export const stateIds = ['normal', 'happy', 'love', 'food', 'nervous', 'sleepy', 'ask', 'wow', 'walk', 'lick', 'watch', 'crouch', 'pounce', 'catch', 'miss', 'sniff', 'achoo', 'stretch', 'yawn', 'paw', 'peer', 'inbox', 'hang', 'rest'];
+export const stateIds = ['normal', 'happy', 'love', 'food', 'nervous', 'sleepy', 'ask', 'wow', 'walk', 'lick', 'watch', 'crouch', 'pounce', 'catch', 'miss', 'sniff', 'achoo', 'stretch', 'yawn', 'paw', 'peer', 'inbox', 'hang', 'rest', 'sit'];
 // A question mark, notes or z's would read backwards when mirrored, so these poses also come with
 // artwork whose glyphs are drawn back to front for facing left. Exclamation marks and hearts are symmetric.
 export const glyphStates = ['ask', 'happy', 'sleepy'];
@@ -11,6 +11,12 @@ export const erhei = {
   id: 'erhei', name: 'Erhei', description: 'A chubby pixel black cat that patrols, licks its paws and loves to pounce on cat grass.',
   // The canvas is 48×48 and the cat itself 48×30, so the cat stands about 2.4 times the text height.
   sizeEm: 3.84, states,
+  // Poses other than standing, each with the base pose shown on the way in or out; stretching gets up from anything.
+  postures: {
+    sit: { base: 'sit', poses: ['sit', 'lick'] },
+    lie: { base: 'rest', poses: ['rest', 'sleepy'] },
+    bridges: ['stretch'],
+  },
   props: {
     // The same cucumber in two places: behind, and ahead after turning (the facing container mirrors, so both land on one spot).
     cucumber: { src: asset('cucumber'), box: { left: '-42.3%', bottom: '0', width: '37.5%', height: '14.6%' } },

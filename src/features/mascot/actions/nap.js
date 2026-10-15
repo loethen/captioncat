@@ -1,17 +1,25 @@
-// Strolls to one end of the caption, turns back towards it and lies down for a while; more often than not
-// it nods off, then wakes with a yawn. Never picked on its own: a stroll ends this way now and then (see walk.js).
+// The routine's rest: walks to the nearer end of the caption, lies down facing back along it and dozes,
+// more often than not falling asleep, then gets up with a stretch. How long and how deeply follows the
+// activity level (`rest` and `sleep` in the pace).
 export const nap = {
-  id: 'nap', name: 'Rest at the edge', requiredStates: ['walk', 'rest', 'sleepy', 'yawn'], requiredProps: [], minSpanEm: 0, incidental: true,
-  buildSteps({ random, edge = random() < 0.5 ? 0 : 1 }) {
+  id: 'nap', name: 'Rest at the edge', requiredStates: ['walk', 'rest', 'sleepy', 'stretch', 'yawn'], requiredProps: [], minSpanEm: 0, kind: 'rest',
+  buildSteps({ random, position, pace = { rest: [15000, 30000], sleep: 0.6 } }) {
+    const edge = position < 0.5 ? 0 : 1, inward = edge ? -1 : 1;
+    const total = pace.rest[0] + random() * (pace.rest[1] - pace.rest[0]);
     const steps = [{ type: 'walk', to: edge }];
-    if (random() < 0.6) steps.push(
-      { type: 'pose', pose: 'rest', turn: true, ms: 3000 + random() * 3000 },   // lies down facing the caption, dozing
-      { type: 'pose', pose: 'sleepy', ms: 8000 + random() * 10000 },            // falls asleep
-      { type: 'pose', pose: 'rest', ms: 900 },                                 // stirs
-      { type: 'pose', pose: 'yawn', ms: 1300 },                                // gets up with a big yawn
+    if (random() < pace.sleep) {
+      const doze = 3000 + random() * 2000;
+      steps.push(
+        { type: 'pose', pose: 'rest', face: inward, ms: doze },              // lies down, dozing
+        { type: 'pose', pose: 'sleepy', ms: Math.max(4000, total - doze) },  // falls asleep
+        { type: 'pose', pose: 'rest', ms: 900 },                             // stirs
+      );
+    } else steps.push({ type: 'pose', pose: 'rest', face: inward, ms: total });   // just a rest
+    steps.push(
+      { type: 'pose', pose: 'stretch', ms: 1600 },                           // gets up with a stretch
+      { type: 'pose', pose: 'yawn', ms: 1100 },
+      { type: 'pose', pose: null, ms: 200 },
     );
-    else steps.push({ type: 'pose', pose: 'rest', turn: true, ms: 6000 + random() * 8000 });   // just a rest
-    steps.push({ type: 'pose', pose: null, ms: 300 });
     return steps;
   },
 };

@@ -45,6 +45,18 @@ props: {
 }
 ```
 
+A character can also declare its `postures`, so actions change posture smoothly instead of jumping from standing to lying:
+
+```js
+postures: {
+  sit: { base: 'sit', poses: ['sit', 'lick'] },    // poses done sitting, and the plain pose for sitting down
+  lie: { base: 'rest', poses: ['rest', 'sleepy'] },
+  bridges: ['stretch'],                            // gets up from any posture straight to standing
+},
+```
+
+Every other pose counts as standing. When a step asks for a pose in another posture, the controller first shows the base pose of each posture on the way, in the order standing, sitting, lying: standing to lying sits down first, lying to walking sits up first, and a sitting pose such as licking a paw starts by sitting down. A bridge pose skips this. Actions never mention postures; they only name poses. Without `postures`, poses switch directly.
+
 Props sit inside the character's facing container, so they mirror with it. `sizeEm`, poses and props all belong to the character package; actions and the state machine never mention shapes or asset paths.
 
 To remove a character, take it out of the registry and delete its artwork and module. A saved id that no longer exists falls back to the first registered character, so the registry must keep at least one.
@@ -66,6 +78,7 @@ export const greet = {
   requiredStates: ['happy'],
   requiredProps: [],
   minSpanEm: 0,
+  kind: 'chore', // patrol, chore, play or rest; see "The routine"
   buildSteps({ random, position, info }) {
     return [
       { type: 'pose', pose: 'happy', ms: 1200 },
@@ -77,25 +90,40 @@ export const greet = {
 
 Import it in `actions/index.js` and add it to the `actions` array. To remove one, take it out of the array; saved settings that mention it are filtered automatically. A new action shows up on the settings page and starts enabled, because settings store only what the user turned off (`disabledActions`). The previews in the popup and on the settings page run the same controller and renderer on a sample caption, so choosing an action there plays it without touching the page's captions. The preview starts on the stroll.
 
-An action with `incidental: true` is never picked at random on its own. Another action refers to it from its own steps: a stroll now and then ends in "Near slip", or else often in "Rest at the edge", where the character lies down at one end of the caption, more often than not falls asleep and wakes with a yawn. It can still be switched on and off and previewed.
-
-Picking is weighted by the action's optional `weight` (default 1). Quiet everyday actions weigh more (the stroll 4, licking a paw and stretching 2), so the big set pieces stay occasional. The same action is not picked twice in a row unless it is the only one available.
-
-How often an action starts follows the user's activity level (`activity` in settings: `calm`, `normal` or `lively`). The pauses for each level are in `paces` in `controller.js`; the content script passes the current level through `env.pace()`, so a change applies from the next pause without rebuilding the character. The popup and the settings page offer the levels by name, not as numbers.
-
 An action is available only when all of these hold: the user has it enabled, the character has its `requiredStates` and `requiredProps`, and the walkable caption width reaches `minSpanEm`. When a replacement character lacks a pose or prop, the actions that need it switch off by themselves.
 
 Generic steps:
 
 | `type` | Fields | Behaviour |
 | --- | --- | --- |
-| `walk` | `to` (0–1), optional `pose` / `speed` / `prop` | Moves along the top edge of the caption. Uses the `walk` pose by default; `speed` is a multiplier. |
-| `pose` | `ms`, optional `pose` / `mood` / `prop` / `fx` / `body` / `turn` | Holds a pose, expression and prop. `turn: true` turns the character around on the spot. `fx` plays a prop effect: `enter`, `appear`, `wave`, `jitter`, `nudge1`, `nudge2`, `tip`, `vanish`, `yank`. `body` plays a whole-body effect: `lunge`, `jump`, `recoil`, `poke`, `dive` and `bail`, `overstep`, `gasp`, `drop`, `cling`, `climb`. Of these, `dive`, `overstep`, `gasp`, `drop` and `cling` leave the character away from its spot until the pose is cleared or the matching return effect plays. |
+| `walk` | `to` (0–1), optional `pose` / `speed` / `prop` | Moves along the top edge of the caption. Uses the `walk` pose by default; `speed` is a multiplier, on top of the activity level's walking speed. |
+| `pose` | `ms`, optional `pose` / `mood` / `prop` / `fx` / `body` / `turn` / `face` | Holds a pose, expression and prop. `turn: true` turns the character around on the spot; `face` (1 right, -1 left) turns it to a given side. `fx` plays a prop effect: `enter`, `appear`, `wave`, `jitter`, `nudge1`, `nudge2`, `tip`, `vanish`, `yank`. `body` plays a whole-body effect: `lunge`, `jump`, `recoil`, `poke`, `dive` and `bail`, `overstep`, `gasp`, `drop`, `cling`, `climb`. Of these, `dive`, `overstep`, `gasp`, `drop` and `cling` leave the character away from its spot until the pose is cleared or the matching return effect plays. |
 | `wait` | `ms`, optional `pose` | Stays put; returns to the normal pose by default. |
 
-`pose: null` and `prop: null` clear the pose or the prop explicitly. A step without a `prop` field keeps the current prop. Any caption expression other than normal interrupts the action and clears the prop. A short caption gap pauses the action; a longer one cancels it.
+`pose: null` and `prop: null` clear the pose or the prop explicitly. A step without a `prop` field keeps the current prop. Any caption expression other than normal interrupts the action and clears the prop; see "The routine" for what is picked up again afterwards. A short caption gap pauses the action; a longer one interrupts it the same way.
 
-`buildSteps()` receives an injectable random function, the current position along the top edge, the facing (`facing`, 1 is right), the caption geometry and the list of currently available actions (`available`), and returns an array of steps. Combining existing steps into a new action needs no change to `controller.js`. A brand new step type needs a handler in the executor.
+`buildSteps()` receives an injectable random function, the current position along the top edge, the facing (`facing`, 1 is right), the caption geometry, the list of currently available actions (`available`) and the activity level's `pace`, and returns an array of steps. Combining existing steps into a new action needs no change to `controller.js`. A brand new step type needs a handler in the executor.
+
+## The routine
+
+The character does not pick actions at random with idle gaps in between; it follows a routine, and every action belongs to one `kind`:
+
+| `kind` | Actions | Role |
+| --- | --- | --- |
+| `patrol` | Stroll | Walks all the way to one end of the caption, often back to the other end, now and then stopping part way to look at something. |
+| `chore` | Lick a paw, Stretch, Sneeze | Small things done on the spot. An action without a `kind` counts as a chore. |
+| `play` | Cat grass, Red dot, Cucumber, Cup, Box | The big set pieces. |
+| `rest` | Rest at the edge | Walks to the nearer end, sits and lies down facing back along the caption, dozes and often falls asleep, then gets up with a stretch and a yawn. |
+
+The character is awake for a stretch of time. While awake, it picks a patrol, a chore or play in the proportions of the activity level, with only a short, natural pause between actions, so it is never left standing about. Within a kind, actions share the kind's share by their own optional `weight` (default 1). The same action is not picked twice in a row unless it is the only one, and a play action that has run stays out for a cooldown set by the activity level, so the set pieces do not repeat within minutes. Once the awake stretch is used up, the next action is the rest; finishing the rest starts a new awake stretch. If the user turned the rest off, it simply stays awake.
+
+Play actions find their own room: each walks to where its props fit before starting (the middle for cat grass, the cucumber and the box, an end for the cup, end to end for the red dot), and those that need space set `minSpanEm`, so a short caption simply leaves them out.
+
+A caption expression or a long enough caption gap interrupts the current action. A patrol or a rest is kept for up to 20 seconds: when the expression is over, the character carries on walking to the same end, or sits and lies back down for the rest of its rest, instead of starting something new. Play, chores and any step with a prop or a body effect under way simply end.
+
+The activity level (`activity` in settings: `calm`, `normal` or `lively`) sets the routine's shape, not a delay: how long the character stays awake, how long it rests, how likely it is to fall asleep, the mix of patrol, chores and play, the pause between actions and the walking speed. Calm spends about two thirds of its time resting and rarely plays; lively is mostly on the move. The values are in `paces` in `controller.js`; the content script passes the current level through `env.pace()`, and `buildSteps()` receives it as `pace`, so a change applies without rebuilding the character. The popup and the settings page offer the levels by name, not as numbers.
+
+An action with `incidental: true` is never picked by the routine. Another action refers to it from its own steps: a patrol now and then does not stop at the end and goes into "Near slip". It can still be switched on and off and previewed.
 
 ## Caption expressions
 

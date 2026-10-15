@@ -1,6 +1,6 @@
 // The red dot hangs in front of the character: always one step ahead while chased, and it flips sides when the character turns.
 export const laser = {
-  id: 'laser', name: 'Chase the red dot', requiredStates: ['walk', 'watch', 'crouch', 'pounce', 'miss'], requiredProps: ['dot'], minSpanEm: 4,
+  id: 'laser', name: 'Chase the red dot', requiredStates: ['walk', 'watch', 'crouch', 'pounce', 'miss'], requiredProps: ['dot'], minSpanEm: 4, kind: 'play',
   buildSteps({ random, position }) {
     const far = position < 0.5 ? 1 : 0;
     const chase = to => [

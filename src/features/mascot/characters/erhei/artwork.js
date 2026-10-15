@@ -93,17 +93,22 @@ function sprite(pose, f, left = false) {
     [[35, 15], [36, 12], [37, 9], [38, 6]].forEach(p => R(p[0], p[1], 3, 4, K));               // foreleg reaching up diagonally from the shoulder
     R(39, 4, 4, 3, K); R(42, 4, 4, 2, WT);                                                     // paw gripping the edge
     R(19, 2, 1, 2, BL); R(19, 4 + kick, 1, 1, BL);
-  } else if (pose === 'lick') {               // sitting up on its haunches, one front paw raised to the mouth
-    const lk = (f >> 1) % 2;                                                                   // head dips with the tongue out, then lifts, alternating
+  } else if (pose === 'sit' || pose === 'lick') {   // sitting up on its haunches; lick: one front paw raised to the mouth
+    const lk = pose === 'lick' ? (f >> 1) % 2 : 0;                                             // head dips with the tongue out, then lifts, alternating
     leg(24, 21, 4, FAR, FW);                                                                   // far front leg, straight down
     tail([[8, 24], [6, 23], [5, 21], [5, 19], [6 + ts, 17]]);
     body(9, 17, 15, 8); R(14, 13, 7, 4, K); R(17, 11, 4, 2, K); R(20, 8, 7, 14, K);          // haunch, back sloping up to the chest
     R(23, 14, 4, 7, WT); R(18, 25, 5, 2, WT);                                                  // white bib, hind paw on the ground
     const hy = lk;
-    head(20, hy, 'down', false);
-    R(27, 15, 4, 5, K); R(30, 14, 3, 4, K);                                                   // near foreleg rising close to the chest
-    R(33, 11, 6, 6, K); R(34, 12, 4, 3, WT); R(35, 11, 2, 1, WT); R(35, 15, 2, 1, WT);       // rounded white paw tucked under the chin
-    R(32, hy + 10, 2, 1, MR); R(32, hy + 11, 2, 1 + lk, PK);                                   // tongue out, lengthening onto the paw
+    if (pose === 'sit') {
+      head(20, hy, f % 12 === 11 ? 'down' : 'n', false);
+      leg(27, 18, 7, K, WT);                                                                   // near front leg, straight down in front of the chest
+    } else {
+      head(20, hy, 'down', false);
+      R(27, 15, 4, 5, K); R(30, 14, 3, 4, K);                                                 // near foreleg rising close to the chest
+      R(33, 11, 6, 6, K); R(34, 12, 4, 3, WT); R(35, 11, 2, 1, WT); R(35, 15, 2, 1, WT);     // rounded white paw tucked under the chin
+      R(32, hy + 10, 2, 1, MR); R(32, hy + 11, 2, 1 + lk, PK);                                 // tongue out, lengthening onto the paw
+    }
   } else {                                     // the standing poses
     const wk = pose === 'walk', by = (wk && f % 2) ? 1 : 0, dy = pose === 'wow' ? -1 : 0, nd = wk ? sw : 0;
     leg(11 - nd, 23, 2, FAR, FW); leg(26 + nd, 23, 2, FAR, FW);

@@ -44,7 +44,7 @@ export default {
   'actions.list': 'Everyday actions',
   'plugins.unsupported': 'The current character cannot do this action',
   'activity.label': 'Activity',
-  'activity.hint': 'How often the character starts an action of its own.',
+  'activity.hint': 'Calm rests and naps a lot; lively spends most of its time on the move and playing.',
   'activity.calm': 'Calm',
   'activity.normal': 'Balanced',
   'activity.lively': 'Lively',

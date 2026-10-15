@@ -1,6 +1,6 @@
 // Walks to the end of the caption and nudges the cup off, bit by bit.
 export const cup = {
-  id: 'cup', name: 'Push the cup', requiredStates: ['walk', 'watch', 'paw', 'peer'], requiredProps: ['cup'], minSpanEm: 0,
+  id: 'cup', name: 'Push the cup', requiredStates: ['walk', 'watch', 'paw', 'peer'], requiredProps: ['cup'], minSpanEm: 0, kind: 'play',
   buildSteps({ facing }) {
     const nudge = (fx, ms) => [
       { type: 'pose', pose: 'paw', body: 'poke', fx, ms: 450 },                // pokes it with a paw

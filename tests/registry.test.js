@@ -16,8 +16,8 @@ test('registered characters have packaged, valid artwork and unique IDs', async 
 test('character capabilities and short captions filter activities', () => {
   const enabled = actions.map(action => action.id);
   assert.deepEqual(availableActions(characters[0], enabled, { fs: 20, span: 200 }).map(action => action.id), ['walk', 'tease', 'lick', 'laser', 'cucumber', 'sneeze', 'stretch', 'cup', 'box', 'slip', 'nap']);
-  assert.deepEqual(availableActions({ states: { walk: {} }, props: {} }, enabled, { fs: 20, span: 200 }).map(action => action.id), ['walk']);
-  assert.deepEqual(availableActions(characters[0], enabled, { fs: 20, span: 0 }).map(action => action.id), ['tease', 'lick', 'cucumber', 'sneeze', 'stretch', 'cup', 'slip', 'nap']);
+  assert.deepEqual(availableActions({ states: { walk: {}, watch: {} }, props: {} }, enabled, { fs: 20, span: 200 }).map(action => action.id), ['walk']);
+  assert.deepEqual(availableActions(characters[0], enabled, { fs: 20, span: 0 }).map(action => action.id), ['lick', 'sneeze', 'stretch', 'cup', 'slip', 'nap']);
   assert.deepEqual(availableActions(characters[0], [], { fs: 20, span: 200 }), []);
 });
 test('reaction priority, disabling and missing artwork fall back safely', () => {
