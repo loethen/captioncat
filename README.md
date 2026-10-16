@@ -1,72 +1,70 @@
-# CaptionCat
+<div align="center">
 
-**Here to watch with you.** (Chinese name: 字幕猫, "陪你看视频")
+<a href="https://captioncat.app"><img src=".github/assets/banner.png" alt="CaptionCat: a cat on your YouTube captions" width="100%"></a>
 
-A Manifest V3 browser extension that dresses up YouTube captions with a paper skin and a small pixel cat that lives on them. Hover translation and one-click word saving come along as extras. It targets Chrome and Edge (Chromium 120+); the name leaves room for other video sites later.
+<h3>A little pixel cat on your YouTube captions.</h3>
 
-The interface is available in English and Simplified Chinese.
+<p>For the long podcasts, the slow talks and every hour of listening practice.</p>
+
+**English** · [简体中文](README.zh-CN.md)
+
+[Website](https://captioncat.app) · [Watch the demo](https://www.youtube.com/watch?v=yL7RapNP9nM) · [Privacy](https://captioncat.app/privacy) · [Report a problem](https://github.com/loethen/captioncat/issues)
+
+</div>
+
+## Why a cat?
+
+CaptionCat started while I was learning English from YouTube podcasts. Hours of people just sitting and talking: great for the ears, a little lonely for the eyes. So I put a cat on the captions.
+
+It doesn't ask for much. It wanders along the captions, washes its face, chases a red dot when boredom hits, and dozes off in the corner when the talk runs long. Every now and then, it looks up at what was just said.
+
+## See it in action
+
+<a href="https://www.youtube.com/watch?v=yL7RapNP9nM"><img src="https://img.youtube.com/vi/yL7RapNP9nM/maxresdefault.jpg" alt="Watch the CaptionCat demo on YouTube" width="100%"></a>
 
 ## Install
 
-`dist/` and `release/` are build outputs and are not in the repository, so build first.
+| Browser | How to get it |
+| --- | --- |
+| Chrome | Chrome Web Store (in review, link coming soon) |
+| Edge | Install from the Chrome Web Store; Edge supports Chrome extensions |
 
-```sh
-npm ci
-npm run build
-```
-
-1. Open `chrome://extensions` in Chrome, or `edge://extensions` in Edge.
-2. Turn on Developer mode, choose "Load unpacked" and select the **`dist` folder**.
-3. Refresh YouTube and turn on captions for a video.
-4. Click the CaptionCat toolbar icon to change the skin and the character. Hover translation, word saving and everything else are on the settings page (the gear button).
-
-The extension is not published to a store yet.
+Works on Chromium 120 and later. The interface is in English and Simplified Chinese.
 
 ## Features
 
-- **Caption skins.** YouTube's own look, or Paper: each caption line gets its own paper box. Font and size stay as set in YouTube. `Alt + Shift + S` switches between the two.
-- **A caption character.** A pixel tuxedo cat strolls along the captions, licks its paws, chases a red dot, pushes a cup off the edge and now and then reacts to what the captions say. It works with either skin and can be turned off; each everyday action has its own switch.
-- **Hover translation.** Hover over a caption to translate the whole sentence into your own language, optionally pausing the video while you read. Sixteen widely spoken target languages; the default is your browser's language. It is off by default and turned on from the settings page.
-- **Word collection.** Click a word in English captions to save it with its sentence, grouped by video. Search the vocabulary, copy a review prompt, or export JSON. It is off by default and turned on from the settings page.
-- **Interface language.** Follows the browser by default and can be switched between English and Chinese in the popup or on the settings page.
+### 🐈‍⬛ A cat that keeps you company
 
-The extension reads the captions YouTube is already showing; it does not download caption tracks or turn captions on. Word collection works on English captions. It targets the standard player; Shorts and embedded players are unverified.
+<img src=".github/assets/cat.jpg" alt="The cat curled up in a cardboard box on top of a caption" width="100%">
 
-## Data and privacy
+A pixel tuxedo cat lives on whatever captions YouTube is showing. It strolls along the words, stretches, sneezes, curls up in a box, knocks a cup off the edge and falls asleep when the video runs long. It also reacts to what is said: a heart for "cute", wide eyes for "wow", a hungry look when someone mentions fish. Pick which everyday actions it does and how lively it is, or turn it off. It keeps you company in fullscreen too.
 
-Settings, vocabulary and the translation cache are stored in `chrome.storage.local` on your device, with no account sync. Removing the extension deletes them, so export your vocabulary first if you want to keep it.
+### 📄 Paper captions
 
-Only the caption you hover over is sent for translation, to Google Translate. The vocabulary is never uploaded. The endpoint in use is not a supported API and may stop working; see [docs/architecture.md](docs/architecture.md).
+Each caption line sits on its own clean paper card, easy to read over any scene. Your YouTube font and size settings stay as they are. Press <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> to switch back to YouTube's own captions at any time.
 
-## Development
+### 🌐 Hover translation
 
-```sh
-npm run dev                         # watch src/; reload the extension and refresh YouTube after changes
-npm run build                       # build dist/
-node scripts/package.mjs            # zip dist/ into release/
-```
+<img src=".github/assets/hover-translation.jpg" alt="Hovering over a caption shows the whole sentence translated" width="100%">
 
-```text
-extension/        static files: manifest, popup and settings HTML, icons, character assets, _locales
-src/
-  background/     message routing, storage, translation requests and cache
-  content/        page entry and the shared caption source
-  features/       skins, mascot, translation, vocabulary
-  locales/        interface text, one file per language
-  shared/         settings, messages, i18n, text and DOM helpers
-  ui/             popup and settings page
-scripts/          build, package, asset generation, optional browser check
-tests/            unit tests and a page fixture
-docs/             guides for each part of the project
-```
+Rest your pointer on a caption to see the whole sentence in your own language, with sixteen languages to choose from. The video can pause while you read and carries on when you move away. Off by default; turn it on in settings.
 
-Documentation:
+### 📒 Word saving
 
-- [docs/development.md](docs/development.md): commands, verification scope, code and language conventions
-- [docs/i18n.md](docs/i18n.md): adding and translating interface text
-- [docs/skins.md](docs/skins.md): the paper skin and its rules
-- [docs/mascot.md](docs/mascot.md): characters, actions, expressions and artwork
-- [docs/captions.md](docs/captions.md): caption tracking, hover translation, word collection
-- [docs/architecture.md](docs/architecture.md): data flow, storage, permissions
+Click a word in English captions to save it together with the sentence it came from, sorted by video. Search your list, copy a ready-made review prompt for your favourite AI tutor, or export everything as JSON. Off by default; turn it on in settings.
 
-[AGENTS.md](AGENTS.md) tells coding agents which of these to read for a given task.
+### 🔒 Your data stays with you
+
+No account, no analytics, no tracking. Settings and saved words live in your browser. The only thing that ever leaves your device is the one caption you hover over, sent to Google Translate, and only when hover translation is on. Read the full [privacy policy](https://captioncat.app/privacy).
+
+## Feedback
+
+Found a bug or have an idea? [Open an issue](https://github.com/loethen/captioncat/issues) or write to [contact@captioncat.app](mailto:contact@captioncat.app). If CaptionCat keeps you company, a ⭐ on this repository helps other learners find it.
+
+Contributions are welcome. Start with the [development guide](docs/development.md). By sending a contribution, you agree that it may be distributed under this project's license and under any commercial license the author grants.
+
+## License
+
+[CC BY-NC 4.0](LICENSE): free for noncommercial use with credit. For commercial use, contact [contact@captioncat.app](mailto:contact@captioncat.app).
+
+The cat is modeled after Jinghua, my tuxedo cat. 🐾
