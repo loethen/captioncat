@@ -26,8 +26,8 @@
 
 | 浏览器 | 获取方式 |
 | --- | --- |
-| Chrome | Chrome 网上应用店（审核中，链接即将上线） |
-| Edge | 从 Chrome 网上应用店安装，Edge 支持 Chrome 插件 |
+| Chrome | [Chrome 网上应用店](https://chromewebstore.google.com/detail/eoeieepckdlahakhfdipjmijbglipnom?hl=zh-CN&utm_source=github) |
+| Edge | 从 [Chrome 网上应用店](https://chromewebstore.google.com/detail/eoeieepckdlahakhfdipjmijbglipnom?hl=zh-CN&utm_source=github)安装，Edge 支持 Chrome 插件 |
 
 支持 Chromium 120 及以上版本。界面提供简体中文和英文。
 

@@ -26,8 +26,8 @@ It doesn't ask for much. It wanders along the captions, washes its face, chases 
 
 | Browser | How to get it |
 | --- | --- |
-| Chrome | Chrome Web Store (in review, link coming soon) |
-| Edge | Install from the Chrome Web Store; Edge supports Chrome extensions |
+| Chrome | [Chrome Web Store](https://chromewebstore.google.com/detail/eoeieepckdlahakhfdipjmijbglipnom?utm_source=github) |
+| Edge | Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/eoeieepckdlahakhfdipjmijbglipnom?utm_source=github); Edge supports Chrome extensions |
 
 Works on Chromium 120 and later. The interface is in English and Simplified Chinese.
 
