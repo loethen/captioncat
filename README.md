@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://captioncat.app"><img src=".github/assets/banner.png" alt="CaptionCat: a cat on your YouTube captions" width="100%"></a>
+<a href="https://captioncat.app"><img src=".github/assets/demo.gif" alt="A pixel tuxedo cat walking, washing its face and chasing a red dot on the captions of a YouTube-style podcast" width="100%"></a>
 
 <h3>A little pixel cat on your YouTube captions.</h3>
 

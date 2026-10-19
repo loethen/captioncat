@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://captioncat.app/zh/"><img src=".github/assets/banner.png" alt="字幕猫 CaptionCat：住在 YouTube 字幕上的猫" width="100%"></a>
+<a href="https://captioncat.app/zh/"><img src=".github/assets/demo.gif" alt="一只像素奶牛猫在 YouTube 播客字幕上踱步、洗脸、追小红点" width="100%"></a>
 
 <h3>一只住在 YouTube 字幕上的像素小猫</h3>
 
