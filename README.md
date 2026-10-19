@@ -1,14 +1,12 @@
 <div align="center">
 
-<a href="https://captioncat.app"><img src=".github/assets/demo.gif" alt="A pixel tuxedo cat walking, washing its face and chasing a red dot on the captions of a YouTube-style podcast" width="100%"></a>
-
 <h3>A little pixel cat on your YouTube captions.</h3>
 
 <p>For the long podcasts, the slow talks and every hour of listening practice.</p>
 
 **English** · [简体中文](README.zh-CN.md)
 
-[Website](https://captioncat.app) · [Watch the demo](https://www.youtube.com/watch?v=yL7RapNP9nM) · [Privacy](https://captioncat.app/privacy) · [Report a problem](https://github.com/loethen/captioncat/issues)
+[Add to Chrome](https://chromewebstore.google.com/detail/eoeieepckdlahakhfdipjmijbglipnom?utm_source=github) · [Website](https://captioncat.app) · [Watch the demo](https://www.youtube.com/watch?v=yL7RapNP9nM) · [Privacy](https://captioncat.app/privacy) · [Report a problem](https://github.com/loethen/captioncat/issues)
 
 </div>
 
@@ -20,7 +18,9 @@ It doesn't ask for much. It wanders along the captions, washes its face, chases 
 
 ## See it in action
 
-<a href="https://www.youtube.com/watch?v=yL7RapNP9nM"><img src="https://img.youtube.com/vi/yL7RapNP9nM/maxresdefault.jpg" alt="Watch the CaptionCat demo on YouTube" width="100%"></a>
+<img src=".github/assets/demo.gif" alt="A pixel tuxedo cat walking, washing its face and chasing a red dot on the captions of a YouTube-style podcast" width="100%">
+
+Want it with sound? [Watch the demo on YouTube](https://www.youtube.com/watch?v=yL7RapNP9nM).
 
 ## Install
 
@@ -35,8 +35,6 @@ Works on Chromium 120 and later. The interface is in English and Simplified Chin
 
 ### 🐈‍⬛ A cat that keeps you company
 
-<img src=".github/assets/cat.jpg" alt="The cat curled up in a cardboard box on top of a caption" width="100%">
-
 A pixel tuxedo cat lives on whatever captions YouTube is showing. It strolls along the words, stretches, sneezes, curls up in a box, knocks a cup off the edge and falls asleep when the video runs long. It also reacts to what is said: a heart for "cute", wide eyes for "wow", a hungry look when someone mentions fish. Pick which everyday actions it does and how lively it is, or turn it off. It keeps you company in fullscreen too.
 
 ### 📄 Paper captions
@@ -44,8 +42,6 @@ A pixel tuxedo cat lives on whatever captions YouTube is showing. It strolls alo
 Each caption line sits on its own clean paper card, easy to read over any scene. Your YouTube font and size settings stay as they are. Press <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> to switch back to YouTube's own captions at any time.
 
 ### 🌐 Hover translation
-
-<img src=".github/assets/hover-translation.jpg" alt="Hovering over a caption shows the whole sentence translated" width="100%">
 
 Rest your pointer on a caption to see the whole sentence in your own language, with sixteen languages to choose from. The video can pause while you read and carries on when you move away. Off by default; turn it on in settings.
 

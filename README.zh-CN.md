@@ -1,14 +1,12 @@
 <div align="center">
 
-<a href="https://captioncat.app/zh/"><img src=".github/assets/demo.gif" alt="一只像素奶牛猫在 YouTube 播客字幕上踱步、洗脸、追小红点" width="100%"></a>
-
 <h3>一只住在 YouTube 字幕上的像素小猫</h3>
 
 <p>听播客、看讲座、磨耳朵，它都在旁边。</p>
 
 [English](README.md) · **简体中文**
 
-[官网](https://captioncat.app/zh/) · [观看演示](https://www.youtube.com/watch?v=yL7RapNP9nM) · [隐私政策](https://captioncat.app/zh/privacy) · [反馈问题](https://github.com/loethen/captioncat/issues)
+[添加到 Chrome](https://chromewebstore.google.com/detail/eoeieepckdlahakhfdipjmijbglipnom?hl=zh-CN&utm_source=github) · [官网](https://captioncat.app/zh/) · [观看演示](https://www.youtube.com/watch?v=yL7RapNP9nM) · [隐私政策](https://captioncat.app/zh/privacy) · [反馈问题](https://github.com/loethen/captioncat/issues)
 
 </div>
 
@@ -20,7 +18,9 @@
 
 ## 看看它的样子
 
-<a href="https://www.youtube.com/watch?v=yL7RapNP9nM"><img src="https://img.youtube.com/vi/yL7RapNP9nM/maxresdefault.jpg" alt="在 YouTube 上观看字幕猫演示" width="100%"></a>
+<img src=".github/assets/demo.gif" alt="一只像素奶牛猫在 YouTube 播客字幕上踱步、洗脸、追小红点" width="100%">
+
+想听声音？[去 YouTube 看演示](https://www.youtube.com/watch?v=yL7RapNP9nM)。
 
 ## 安装
 
@@ -35,8 +35,6 @@
 
 ### 🐈‍⬛ 陪着你的猫
 
-<img src=".github/assets/cat.jpg" alt="小猫蜷在字幕上的纸箱里" width="100%">
-
 一只像素奶牛猫住在 YouTube 正在显示的字幕上。它在字幕上踱步、伸懒腰、打喷嚏、钻纸箱、把杯子推下去，视频太长就睡着了。它还会对字幕里的话做出反应：听到「cute」冒出爱心，听到「wow」瞪大眼睛，有人提到鱼就馋了。你可以挑它平时做哪些动作、调它的活跃程度，也可以把它关掉。全屏时它也在。
 
 ### 📄 纸片字幕
@@ -44,8 +42,6 @@
 给字幕加了个白底，画面再乱也不晃眼。字体和大小沿用你在 YouTube 里的设置。按 <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> 能随时切回原版。
 
 ### 🌐 悬停翻译
-
-<img src=".github/assets/hover-translation.jpg" alt="鼠标停在字幕上，显示整句翻译" width="100%">
 
 鼠标放上去就能看整句翻译，视频也会跟着暂停，等你看完再继续。支持十六种目标语言。默认关闭，在设置里打开。
 
