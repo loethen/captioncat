@@ -61,6 +61,6 @@ Contributions are welcome. Start with the [development guide](docs/development.m
 
 ## License
 
-The code is under the [MIT License](LICENSE). The cat's artwork and the CaptionCat name are not: you can run the extension with the cat and write about it, but a fork you publish needs its own name and character. See [ASSETS-LICENSE.md](ASSETS-LICENSE.md).
+[MIT](LICENSE).
 
 The cat is modeled after Jinghua, my tuxedo cat. 🐾

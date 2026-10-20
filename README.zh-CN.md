@@ -61,6 +61,6 @@
 
 ## 许可协议
 
-代码采用 [MIT 协议](LICENSE)。小猫的美术素材和「CaptionCat / 字幕猫」这个名字不在其中：你可以带着小猫运行插件、写文章介绍它，但发布的分支需要换上自己的名字和角色。详见 [ASSETS-LICENSE.md](ASSETS-LICENSE.md)。
+[MIT](LICENSE)。
 
 小猫的原型来自「警花」，我家的奶牛猫。🐾
