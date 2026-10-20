@@ -57,10 +57,10 @@ No account, no analytics, no tracking. Settings and saved words live in your bro
 
 Found a bug or have an idea? [Open an issue](https://github.com/loethen/captioncat/issues) or write to [contact@captioncat.app](mailto:contact@captioncat.app). If CaptionCat keeps you company, a ⭐ on this repository helps other learners find it.
 
-Contributions are welcome. Start with the [development guide](docs/development.md). By sending a contribution, you agree that it may be distributed under this project's license and under any commercial license the author grants.
+Contributions are welcome. Start with the [development guide](docs/development.md). By sending a contribution, you agree that it is licensed under the MIT License.
 
 ## License
 
-[CC BY-NC 4.0](LICENSE): free for noncommercial use with credit. For commercial use, contact [contact@captioncat.app](mailto:contact@captioncat.app).
+The code is under the [MIT License](LICENSE). The cat's artwork and the CaptionCat name are not: you can run the extension with the cat and write about it, but a fork you publish needs its own name and character. See [ASSETS-LICENSE.md](ASSETS-LICENSE.md).
 
 The cat is modeled after Jinghua, my tuxedo cat. 🐾

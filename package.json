@@ -2,7 +2,7 @@
   "name": "captioncat",
   "version": "1.0.0",
   "private": true,
-  "license": "CC-BY-NC-4.0",
+  "license": "MIT",
   "type": "module",
   "description": "Browser extension for caption skins, hover translation and vocabulary collection",
   "scripts": {

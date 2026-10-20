@@ -1,4 +1,5 @@
 // Preserved original tuxedo cat pixel artwork; behavior lives in ../actions and controller.
+// Not under the MIT License: the artwork is all rights reserved, see ASSETS-LICENSE.md.
 // scripts/generate-assets.mjs bakes every pose into an SVG whose frames switch every 120ms.
 const K = '#1c1a20', FAR = '#3a3846', FW = '#cfcdc4', WT = '#fbfaf6', PK = '#ff8fa8', AM = '#f2a81d';
 const BX = '#c9a26b', BXD = '#9c7645', CUP = '#f4f6fb', CUPD = '#b9bfd3';

@@ -57,10 +57,10 @@
 
 发现问题或者有想法？欢迎[提交 issue](https://github.com/loethen/captioncat/issues)，或写信到 [contact@captioncat.app](mailto:contact@captioncat.app)。如果字幕猫陪过你，给这个仓库点个 ⭐，能帮更多学外语的人发现它。
 
-欢迎贡献代码，先看看[开发指南](docs/development.md)。提交贡献即表示你同意，你的贡献可以按本项目的许可协议发布，也可以包含在作者授予的商业授权中。
+欢迎贡献代码，先看看[开发指南](docs/development.md)。提交贡献即表示你同意，你的贡献按 MIT 协议授权。
 
 ## 许可协议
 
-[CC BY-NC 4.0](LICENSE)：注明出处即可免费用于非商业用途。商业使用请联系 [contact@captioncat.app](mailto:contact@captioncat.app)。
+代码采用 [MIT 协议](LICENSE)。小猫的美术素材和「CaptionCat / 字幕猫」这个名字不在其中：你可以带着小猫运行插件、写文章介绍它，但发布的分支需要换上自己的名字和角色。详见 [ASSETS-LICENSE.md](ASSETS-LICENSE.md)。
 
 小猫的原型来自「警花」，我家的奶牛猫。🐾
