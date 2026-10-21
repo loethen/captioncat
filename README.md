@@ -2,7 +2,7 @@
 
 <h3>A little pixel cat on your YouTube captions.</h3>
 
-<p>For the long podcasts, the slow talks and every hour of listening practice.</p>
+<p>For the long podcasts, the slow talks and the late-night videos.</p>
 
 **English** · [简体中文](README.zh-CN.md)
 
@@ -12,9 +12,9 @@
 
 ## Why a cat?
 
-CaptionCat started while I was learning English from YouTube podcasts. Hours of people just sitting and talking: great for the ears, a little lonely for the eyes. So I put a cat on the captions.
+I made CaptionCat while learning English from long YouTube podcasts. There wasn't much to look at, so I put a cat on the captions.
 
-It doesn't ask for much. It wanders along the captions, washes its face, chases a red dot when boredom hits, and dozes off in the corner when the talk runs long. Every now and then, it looks up at what was just said.
+It walks along the words, knocks things off the edge, and falls asleep when a video runs long. Some words make it react: a heart for "cute", a hungry look at "fish".
 
 ## See it in action
 
