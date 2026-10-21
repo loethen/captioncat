@@ -7,7 +7,7 @@ import { createAssetRenderer } from './renderer.js';
 
 export function createMascotFeature(source) {
   const media = matchMedia('(prefers-reduced-motion: reduce)');
-  let settings, character, renderer, controller, frame = 0, lastNod = 0, unsubscribe;
+  let settings, character, renderer, controller, frame = 0, unsubscribe;
   const calm = () => media.matches;
   const enabled = () => !!character;
   function tick(now) {
@@ -18,10 +18,7 @@ export function createMascotFeature(source) {
   }
   function react(snapshot) {
     if (!controller || !settings) return;
-    const mood = moodOf(snapshot.text, undefined, character);
-    controller.setMood(mood);
-    // An expression is already the reaction; a nod on top of it reads as a jump.
-    if (mood === 'normal' && snapshot.changed && performance.now() - lastNod > 2400) { controller.nod(); lastNod = performance.now(); }
+    controller.setMood(moodOf(snapshot.text, undefined, character));
   }
   function rebuild() {
     controller?.reset(); renderer?.dispose();

@@ -5,7 +5,7 @@ import { createMascot } from '../src/features/mascot/controller.js';
 function fixture() {
   const calls = []; let info = { fs: 20, size: 56, x0: 50, span: 200, perchY: 200, groundY: 250 }, active = true, calm = false, actions = [], completion;
   const env = { active: () => active, calm: () => calm, info: () => info, actions: () => actions };
-  for (const method of ['pose', 'prop', 'override', 'sleep', 'hide', 'fade', 'size', 'place', 'show', 'pop', 'land', 'nod', 'face', 'setMood', 'propFx', 'bodyFx']) env[method] = (...args) => calls.push([method, ...args]);
+  for (const method of ['pose', 'prop', 'override', 'sleep', 'hide', 'fade', 'size', 'place', 'show', 'pop', 'land', 'face', 'setMood', 'propFx', 'bodyFx']) env[method] = (...args) => calls.push([method, ...args]);
   env.move = (from, to, kind, done) => { calls.push(['move', from, to, kind]); completion = done; };
   const mascot = createMascot(env, () => 0.5);
   return { mascot, calls, setInfo: value => { info = value; }, setActive: value => { active = value; }, setCalm: value => { calm = value; }, setActions: value => { actions = value; }, complete: () => completion?.() };

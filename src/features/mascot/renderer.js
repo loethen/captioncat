@@ -71,7 +71,6 @@ export function createAssetRenderer({ character, assetURL, reduced }) {
       animation.onfinish = () => { done(); animation.cancel(); if (moveAnimation === animation) moveAnimation = null; };
     },
     pop() { play(inner, [{ transform: 'translateY(70%) scale(.55)', opacity: 0 }, { transform: 'translateY(-8%) scale(1.06)', opacity: 1, offset: 0.6 }, { transform: 'none', opacity: 1 }], { duration: 500, easing: 'ease-out' }); },
-    nod() { play(inner, [{ transform: 'none' }, { transform: 'translateY(6%) scale(1.06,.9)', offset: 0.3 }, { transform: 'translateY(-14%) scale(.96,1.06)', offset: 0.6 }, { transform: 'none' }], { duration: 450 }); },
     land() { play(inner, [{ transform: 'scale(1.14,.82)' }, { transform: 'scale(.97,1.05)', offset: 0.55 }, { transform: 'none' }], { duration: 300 }); },
     bodyFx(name) {
       if (!bodyEffects[name] || !canAnimate()) return;

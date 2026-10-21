@@ -63,7 +63,7 @@ To remove a character, take it out of the registry and delete its artwork and mo
 
 ### The tuxedo cat's artwork
 
-The tuxedo cat is drawn in code. `src/features/mascot/characters/tuxedo/artwork.js` paints each pose frame by frame, and `node scripts/generate-assets.mjs` bakes the poses and props into frame-switching SVGs under `extension/assets/characters/tuxedo/`. Edit `artwork.js` and regenerate; do not edit the SVGs by hand.
+The tuxedo cat is drawn in code. `src/features/mascot/characters/tuxedo/artwork.js` paints each pose frame by frame, and `node scripts/generate-assets.mjs` bakes the poses and props into frame-switching SVGs under `extension/assets/characters/tuxedo/`. Edit `artwork.js` and regenerate; do not edit the SVGs by hand. Keep the head in the same place across poses that follow one another: the sitting poses are shifted forward (`SIT_SHIFT`) so that sitting down from standing does not look like a jump.
 
 The settings page also uses these SVGs directly: the sleeping cat in an empty vocabulary, and the cat living on the settings page footer, which runs the real controller with random actions (`createMascotPreview(stage, { random: true })`). They are part of the CaptionCat brand and stay visible when the caption character is set to None.
 
@@ -115,11 +115,11 @@ The character does not pick actions at random with idle gaps in between; it foll
 | `play` | Cat grass, Red dot, Cucumber, Cup, Box | The big set pieces. |
 | `rest` | Rest at the edge | Walks to an end, usually the nearer one, sits and lies down facing back along the caption, dozes and often falls asleep, then gets up with a stretch and a yawn. |
 
-The character is awake for a stretch of time. While awake, it picks a patrol, a chore or play in the proportions of the activity level, with only a short, natural pause between actions, so it is never left standing about. Within a kind, actions share the kind's share by their own optional `weight` (default 1). The same action is not picked twice in a row unless it is the only one, and a play action that has run stays out for a cooldown set by the activity level, so the set pieces do not repeat within minutes. Once the awake stretch is used up, the next action is the rest; finishing the rest starts a new awake stretch. If the user turned the rest off, it simply stays awake.
+The character is awake for a stretch of time. While awake, it picks a patrol, a chore or play in the proportions of the activity level, with only a short, natural pause between actions, so it is never left standing about. Within a kind, actions share the kind's share by their own optional `weight` (default 1). The same action is not picked twice in a row unless it is the only one, and a play action that has run stays out for a cooldown set by the activity level, so the set pieces do not repeat within minutes. Once the awake stretch is used up, the next action is the rest; finishing the rest starts a new awake stretch, and the first action after it is a patrol or play, never a chore on the spot, so a cat that has just stretched gets moving. If the user turned the rest off, it simply stays awake.
 
 Play actions find their own room: each walks to where its props fit before starting (the middle for cat grass, the cucumber and the box, an end for the cup, end to end for the red dot), and those that need space set `minSpanEm`, so a short caption simply leaves them out.
 
-A caption expression or a long enough caption gap interrupts the current action. A patrol or a rest is kept for up to 20 seconds: when the expression is over, the character carries on walking to the same end, or sits and lies back down for the rest of its rest, instead of starting something new. Play, chores and any step with a prop or a body effect under way simply end.
+A caption expression or a long enough caption gap interrupts the current action. A patrol, or a rest still walking to its edge, is kept for up to 20 seconds: when the expression is over, the character carries on walking to the same end instead of starting something new. A rest that has already sat or lain down counts as woken: it ends as if finished, a new awake stretch starts, and the character does not lie back down. Play, chores and any step with a prop or a body effect under way simply end.
 
 The activity level (`activity` in settings: `calm`, `normal` or `lively`) sets the routine's shape, not a delay: how long the character stays awake, how long it rests, how likely it is to fall asleep, the mix of patrol, chores and play, the pause between actions and the walking speed. Calm spends about two thirds of its time resting and rarely plays; lively is mostly on the move. The values are in `paces` in `controller.js`; the content script passes the current level through `env.pace()`, and `buildSteps()` receives it as `pace`, so a change applies without rebuilding the character. The popup and the settings page offer the levels by name, not as numbers.
 
@@ -141,7 +141,7 @@ A character may provide `createRenderer({ character, assetURL, reduced })` to re
 
 ```text
 mount(player), size(px), place({x, y}), show(), hide(), fade()
-move(from, to, kind, done), pop(), nod(), land()
+move(from, to, kind, done), pop(), land()
 setMood(name), override(nameOrNull), pose(nameOrNull), sleep(boolean)
 face(direction), prop(nameOrNull), propFx(name), bodyFx(name), dispose()
 ```
@@ -157,6 +157,6 @@ A renderer for local video or Lottie can handle playback, state changes and tear
 - Whenever the line under it moves or changes width, the character keeps its x, clamped to the new line, so it drops or hops straight instead of sliding to the same fraction of a line with a different width.
 - A change of line never pauses a walk: it keeps walking while the new line settles and while it hops or drops, landing where it took off and catching up, and through a blank of under a second between two captions it carries on along the last line.
 - A brief caption gap keeps the character perched. A longer gap makes it fall, rest, sleep and finally fade, about four and a half seconds after the captions went away (`timing` in `controller.js`); it returns when captions come back.
-- A caption expression is the whole reaction: the nod on a new caption only plays when the caption shows no expression, so the character does not hop as it changes face.
+- Caption expressions are the only reaction to what is said. A new caption on its own does not make the character move; an earlier nod on every caption change was removed because the frequent little hop read as jumpiness.
 - Coordinates account for the player's CSS scale, and the overlay lives inside the player so it shows in fullscreen.
 - `controller.js` is a state machine with no DOM access; keep it that way.

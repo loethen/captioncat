@@ -18,7 +18,7 @@ export function createMascot(env, random = Math.random, config = timing) {
   let state = 'hidden', current = null, destination = null, ground = null, position = 1;
   let busy = false, generation = 0, missingSince = null, restSince = 0, sleeping = false, worried = false;
   let activity = null, nextActionAt = 0, lastKind = '', lastNow = null, mood = 'normal', facing = 1;
-  let awakeSince = 0, awakeFor = 0, posture = 'stand', interrupted = null;
+  let awakeSince = 0, awakeFor = 0, posture = 'stand', interrupted = null, justWoke = false;
   const playedAt = new Map();
   let candidate = null, candidateSince = 0, stable = null, line = null, lastInfo = null;
   const between = (lo, hi) => lo + random() * (hi - lo);
@@ -54,25 +54,28 @@ export function createMascot(env, random = Math.random, config = timing) {
     return steps;
   }
 
-  // `completed` is false when something cut the action short; an interrupted rest does not refresh the cat.
+  // `completed` is false when something cut the action short. A rest that ends, or is woken from, starts a new
+  // awake stretch, and the first thing after it is to get moving.
   function endActivity(now, completed = false) {
-    if (completed && activity?.kind === 'rest') wake(now);
+    if (completed && activity?.kind === 'rest') { wake(now); justWoke = true; }
     activity = null;
     setPose(null); env.prop(null); env.override(null);
     nextActionAt = now + between(...pace().pause);
   }
 
-  // A caption expression or a caption gap cuts the action short. A patrol or a rest is kept, so the character
-  // carries on walking to the same end or lies back down afterwards; anything with a prop or a body effect
+  // A caption expression or a caption gap cuts the action short. A patrol, or a rest still on its way to the
+  // edge, is kept, so the character carries on walking to the same end afterwards. A rest that has already
+  // lain down counts as woken: the character does not lie back down. Anything with a prop or a body effect
   // under way, and play and chores in general, simply end.
   function interrupt(now) {
     const step = activity?.steps[activity.index];
     interrupted = null;
-    if (step && ['patrol', 'rest'].includes(activity.kind) && !step.body && !step.fx && !step.prop) {
+    const woken = activity?.kind === 'rest' && activity.steps.slice(0, activity.index + 1).some(done => done.type !== 'walk');
+    if (step && !woken && ['patrol', 'rest'].includes(activity.kind) && !step.body && !step.fx && !step.prop) {
       const left = step.type === 'walk' || activity.started === null ? step.ms : Math.max(1000, step.ms - (now - activity.started));
       interrupted = { ...activity, steps: [{ ...step, ms: left, bridged: false }, ...activity.steps.slice(activity.index + 1)], index: 0, started: null, at: now };
     }
-    endActivity(now);
+    endActivity(now, woken);
   }
 
   // The routine: rest once the awake stretch is used up, otherwise patrol, a chore or play in the level's proportions.
@@ -89,7 +92,13 @@ export function createMascot(env, random = Math.random, config = timing) {
     const cooling = action => kindOf(action) === 'play' && now - (playedAt.get(action.id) ?? -Infinity) < pace().cooldown;
     const eligible = available.filter(action => !action.incidental && kindOf(action) !== 'rest' && !cooling(action));
     const fresh = eligible.filter(action => action.id !== lastKind);
-    const choices = fresh.length ? fresh : eligible;
+    let choices = fresh.length ? fresh : eligible;
+    // Just up from a rest, it stretches its legs: a stroll or a game, not another chore on the spot.
+    if (justWoke) {
+      justWoke = false;
+      const moving = choices.filter(action => ['patrol', 'play'].includes(kindOf(action)));
+      if (moving.length) choices = moving;
+    }
     if (!choices.length) { nextActionAt = now + pace().pause[1]; return; }
     // Each kind gets its share of the mix, split between its actions by their own weight.
     const { mix } = pace();
@@ -235,7 +244,6 @@ export function createMascot(env, random = Math.random, config = timing) {
       if (activity) endActivity(lastNow || 0);
       interrupted = null; begin(plugin, info, env.actions(info), lastNow || 0); return true;
     },
-    nod() { if (state === 'perched' && !busy && !activity) env.nod(); },
     setMood(value) {
       mood = value; env.setMood(value);
       if (value !== 'normal' && activity) interrupt(lastNow || 0);

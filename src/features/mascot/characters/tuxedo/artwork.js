@@ -10,6 +10,7 @@ const SW = 48, SH = 30, FRAMES = 24, FRAME_MS = 120;   // 24 is a common multipl
 // The output canvas is a 48×48 square (the character box is square); the cat sits on the bottom edge with one row left for the outline.
 const VIEW_BOX = `0 ${SH - 1 - SW} ${SW} ${SW}`;
 const TOP = 8;                                 // rows above 0 inside the canvas, for poses taller than standing (sitting)
+const SIT_SHIFT = 6;                           // columns the sitting poses move forward, so their head lines up with standing
 const GLY = {
   '?': ['.###.', '#...#', '..##.', '.....', '..#..'],
   '!': ['..#..', '..#..', '..#..', '.....', '..#..'],
@@ -109,6 +110,8 @@ function sprite(pose, f, left = false) {
       R(33, 11, 6, 6, K); R(34, 12, 4, 3, WT); R(35, 11, 2, 1, WT); R(35, 15, 2, 1, WT);     // rounded white paw tucked under the chin
       R(32, hy + 10, 2, 1, MR); R(32, hy + 11, 2, 1 + lk, PK);                                 // tongue out, lengthening onto the paw
     }
+    // Drawn further back than standing; shift it so the head stays where it was and sitting down does not jump.
+    for (const row of grid) { row.unshift(...Array(SIT_SHIFT).fill(null)); row.length = SW; }
   } else {                                     // the standing poses
     const wk = pose === 'walk', by = (wk && f % 2) ? 1 : 0, dy = pose === 'wow' ? -1 : 0, nd = wk ? sw : 0;
     leg(11 - nd, 23, 2, FAR, FW); leg(26 + nd, 23, 2, FAR, FW);
