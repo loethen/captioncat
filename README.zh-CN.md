@@ -18,7 +18,7 @@
 
 ## 看看它的样子
 
-<img src=".github/assets/demo.gif" alt="一只像素奶牛猫在 YouTube 播客字幕上踱步、洗脸、追小红点" width="100%">
+<img src=".github/assets/demo.gif" alt="一只像素奶牛猫在播客字幕上散步、把杯子推下去、差点滑下去、爬回来再趴下" width="100%">
 
 想听声音？[去 YouTube 看演示](https://www.youtube.com/watch?v=yL7RapNP9nM)。
 

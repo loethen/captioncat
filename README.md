@@ -18,7 +18,7 @@ It doesn't ask for much. It wanders along the captions, washes its face, chases 
 
 ## See it in action
 
-<img src=".github/assets/demo.gif" alt="A pixel tuxedo cat walking, washing its face and chasing a red dot on the captions of a YouTube-style podcast" width="100%">
+<img src=".github/assets/demo.gif" alt="A pixel tuxedo cat on the captions of a podcast: it walks along, knocks a cup off the edge, slips, climbs back and lies down" width="100%">
 
 Want it with sound? [Watch the demo on YouTube](https://www.youtube.com/watch?v=yL7RapNP9nM).
 
