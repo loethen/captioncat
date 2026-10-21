@@ -6,7 +6,7 @@
 
 [English](README.md) · **简体中文**
 
-[添加到 Chrome](https://chromewebstore.google.com/detail/eoeieepckdlahakhfdipjmijbglipnom?hl=zh-CN&utm_source=github) · [官网](https://captioncat.app/zh/) · [观看演示](https://www.youtube.com/watch?v=yL7RapNP9nM) · [隐私政策](https://captioncat.app/zh/privacy) · [反馈问题](https://github.com/loethen/captioncat/issues)
+[添加到 Chrome](https://chromewebstore.google.com/detail/eoeieepckdlahakhfdipjmijbglipnom?hl=zh-CN&utm_source=github) · [官网](https://captioncat.app/zh/) · [观看演示](https://www.youtube.com/watch?v=DTOXzpS6HF8) · [隐私政策](https://captioncat.app/zh/privacy) · [反馈问题](https://github.com/loethen/captioncat/issues)
 
 </div>
 
@@ -20,7 +20,7 @@
 
 <img src=".github/assets/demo.gif" alt="一只像素奶牛猫在播客字幕上散步、把杯子推下去、差点滑下去、爬回来再趴下" width="100%">
 
-想听声音？[去 YouTube 看演示](https://www.youtube.com/watch?v=yL7RapNP9nM)。
+想听声音？[去 YouTube 看演示](https://www.youtube.com/watch?v=DTOXzpS6HF8)。
 
 ## 安装
 

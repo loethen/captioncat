@@ -6,7 +6,7 @@
 
 **English** · [简体中文](README.zh-CN.md)
 
-[Add to Chrome](https://chromewebstore.google.com/detail/eoeieepckdlahakhfdipjmijbglipnom?utm_source=github) · [Website](https://captioncat.app) · [Watch the demo](https://www.youtube.com/watch?v=yL7RapNP9nM) · [Privacy](https://captioncat.app/privacy) · [Report a problem](https://github.com/loethen/captioncat/issues)
+[Add to Chrome](https://chromewebstore.google.com/detail/eoeieepckdlahakhfdipjmijbglipnom?utm_source=github) · [Website](https://captioncat.app) · [Watch the demo](https://www.youtube.com/watch?v=DTOXzpS6HF8) · [Privacy](https://captioncat.app/privacy) · [Report a problem](https://github.com/loethen/captioncat/issues)
 
 </div>
 
@@ -20,7 +20,7 @@ It doesn't ask for much. It wanders along the captions, washes its face, chases 
 
 <img src=".github/assets/demo.gif" alt="A pixel tuxedo cat on the captions of a podcast: it walks along, knocks a cup off the edge, slips, climbs back and lies down" width="100%">
 
-Want it with sound? [Watch the demo on YouTube](https://www.youtube.com/watch?v=yL7RapNP9nM).
+Want it with sound? [Watch the demo on YouTube](https://www.youtube.com/watch?v=DTOXzpS6HF8).
 
 ## Install
 
