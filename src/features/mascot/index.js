@@ -18,8 +18,10 @@ export function createMascotFeature(source) {
   }
   function react(snapshot) {
     if (!controller || !settings) return;
-    controller.setMood(moodOf(snapshot.text, undefined, character));
-    if (snapshot.changed && performance.now() - lastNod > 2400) { controller.nod(); lastNod = performance.now(); }
+    const mood = moodOf(snapshot.text, undefined, character);
+    controller.setMood(mood);
+    // An expression is already the reaction; a nod on top of it reads as a jump.
+    if (mood === 'normal' && snapshot.changed && performance.now() - lastNod > 2400) { controller.nod(); lastNod = performance.now(); }
   }
   function rebuild() {
     controller?.reset(); renderer?.dispose();

@@ -156,6 +156,7 @@ A renderer for local video or Lottie can handle playback, state changes and tear
 - The character waits for the top edge of the caption to be stable before changing level when captions scroll, but its action carries on meanwhile at the old height.
 - Whenever the line under it moves or changes width, the character keeps its x, clamped to the new line, so it drops or hops straight instead of sliding to the same fraction of a line with a different width.
 - A change of line never pauses a walk: it keeps walking while the new line settles and while it hops or drops, landing where it took off and catching up, and through a blank of under a second between two captions it carries on along the last line.
-- A brief caption gap keeps the character perched. A longer gap makes it fall, rest, sleep and finally fade; it returns when captions come back.
+- A brief caption gap keeps the character perched. A longer gap makes it fall, rest, sleep and finally fade, about four and a half seconds after the captions went away (`timing` in `controller.js`); it returns when captions come back.
+- A caption expression is the whole reaction: the nod on a new caption only plays when the caption shows no expression, so the character does not hop as it changes face.
 - Coordinates account for the player's CSS scale, and the overlay lives inside the player so it shows in fullscreen.
 - `controller.js` is a state machine with no DOM access; keep it that way.

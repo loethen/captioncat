@@ -1,5 +1,5 @@
 // Pure state machine. All geometry, rendering, animation and settings enter via env.
-export const timing = { worry: 900, fall: 2500, sleep: 1500, hide: 8000, walkSpeed: 3, settle: 150 };
+export const timing = { worry: 900, fall: 2000, sleep: 1000, hide: 2500, walkSpeed: 3, settle: 150 };
 
 // Activity levels shape the character's routine: awake for a while (`awake`, ms), patrolling, doing small
 // chores and now and then playing, in the proportions of `mix`, with only a short natural `pause` between
